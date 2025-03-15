@@ -1,0 +1,847 @@
+
+CSE 156 Natural Language Processing 
+8 - Pretraining
+Instructor: Lianhui Qin 
+Slides adapted from Yejin Choi, and CSE595 @ U of Michigan 
+1 
+Recap 
+CSE 156 NLP 2 Pretraining
+The Transformer Decoder • A Transformer decoder is what we use  
+Output Probabilities Softmax 
+Linear 
+Add & Norm 
+to build systems like language models. 
+Repeat for number  
+of encoder blocks 
+• It’s a lot like our minimal self-attention  
+architecture, but with a few more  
+components. 
+• Residual connection (“Add”) 
+• Layer normalization (“Norm") 
++ 
+• Replace self-attention with multi-head  
+self-attention. 
+Feed-Forward 
+Add & Norm 
+Masked Multi-head Attention 
+Position Embedding Input Embeddings 
+Inputs 
+CSE 156 NLP 
+3 Pretraining
+Why Multi-head Attention? 
+What if we want to look in  
+multiple places in the  
+sentence at once? 
+?Instead of having only one  
+attention head, we can create  
+multiple sets of (queries, keys,  
+values) independent from each  
+other! 
+
+CSE 156 NLP 
+4 Pretraining
+Multi-Head Attention: Walk-through 
+bi,1 
+α′i,i,1 α′i,j,1 
+× × 
+qi,1 qi,2 ki,1 ki,2 vi,1 vi,2 qj,1 qj,2 kj,1 kj,2 vj,1 vj,2 
+qi ki vi 
+ai 
+CSE 156 NLP 
+qj kj vj 
+aj Multi-head Attention 
+5 Pretraining
+bi,2 
+α′i,i,2 α′i,j,2 
+× × 
+qi,1 qi,2 ki,1 ki,2 vi,1 vi,2 qj,1 qj,2 kj,1 kj,2 vj,1 vj,2 
+qi ki vi 
+ai 
+CSE 156 NLP 
+qj kj vj 
+aj Multi-head Attention 
+6 Pretraining
+bi,1 
+b = Y i 
+bi,2 
+Some  
+transformation 
+Concatenation 
+× × × × 
+qi,1 qi,2 ki,1 ki,2 vi,1 vi,2 qj,1 qj,2 kj,1 kj,2 vj,1 vj,2 
+qi ki vi ai 
+Multi-head Attention 
+qj kj vj aj 
+CSE 156 NLP 
+7 Pretraining
+The Transformer Decoder 
+Output Probabilities Softmax 
+Linear 
+Add & Norm 
+Repeat for number  
+• The Transformer Decoder is a stack of  
+of encoder blocks 
+Transformer Decoder Blocks. 
+• Each Block consists of: 
+• Masked Multi-head Self-attention 
+• Add & Norm 
+• Feed-Forward 
+• Add & Norm 
++ 
+Feed-Forward 
+Add & Norm 
+Masked Multi-head Attention 
+Block 
+Position Embedding Input Embeddings 
+Inputs 
+CSE 156 NLP 
+8 Pretraining
+The Transformer Encoder • The Transformer Decoder 
+Output Probabilities Softmax 
+Linear 
+Add & Norm 
+constrains to unidirectional 
+Repeat for number  
+of encoder blocks 
+context, as for language  
+models. 
+• What if we want bidirectional 
+context, like in a bidirectional  
+RNN? 
+• We use Transformer Encoder —  
+Feed-Forward 
+Add & Norm 
+Multi-head 
+Attention 
+Block 
+the ONLY difference is that we  remove the masking in self attention. 
+No masks! 
++ 
+Position Embedding Input Embeddings 
+Encoder Inputs 
+CSE 156 NLP 
+9 Pretraining
+The Transformer Encoder-Decoder 
+• More on Encoder-Decoder models will be  
+introduced in the next lecture! 
+• Right now we only need to know that it processes the  source sentence with a bidirectional model  
+(Encoder) and generates the target with a  
+wt1+2, . . . 
+unidirectional model (Decoder). 
+• The Transformer Decoder is modified to perform  cross-attention to the output of the Encoder. w1, . . . ,wt1 
+wt1+1, . . . ,wt2 
+CSE 156 NLP 
+10 Pretraining
+Cross-Attention 
+• 11 
+Add & Norm 
+Feed-Forward 
+Add & Norm 
+Multi-head 
+Attention 
+Block 
++ + 
+Position Embedding 
+Input Embeddings 
+Encoder Inputs 
+Add & Norm 
+Feed-Forward 
+Add & Norm 
+Masked Multi-head 
+Attention 
+K V Q 
+Add & Norm 
+Masked Multi-head 
+Attention 
+Block 
+Position Embedding Input Embeddings 
+Decoder Inputs 
+Linear 
+Softmax 
+Output Probabilities 
+CSE 156 NLP 
+11 Pretraining
+Cross-Attention Details  
+• Self-attention: queries, keys, and values come from the same source. • Cross-Attention: keys and values are from Encoder (like a memory); queries are  from Decoder. 
+h1, …, h hi ∈ ℝd 
+• Let be output vectors from the Transformer encoder, . 1, …, zi ∈ ℝd 
+• Let be input vectors from the Transformer decoder, . • Keys and values from the encoder: 
+• • 
+ki = WK hi vi = WV hi 
+• Queries are drawn from the decoder: 
+• 
+CSE 156 NLP 
+qi = WQ zi 
+12 Pretraining
+The Revolutionary Impact of Transformers 
+• Almost all current-day leading language models use Transformer building blocks. • E.g., GPT1/2/3/4, T5, Llama 1/2, BERT, … almost anything we can name • Transformer-based models dominate nearly all NLP leaderboards. 
+• Since Transformer has been popularized in  
+language applications, computer vision also  
+adapted Transformers, e.g., Vision  
+Transformers. 
+[Khan et al., 2021] 
+What’s next after  
+Transformers? 
+CSE 156 NLP 
+13 Pretraining
+Transformer types  
+and examples  
+https://magazine.sebastianraschka.com/p/understanding-encoder-and-decoder 
+CSE 156 NLP 
+14 Pretraining
+Pretraining 
+CSE 156 NLP 15 Pretraining
+Consider the the task of Sentiment Analysis 
+Food Review: “I recently had the pleasure of dining at Fusion Bites, and the  
+experience was nothing short of spectacular. The menu boasts an exciting  blend of global flavors, and each dish is a masterpiece in its own right.” 
+Say that we are given a dataset of 100K food reviews with sentiment labels,  how do we train a model to perform sentiment analysis over unseen food  reviews? 
+We can directly train a randomly initialized model to take in food  review texts and output “positive” or “negative” sentiment labels. 
+CSE 156 NLP 16 Pretraining
+Overview: The Paradigm Shift 
+Training Set (Dev) 
+Train Development Set  
+slow Classic Deep Learning 
+(Dev) 
+Validation Set (Val) Validate 
+Test Set (Test) Test 
+Lecture 10 
+CSE 156 NLP 17 Pretraining
+Consider the the task of Sentiment Analysis 
+Food Review: “I recently had the pleasure of dining at Fusion Bites, and the  
+experience was nothing short of spectacular. The menu boasts an exciting  blend of global flavors, and each dish is a masterpiece in its own right.” Movie Review: "The narrative unfolds with a steady pace, showcasing a  
+blend of various elements. While the performances are competent, and the  cinematography captures the essence of the story, the overall impact falls  somewhere in the middle." 
+
+If we are instead given movie reviews to classify, can we use the same system  trained from food reviews to predict the sentiment? 
+May NOT generalize well due to distributional shift! 
+CSE 156 NLP 
+18 Pretraining
+Lots of Information in Raw Texts 
+The dish was a symphony of flavors, with each bite delivering a harmonious blend  
+of sweet and savory notes that left my taste buds in a state of culinary __________. 
+euphoria 
+
+The dish fell short of expectations, as the flavors lacked depth and the texture was  letdown 
+disappointingly bland, leaving me with a sense of culinary __________. 
+Overall, the value I got from the two hours watching it was the sum total of the  
+popcorn and the drink. The movie was _______________. 
+disappointing 
+
+Despite a promising premise, the movie failed to live up to its potential, as the  
+plot felt disjointed, the characters lacked depth, and the pacing left me  disengaged, resulting in a rather __________ cinematic experience. 
+amazing 
+
+CSE 156 NLP 
+19 Pretraining
+Lots of Information in Raw Texts 
+Verb watching I went to Hawaii for snorkeling, hiking, and whale __________. 
+Preposition over I walked across the street, checking for traffic ________ my shoulders. 
+Commonsense knife 
+I use __________ and fork to eat steak. 
+Time 1933 
+Ruth Bader Ginsburg was born in __________. 
+Location Seattle 
+University of Washington is located at __________, Washington. 
+I was thinking about the sequence that goes 1, 1, 2, 3, 5, 8, 13, 21, ______.  
+Math 34 Chemistry oxygen 
+Sugar is composed of carbon, hydrogen, and __________. 
+… 
+CSE 156 NLP 
+20 Pretraining
+How to Harvest Underlying Patterns, Structures, and  Semantic Knowledge from Raw Texts? 
+• Say that we are given a dataset of 100K food reviews with sentiment  labels, how do we train a model to perform sentiment analysis  over unseen food reviews? 
+Pre-training! (aka self-supervised learning)  
+CSE 156 NLP 
+21 Pretraining
+Overview: The Paradigm Shift Training Set (Dev) 
+Classic Deep Learning 
+Train Development Set  
+slow 
+(Dev) 
+Validation Set (Val) Validate 
+Test Set (Test) Test 
+Pre-training Set (Pre) 
+Development Set  (Dev) 
+Test Set (Test) 
+Pre-train 
+slow 
+Fine 
+Test fast Tune 
+Since 2018 (Elmo) 
+CSE 156 NLP 22 Pretraining
+Overview: The Paradigm Shift Training Set (Dev) 
+Classic Deep Learning 
+Train Development Set  
+slow 
+(Dev) 
+Validation Set (Val) Validate 
+Test Set (Test) Test 
+Pre-training Set (Pre) 
+Development Set  (Dev) 
+Test Set (Test) 
+Pre-training Set (Pre) 
+Pre-train 
+slow 
+Pre-train 
+slow 
+Fine 
+Test fast Tune 
+Since 2018 (Elmo) Since 2020 (GPT-3) 
+Test Set (Test) 
+In-Context Learning (Zero-shot Learning) 
+Test 
+CSE 156 NLP 23 Pretraining
+Self-supervised Pre-training for Learning Underlying  Patterns, Structures, and Semantic Knowledge 
+• Pre-training through language modeling [Dai  
+and Le, 2015] 
+• Model , the probability  
+Pθ(wt|w1:t−1) 
+distribution of the next word given previous  contexts. 
+• There’s lots of (English) data for this! E.g.,  books, websites. 
+• Self-supervised training of a neural  network to perform the language modeling  task with massive raw text data. 
+• Save the network parameters to reuse later. 
+are composed of tiny water droplet EOS 
+Decoder 
+(Transformers, LSTM, …) 
+Clouds are composed of tiny water droplet 
+CSE 156 NLP 24 Pretraining
+Pretraining 
+• Evolution tree 
+• Until Apr 2023 
+Yang et al. "Harnessing the power of llms  in practice: A survey on chatgpt and  beyond." ACM Transactions on  
+Knowledge Discovery from Data 18, no. 6  (2024): 1-32. 
+GLM-4 (Jun 2024) now is  decoder only too
+CSE 156 NLP 25 Pretraining 
+Pre-training Data 
+• Ideally, we want high-quality data for pre-training. 
+• High-quality: natural, clean, informative, and diverse; 
+• Books, Wikipedia, news, scientific papers; 
+• High quality data eventually runs out.  
+• In practice, internet is the most viable option for data. 
+• In the digital era, the web is the go-to place for general domain human knowledge; • It is massive and unlikely to grow slower than computing resources* 
+• Publicly available* 
+* Are these claim still true these days? Questionable. 
+Lecture 10
+CSE 156 NLP 26 Pretraining 
+Pre-training Data 
+• Web data is plentiful, but can be challenging to work with. • Data is noisy, dirty, and biased 
+• Recency bias / Demographic biases /Language biases 
+• Web is much more dynamic than static HTML pages 
+• CSS, JavaScript, interactivity, etc. 
+• Responsive design 
+• Many HTML pages involves 20+ secondary URLs, iframes, etc. CSE 156 NLP 27 Pretraining
+Pre-training Data 
+• Web data is plentiful, but can be challenging to work with. • What counts as content? 
+• Ads, recommendation, navigation, etc. 
+• Multimedia: images, videos, tables, etc. 
+• HTML? What if you want to train a code language model? 
+• Spam? 
+• Copyright and usage constraints can get extremely complicated • Data is contaminated with auto-generated text 
+• Not just from LLM usage, but also tons of templated text. 
+• Training on synthetic data can lead to language model collapse (Seddik et al 2024). 
+Seddik et al. "How bad is training on synthetic data? a statistical analysis of language model collapse." arXiv preprint arXiv:2404.05090  (2024).
+CSE 156 NLP 28 Pretraining 
+Pre-training Data 
+• The Web Data Pipeline 
+• Content is posted to the web. 
+• Webcrawlers identify and download a portion of this content. 
+• The data is filtered and cleaned. 
+• Content extraction from webpages is a well-studied problem in industry.  • ClueWeb22 Content Extraction Pipeline from Bing 
+
+Lecture 10
+CSE595 - Natural Language Processing - Fall 2024 
+CSE 156 NLP 29 Pretraining 
+Pre-training Data 
+• General Idea 
+• Start with a set of seed websites 
+• Explore outward by following all hyperlinks on the webpage. • Systematically download each webpage and extract the raw text. 
+
+Lecture 10
+CSE595 - Natural Language Processing - Fall 2024 
+CSE 156 NLP 30 Pretraining 
+Pre-training Data 
+• How to harvest a large number of seed URLs efficiently? • How to select “high quality” URLs and skip over “bad” URLs • Some cases are clear cut: spammy, unsafe, NSFW, etc. • Some are hard to detect or up to debate: toxic and biased content • How to keep the crawl up-to-date  
+• Given a fixed compute budget each month, is it better to crawl new  webpages, or recrawl old ones that might’ve changed? 
+Lecture 10
+CSE595 - Natural Language Processing - Fall 2024 
+CSE 156 NLP 31 Pretraining 
+Pre-training Data 
+• WebText: The pretraining corpus of GPT-2 
+• Harvested all outbound links from Reddit 
+• These are all URLs that were manually mentioned by humans • Only kept links that received >= 3 “Karma” 
+• Karma is basically your reputation on Reddit. 
+• Deduplicated URLs 
+• Total 45 million URLs deduped to 8 million web pages 
+• Pros 
+• Easy to harvest a relatively large set of URLs from a common resource • Human votes on the URLs 
+• Cons 
+• Since then, Reddit has forbid the use of its data for pretraining LLMs • Limited scale, and Reddit is not super clean 
+Lecture 10
+CSE595 - Natural Language Processing - Fall 2024 
+CSE 156 NLP 32 Pretraining 
+Pre-training Data 
+• Rule-based filtering in C4 (pre-training dataset for T5) 
+• Start from Common Crawl’s official extracted texts from HTML 
+• Only keep text lines ended with a terminal punctuation mark 
+• Discard pages with fewer than 5 sentences 
+• Only keep lines with at least 3 words 
+• Remove any line with the word “Javascript” 
+• Remove any page 
+• with any words in a toxic word dictionary 
+• with the phrase “lorem ipsum” 
+• With “{“ 
+• De-dup at three-sentence span level 
+Lecture 10
+CSE 156 NLP 33 Pretraining 
+Pre-training Data 
+• The diversity of pre-training data matters 
+• Meta Llama-3 team (2024) performed extensive experiments to  evaluate the best ways of mixing data from different sources in our  final pretraining dataset. 
+• Llama-3 final data mix:  
+• 50% of tokens corresponding to general knowledge; 
+• 25% of mathematical and reasoning tokens; 
+• 17% code tokens; 
+• 8% multilingual tokens. 
+Dubey, Abhimanyu, Abhinav Jauhri, Abhinav Pandey, Abhishek Kadian, Ahmad Al-Dahle, Aiesha Letman, Akhil Mathur et al. "The  llama 3 herd of models." arXiv preprint arXiv:2407.21783 (2024).
+Lecture 10 
+CSE 156 NLP 34 Pretraining 
+Pre-training Data 
+• The diversity of pre-training data matters 
+Zhao et al. "A survey of large language models." arXiv preprint arXiv:2303.18223 (2023).
+Lecture 10 
+CSE 156 NLP 35 Pretraining 
+Overview: The Paradigm Shift Training Set (Dev) 
+Classic Deep Learning 
+Train Development Set  
+slow 
+(Dev) 
+Validation Set (Val) Validate 
+Test Set (Test) Test 
+Pre-training Set (Pre) 
+Development Set  (Dev) 
+Test Set (Test) 
+slowSince 2018 (Elmo)
+Pre-train 
+Fine 
+Test fast 
+Tune 
+Pre-training Set (Pre) Test Set (Test) 
+Lecture 10 
+Pre-train 
+slow 
+In-Context Learning (Zero-shot Learning) 
+Since 2020 (GPT-3) 
+Test 
+CSE 156 NLP 36 Pretraining 
+Supervised Fine-tuning for Specific Tasks 
+Step 1: 
+Pre-training 
+are composed of tiny water droplet EOS 
+Decoder 
+(Transformers, LSTM, …) 
+Clouds are composed of tiny water droplet Abundant data; learn general language 
+Step 2: 
+Fine-tuning 
+or 
+Decoder 
+(Transformers, LSTM, …) 
+… the movie was … 
+Limited data; adapt to the task 
+CSE 156 NLP 
+37 Pretraining
+The Stochastic Gradient Descent Angle 
+Why should pre-training and then fine-tuning help? 
+̂θ 
+• Providing parameters by approximating the pre-training loss,  
+min θ 
+ℒpretrain(θ) 
+. 
+̂θ 
+• Then, starting with parameters , approximating fine-tuning loss,  
+min θ 
+ℒfinetune(θ) 
+. 
+̂θ 
+• Stochastic gradient descent sticks (relatively) close to during fine tuning. 
+̂θ 
+• So, maybe the fine-tuning local minima near tend to generalize well! ̂θ 
+• And/or, maybe the gradients of fine-tuning loss near propagate nicely! CSE 156 NLP 38 Pretraining
+Advantages of Pre-training & Fine-tuning 
+• Leveraging rich underlying information from abundant raw texts. • Reducing the reliance of task-specific labeled data that is difficult or  costly to obtain. 
+• Initializing model parameters for more generalizable NLP  applications. 
+• Saving training cost by providing a reusable model checkpoints. • Providing robust representation of language contexts. 
+CSE 156 NLP 
+39 Pretraining
+Caveat: Catastrophic Forgetting 
+• Sequentially pre-train then fine-tune may result in catastrophic  forgetting, meaning that while adapting to the new fine-tuning  task, the model may lose previously learned information. 
+• However, as modern language models are becoming larger in size and  are pre-trained on massive raw text, they do encode tremendous  amount of valuable information. Thus, it’s generally still more helpful  to leverage information learned from the pre-training stage, than  training on a task completely from scratch. 
+CSE 156 NLP 
+40 Pretraining
+Access Code: 425037
+Parameter-Efficient Fine-tuning 
+Instead of updating all parameters in the massive neural network (up to many  billions of parameters), can we make fine-tuning more efficient? 
+or Decoder 
+or Decoder 
+(Transformers, LSTM, …) 
+… the movie was … 
+Full Fine-tuning 
+Updating all parameters  
+CSE 156 NLP 
+(Transformers, LSTM, …) 
+… the movie was … 
+Parameter-Efficient Fine-tuning 
+Updating a few existing or new parameters 42 Pretraining
+Parameter-Efficient Fine-tuning or 
+Decoder 
+(Transformers, LSTM, …) 
+… the movie was … 
+Parameter-Efficient Fine-tuning 
+Updating a few existing or new parameters CSE 156 NLP 
+• More efficient at fine-tuning &  inference time 
+• Less overfitting by keeping the  majority of parameters learned  during pre-training  
+43 Pretraining
+Adapter 
+[Houlsby, 2019] 
+Updated
+• Injecting new layers (randomly initialized) into the original network,  keeping other parameters frozen 
+CSE 156 NLP 44 Pretraining 
+Prefix-tuning [Li and Liang, 2021] 
+• Learning a small continuous  task-specific vector (called  
+the prefix) to each  
+Frozen
+transformer block, while  keeping the pre-trained LM  frozen 
+• With 0.1% parameter is  comparable to full fine 
+tuning, especially under low data regime 
+Updated 
+CSE 156 NLP 45 Pretraining 
+Prompt-tuning [Lester et al., 2021] • Contemporaneous work to  
+prefix-tuning 
+• A single “soft prompt”  representation that is  
+prepended to the  
+embedded input on the  encoder side 
+• Require fewer parameters  than prefix-tuning 
+Updated 
+Frozen
+CSE 156 NLP 46 Pretraining 
+Low-Rank Adaptation (LoRA) • Main Idea: learn a low-rank “diff”  
+between the pre-trained and fine-tuned  weight matrices. 
+• ~10,000x less fine-tuned parameters,  ~3x GPU memory requirement. 
+• On-par or better than fine-tuning all  model parameters in model quality on  RoBERTa, DeBERTa, GPT-2, and GPT-3. • Easier to learn than prefix-tuning. 
+[Hu et al., 2021] 
+B ∈ ℝd×r 
+A ∈ ℝr×k
+where rank r ≪ min(d, k) Frozen Updated 
+W0 + ΔW = W0 + BA 
+CSE 156 NLP 47 Pretraining 
+• Main Idea: learn a low-rank “diff” between the pre-trained and fine tuned weight matrices. 
+• ~10,000x less fine-tuned parameters, ~3x GPU memory requirement. • On-par or better than fine-tuning all model parameters in model  quality on RoBERTa, DeBERTa, GPT-2, and GPT-3. 
+• Easier to learn than prefix-tuning. 
+CSE 156 NLP 48 Pretraining
+3 Pre-training Paradigms/Architectures• E.g., BERT, RoBERTa, DeBERTa, … 
+Encoder • 
+• Autoencoder model • Masked language modeling 
+Encoder-Decoder• E.g., T5, BART, … • seq2seq model 
+• E.g., GPT, GPT2, GPT3, … 
+Decoder 
+• Autoregressive model 
+• Left-to-right language modeling 
+CSE 156 NLP 49 Pretraining 
+3 Pre-training Paradigms/Architectures 
+Encoder • Bidirectional; can condition  on the future context 
+• 
+Encoder-Decoder• Map two sequences of  different length together
+Decoder• Language modeling; can only  condition on the past context 
+CSE 156 NLP 50 Pretraining 
+Encoder: Training Objective 
+[Devlin et al., 2018] 
+• How to encode information from both bidirectional contexts? • General Idea: text reconstruction! 
+• Your time is [MASK], so don't [MASK] it living someone else's life.  
+ limited waste  
+ dogma living  
+Don't be trapped by [MASK], which is [MASK] with the results of  other [MASK]'s thinking. — [MASK] Jobs 
+people Steve  
+went store, 
+h1, …, h 
+I [M] to the [M] 
+h1, …, h = Encoder( 1,…, ) 
+∼ + 
+~ 
+Only add loss terms from the masked tokens. If is the masked version  ( |~)
+of , we’re learning . Called Masked Language model (MLM). 
+CSE 156 NLP 51 Pretraining 
+Bidirectional Encoder Encoder: BERT Representations from Transformers [Devlin et al., 2018]
+• 2 Pre-training Objectives: 
+• Masked LM: Choose a random 15% of tokens to  predict. 
+[Predict these!] to went 
+store 
+• For each chosen token: 
+WHY keeping some tokens unchanged? There’s no [MASK] during fine-tuning time! 
+• Replace it with [MASK] 80% of the time. 
+• Replace it with a random token 10% of the time. • Leave it unchanged 10% of the time (but still  predict it!). 
+• Next Sentence Prediction (NSP) 
+• 50% of the time two adjacent sentences are in the  correct order. 
+• This actually hurts model learning based on later  work! 
+Encoder 
+I pizza to the [M] 
+[Replaced] [Not replaced] [Masked] 
+CSE 156 NLP 52 Pretraining 
+Bidirectional Encoder Encoder: BERT Representations from Transformers [Devlin et al., 2018]
+• 2 Pre-training Objectives: 
+• Masked LM: Choose a random 15% of tokens to  predict. 
+[Predict these!] to went 
+store 
+• For each chosen token: 
+WHY keeping some tokens unchanged? There’s no [MASK] during fine-tuning time! 
+• Replace it with [MASK] 80% of the time. 
+• Replace it with a random token 10% of the time. • Leave it unchanged 10% of the time (but still  predict it!). 
+• Next Sentence Prediction (NSP) 
+• 50% of the time two adjacent sentences are in the  correct order. 
+• This actually hurts model learning based on later  work! 
+Encoder 
+I pizza to the [M] 
+[Replaced] [Not replaced] [Masked] 
+CSE 156 NLP 53 Pretraining 
+Bidirectional Encoder Encoder: BERT Representations from Transformers [Devlin et al., 2018]
+• 2 Pre-training Objectives: 
+• Masked LM: Choose a random 15% of tokens to  predict. 
+• For each chosen token: 
+• Replace it with [MASK] 80% of the time. 
+• Replace it with a random token 10% of the time. • Leave it unchanged 10% of the time (but still  
+[Predict these!] to went 
+Encoder 
+store 
+predict it!). 
+• Next Sentence Prediction (NSP) 
+• 50% of the time two adjacent sentences are in the  correct order. 
+• This actually hurts model learning based on later  work! 
+I pizza to the [M] 
+[Replaced] [Not replaced] [Masked] 
+CSE 156 NLP 54 Pretraining 
+Bidirectional Encoder Encoder: BERT Representations from Transformers [Devlin et al., 2018] 
+• 2 Pre-training Objectives: Special token added to the  
+Special token to  
+Final embedding is the sum of  
+• Masked LM: Choose a random 15% of tokens to predict. 
+beginning of each input sequence • For each chosen token: 
+separate sentence A/B 
+all three!
+• Replace it with [MASK] 80% of the time. 
+• Replace it with a random token 10% of the time. 
+• Leave it unchanged 10% of the time (but still predict it!). • Next Sentence Prediction (NSP) 
+• 50% of the time two adjacent sentences are in the correct order. • This actually hurts model learning based on later work! 
+Learned embedding to every token indicating  
+whether it belongs to sentence A or sentence B Position of the token in the entire sequence 
+CSE 156 NLP 55 Pretraining 
+Bidirectional Encoder Encoder: BERT Representations from Transformers [Devlin et al., 2018] 
+• SOTA at the time on a wide range of tasks after fine-tuning! • QQP: Quora Question Pairs (detect paraphrase questions) 
+• QNLI: natural language inference over question answering data 
+• SST-2: sentiment analysis 
+• CoLA: corpus of linguistic acceptability (detect whether sentences are grammatical.) • STS-B: semantic textual similarity 
+• MRPC: microsoft paraphrase corpus 
+• RTE: a small natural language inference corpus
+CSE 156 NLP 56 Pretraining 
+Bidirectional Encoder Encoder: BERT Representations from Transformers [Devlin et al., 2018] 
+• Two Sizes of Models 
+SWAG 
+• Base: 110M, 4 Cloud TPUs, 4 days • Large: 340M, 16 Cloud TPUs, 4 days • Both models can be fine-tuned with  single GPU 
+• The larger the better! 
+• MLM converges slower than Left-to Right at the beginning, but out performers it eventually
+CSE 156 NLP 57 Pretraining 
+Encoder: RoBERTa 
+[Liu et al., 2019] 
+• Original BERT is significantly undertrained! 
+• More data (16G => 160G) • Pre-train for longer 
+• Bigger batches 
+All around better than BERT!
+• Removing the next sentence prediction (NSP) objective 
+• Training on longer sequences 
+• Dynamic masking, randomly masking out different tokens 
+• A larger byte-level BPE vocabulary containing 50K sub-word units CSE 156 NLP 58 Pretraining 
+Encoder: Other Variations of BERT 
+• ALBERT [Lan et al., 2020]: incorporates two parameter reduction techniques that lift  the major obstacles in scaling pre-trained models  
+• DeBERTa [He et al., 2021]: decoding-enhanced BERT with disentangled attention  • SpanBERT [Joshi et al., 2019]: masking contiguous spans of words makes a harder,  more useful pre-training task 
+• ELECTRA [Clark et al., 2020]: corrupts texts by replacing some tokens with  plausible alternatives sampled from a small generator network, then train a discriminative  model that predicts whether each token in the corrupted input was replaced by a generator  sample or not. 
+• DistilBERT [Sanh et al., 2019]: distilled version of BERT that’s 40% smaller • TinyBERT [Jiao et al., 2019]: distill BERT for both pre-training & fine-tuning • … 
+CSE 156 NLP 59 Pretraining
+Encoder: Pros & Cons 
+• Consider both left and right context 
+• Capture intricate contextual relationships 
+• Not good at generating open-text from left-to right, one token at a time 
+make/brew/craft 
+Encoder 
+Iroh goes to [M] tasty tea 
+goes to make tasty tea END Decoder
+Iroh goes to make tasty tea 
+CSE 156 NLP 60 Pretraining 
+3 Pre-training Paradigms/Architectures 
+Encoder • Bidirectional; can condition  on the future context 
+• 
+Encoder-Decoder• Map two sequences of  different length together
+Decoder• Language modeling; can only  condition on the past context 
+CSE 156 NLP 61 Pretraining 
+Encoder-Decoder: Architecture 
+• Moving towards open-text  
+generation… 
+• Encoder builds a representation of  the source and gives it to the decoder • Decoder uses the source  
+representation to generate the target  sentence 
+wt1+2, . . . 
+wt1+1, . . . ,wt2 
+w1, . . . ,wt1 
+• The encoder portion benefits from  bidirectional context; the decoder portion is used to train the whole  model through language modeling 
+h1, . . . , ht1= Encoder(w1, . . . ,wt1) 
+ht1+1, . . . , ht2= Decoder(wt1+1, . . . ,wt2, h1, . . . , ht1) yi ∼ Ahi + b, i > t 
+[Raffel et al., 2018]
+CSE 156 NLP 62 Pretraining 
+Encoder-Decoder: An Machine Translation Example 
+• Moving towards open-text  
+generation… 
+• Encoder builds a representation of  
+the source and gives it to the decoder 
+• Decoder uses the source  
+representation to generate the target  
+sentence 
+• The encoder portion benefits from  
+bidirectional context; the decoder 
+portion is used to train the whole  
+model through language modeling 
+[Lena Viota Blog]
+CSE 156 NLP 63 Pretraining 
+Encoder-Decoder: Training Objective 
+• T5 [Raffel et al., 2018] 
+• Text span corruption (denoising): Replace  
+different-length spans from the input with  
+unique placeholders (e.g., <extra_id_0>);  
+decode out the masked spans. 
+• Done during text preprocessing: training  
+uses language modeling objective at the  
+decoder side 
+CSE 156 NLP 64 Pretraining
+Encoder-Decoder: T5 [Raffel et al., 2018]
+• Encoder-decoders works better than decoders 
+• Span corruption (denoising) objective works better than language modeling CSE 156 NLP 65 Pretraining 
+Encoder-Decoder: T5 [Raffel et al., 2018] 
+• Text-to-Text: convert NLP tasks into input/output text sequences • Dataset: Colossal Clean Crawled Corpus (C4), 750G text data! • Various Sized Models: 
+• Base (222M) 
+• Small (60M) 
+• Large (770M) 
+• 3B 
+• 11B 
+• Achieved SOTA with scaling & purity of data 
+[Google Blog]
+CSE 156 NLP 66 Pretraining 
+Encoder-Decoder: Pros & Cons 
+• A nice middle ground between leveraging bidirectional contexts and open-text generation 
+• Good for multi-task fine-tuning 
+• Require more text wrangling 
+• Harder to train 
+• Less flexible for natural language generation
+CSE 156 NLP 67 Pretraining 
+3 Pre-training Paradigms/Architectures 
+Encoder • Bidirectional; can condition  on the future context 
+• 
+Encoder-Decoder• Map two sequences of  different length together
+Decoder• Language modeling; can only  condition on the past context 
+CSE 156 NLP 68 Pretraining 
+Decoder: Training Objective • Many most famous generative LLMs are decoder 
+only 
+• e.g., GPT1/2/3/4, Llama1/2 
+• Language modeling! Natural to be used for open text generation 
+• Conditional LM:  
+p(wt|w1, . . . ,wt−1, x) 
+• Conditioned on a source context to generate  
+x 
+from left-to-right 
+• Can be fine-tuned for natural language generation  (NLG) tasks, e.g., dialogue, summarization. 
+w2,w3,w4,w5,w6 w1,w2,w3,w4,w5 
+A, b
+h1, . . . , h5 
+CSE 156 NLP 69 Pretraining 
+Decoder: Training Objective • Customizing the pre-trained model for  
+downstream tasks: 
+• Add a linear layer on top of the last  hidden layer to make it a classifier! • During fine-tuning, trained the randomly  initialized linear layer, along with all  parameters in the neural net. 
+or 
+Linear 
+A, b 
+h1, . . . , h5 
+Is Santa Claus real figure?
+CSE 156 NLP 70 Pretraining 
+Decoder: GPT Generative Pre-trained Transformer [Radford et al., 2018]
+CSE 156 NLP 71 Pretraining 
+How to pick a proper architecture for a given task? 
+• Right now decoder-only models seem to dominant the field at the  moment 
+• e.g., GPT1/2/3/4, Mistral, Llama1/2 
+• T5 (seq2seq) works well with multi-tasking 
+• Picking the best model architecture remains an open research  question! 
+CSE 156 NLP 72 Pretraining
+CSE 156 NLP 
+Reasoning? 
+73 Pretraining
+StructChem:  
+
+Structured Chemistry Reasoning with Large Language  Models 
+Siru Ouyang Zhuosheng  
+Zhang Bing Yan Xuan Liu Yejin Choi Jiawei Han Lianhui Qin
+
+Previous chemistry tasks
+
+Previous chemistry tasks 
+Direct question-answering;  
+Lack complex reasoning process 
+
+
+Unifying textual and molecule representation via multi-tasking.
+Mol-Instructions: A Large-Scale Biomolecular Instruction Dataset for Large Language Models. Fang et al., arXiv 2306. 
+
+
+How will chemicals  
+behave at equilibrium? 
+Kc 
+ means the equilibrium  
+constant. 
+Understanding of this certain  
+chemistry reaction. 
+SciBench: Evaluating College-Level Scientific Problem-Solving Abilities of Large Language Models Wang et al., arXiv 2023.
+
+For the given reaction: 
+N2(g) + O2(g) → N2O(g) 
+The equilibrium constant K_c is defined as follows: Kc=[N2O] ([N2] × [O2]) 
+[N2] [O2] [N2O] 
+where , , and are the molar  N2 O2 N2O 
+concentrations of , , and respectively at  equilibrium. 
+[N2] =2.80 × 10−4mol 
+2.00L= 1.40 × 10−4M 
+Kc 
+Then plug these values into the formula for : Kc=(1.00 × 10−2) 
+1.40 × 10−4 × 1.25 × 10−5= 5.71 × 106K
+
+For the given reaction: 
+N2(g) + O2(g) → N2O(g) 
+The equilibrium constant K_c is defined as follows: Kc=[N2O] ([N2] × [O2]) 
+[N2] [O2] [N2O] 
+where , , and are the molar  N2 O2 N2O 
+concentrations of , , and respectively at  equilibrium. 
+[N2] =2.80 × 10−4mol 
+2.00L= 1.40 × 10−4M 
+Kc 
+Then plug these values into the formula for : Kc=(1.00 × 10−2) 
+1.40 × 10−4 × 1.25 × 10−5= 5.71 × 106K
+
+For the given reaction: 
+N2(g) + O2(g) → N2O(g) 
+The equilibrium constant K_c is defined as follows: Kc=[N2O] 
+([N2] × [O2]) 
+[N2] [O2] [N2O] 
+where , , and are the molar  N2 O2 N2O 
+concentrations of , , and respectively at  equilibrium. 
+[N2] =2.80 × 10−4mol 
+2.00L= 1.40 × 10−4M 
+Kc 
+Then plug these values into the formula for : 
+Equation balancing 
+Correct format of theorem 
+2N2(g) + O2(g) → 2N2O(g) 
+Kc=[N2O]a 
+([N2]b × [O2]c) 
+Kc=(1.00 × 10−2) 
+1.40 × 10−4 × 1.25 × 10−5= 5.71 × 106K 
+Plug-ins
+Kc=(1.00 × 10−2)2 
+(1.40 × 10−4)2 × 1.25 × 10−5= 4.08 × 108K 

@@ -1,0 +1,323 @@
+
+CSE 156 Natural Language Processing 
+16 - Multimodality 
+Instructor: Lianhui Qin 
+1 Slides adapted from Yejin Choi
+Logistic 
+• Participation survey results will be released next week. 
+• A detailed final project rubric is coming soon (already included in mid-report  requirements). 
+• Course recordings are available. 
+• https://podcast.ucsd.edu/watch/wi25/cse156_a00 
+• Piazza/Media Gallery
+CSE 156 NLP 2 
+Assignment Grades (50% of Total Course Grade) 
+The total assignment grade is computed as: 
+0.2 × (highest score) + 0.15 × (second highest) + 0.1 × (third highest) + 0.05 × (fourth highest). 
+You've done a great job so far!
+CSE 156 NLP 3 
+Let’s do course evaluation! 
+• 43/122 (35.25%) students completed the evaluation! � • 70% , +1 bonus points for everyone. 
+• 80% +2 extra credit 
+• 90% +3 extra credit • No grade curving. 
+Check out email from  noreply-evals@ucsd.edu
+CSE 156 NLP 4 
+MultiModal Systems 
+• Dictionary Definition: “characterized by several different modes of activity  or occurrence” 
+• Multimodal AI: System that integrates various data types and sensory  inputs (images, videos, audio, other sensory information) to create a  unified representation or understanding. 
+A person throwing  
+a frisbee. 
+Text Image Video Audio 
+• This lecture: will focus on image & text only. 
+CSE 156 NLP 5 Multimodality
+Examples of Multimodal Tasks 
+CSE 156 NLP 6 Multimodality
+Multimodal Language Models How to train these models? CSE 156 NLP 7
+Multimodality 
+Multimodal Learning (for Image & Text) 
+Image & Text Alignment Image + Text Understanding Text to Image Generation 
+A person throwing  
+a frisbee. 
+What is the object 
+being thrown? 
+A person throwing  
+a frisbee. 
+A frisbee 
+Note: For simplicity, we will cover image and text as the two modalities. CSE 156 NLP 8
+Multimodality 
+Steps of Image-Text Alignment 
+
+A person throwing  a frisbee. 
+?? 
+Image 
+Encoder 
+fv 
+Word2Vec, BERT, … 
+Text 
+Encoder 
+ft 
+xv xt 
+• Step1: Encode different  modalities into shared  
+embeddings.  
+• Step2: Bring modalities that encode same meaning into  the same space. 
+CSE 156 NLP 9
+Multimodality 
+Vision Encoder: Convolutional Neural Networks 
+• CNNs: Extract features that encode spatial and temporal relationships in image with  convolution operations. 
+• Pooling: Reduce dimensionality of the convoluted features for efficient computation • De facto model for Image Classification  CSE 156 NLP 10 Multimodality
+The Vision Transformer: Image Encoding via Patch Tokens 
+• Tokenize images as sequence of “patches”  
+of fixed size (e.g. 16 x16 px) 
+• Resize images to same size to ensure same  number of patches in training. 
+• Image Size 224*224px = 14*14 patches • Use the same transformer encoder  architecture in NLP 
+• Add [CLS] token for classification tasks. • Add positional embedding to be aware of  location of patches.  
+• Less image-specific inductive bias than  CNNs that encodes translation equivariance  and locality. 
+Task: Image Classification 
+CSE 156 NLP 11 Multimodality
+Steps of Image-Text Alignment CNNs: ResNet  
+
+A person throwing  a frisbee. 
+Transformers: ViT,  … 
+Image 
+Encoder 
+fv 
+Word2Vec, BERT, … 
+Text 
+Encoder 
+ft 
+xv 
+Fusion xt 
+• Step1: Encode different  modalities into shared  
+embeddings.  
+• Step2: Bring modalities that encode same meaning into  the same space. 
+CSE 156 NLP 12
+Multimodality 
+Step2: Learning to Align Embeddings 
+
+A person throwing  a frisbee. 
+xv ∈ ℝv 
+Linear 
+Projection 
+xt ∈ ℝt 
+Linear 
+Projection 
+zv= WvxTv + bTv ∈ ℝm 
+• How to define the  
+loss function? 
+zt = WtxTt + bTt ∈ ℝm 
+CSE 156 NLP 13
+Multimodality 
+Contrastive Learning 
+• Contrastive Learning: learn the shared embedding by contrasting positive and  negative pairs of instances 
+• Positives: matched image-text pairs 
+• Negatives: image-text from mismatched instances  
+• Idea: Positive instances should be closer together in a learned embedding space, while  Negatives should be farther apart. 
+A person throwing a frisbee 
+A cup sitting next to a laptop. 
+… 
+A person riding a snowboard. 
+CSE 156 NLP 14
+Multimodality 
+Contrastive Learning 
+• Adjust similarity of learned embeddings with a distance metric. 
+• Euclidean Distance • Cosine Similarity 
+cos(u, v) =u ⋅ v ||u||2 || v ||2 
+Why preferred over Euclidean Distance? 
+zv zv z+t z+− 
+• sim( , z_t) >> sim(z_v, z_t )  
+A person throwing a frisbee 
+zv 
+z+t 
+z+− 
+A person riding a snowboard. 
+CSE 156 NLP 15
+Multimodality 
+Contrastive Learning 
+• Adjust similarity of learned embeddings with a distance metric. 
+• Euclidean Distance • Cosine Similarity 
+cos(u, v) =u ⋅ v ||u||2 || v ||2 
+zv zv z+t z+− z+v zt z−v zt 
+• sim( , z_t) >> sim(z_v, z_t ) + sim( , z_t) >> sim(z_v, z_t )  
+A person throwing a frisbee 
+zt 
+z+vz−v 
+CSE 156 NLP 16
+Multimodality 
+A Different View of Contrastive Learning 
+• What does this look like? 
+• Classification over distance embedding! 
+Positive Negative 
+Negative 
+A person throwing a frisbee 
+A cup sitting next to a laptop. … 
+A person riding a snowboard. 
+CSE 156 NLP 17 Multimodality
+CLIP: Contrastive Language-Image Pre-Training Use the [CLS] token  
+Aligned 
+Image, Text  
+Pairs 
+Objective: given a batch of N (image, text) pairs,  
+predict which of the N × N possible (image, text)  
+pairings across a batch actually occurred. 
+Minimize  
+InfoNCE Loss 
+CSE 156 NLP 18
+for transformers Multimodality 
+CLIP: Contrastive Language-Image Pre-Training 
+Create Prompt to  
+Class Labels  
+for more context 
+N-Classes Prediction 
+Select the best  
+text prompt that gives the  
+highest similarity. 
+CSE 156 NLP 19
+Enables Open Vocabulary  Classification class labels. 
+Multimodality 
+Image-Text Training Dataset 
+• Previous Image-Text Pre-Training Dataset 
+• Leverage filtered, carefully annotated dataset for academic research  • 10M was considered as “large-scale” pre-training 
+CSE 156 NLP 20 Multimodality
+Image-Text Training Dataset 
+• Previous Image-Text Pre-Training Dataset 
+• Leverage filtered, carefully annotated dataset for academic research  • 10M was considered as “large-scale” pre-training 
+• CLIP: 400M Image-Text pairs crawled from web 
+• Unfiltered, highly varied, and highly noisy data 
+• Covers much more diverse concepts and images 
+CSE 156 NLP 21 Multimodality
+Text Supervision Enables Strong Zero-Shot Performance  in Vision Tasks 
+• Large-Scale Training on Noisy Image 
+Text Data -> Great Zero-Shot  
+Performance 
+• Zero-Shot CLIP is competitive with  fully supervised Resnet50 in Image  Classification 
+• Linear Probe: Train linear layer on  top of fixed, pre-trained  
+embeddings. 
+CSE 156 NLP 22
+Zero-Shot CLIP 
+Outperforms 
+Supervised baseline. 
+Supervised baseline Outperforms CLIP. 
+Multimodality 
+CLIP vs Unimodal Visual Representations 
+• Linear Probe performance v.s.  
+computer vision models  
+• CLIP provides visual representations  
+with better transferability  
+Trained Vision Models 
+CSE 156 NLP 23
+Multimodality 
+CLIP vs Unimodal Visual Representations 
+• CLIP features are more robust  
+to task shift compared to  
+vision models pre-trained on  
+ImageNet. 
+• Higher transfer scores of linear  
+probes trained on CLIP over  
+models with similar ImageNet  
+performance. 
+CSE 156 NLP 24 Multimodality
+Why is CLIP so good? 
+• Learning visual representation with  
+language supervision: learns visual  
+concepts much more efficiently. 
+• Exploited Scalability benefits: 
+• 256 GPUS + 4096 batch size with 2  
+weeks of training 
+• Large batch size in Contrastive Learning 
+• More negatives to compare against. 
+• More challenging task to distinguish  
+the negatives, requiring fine-grained  
+visual recognition. 
+CSE 156 NLP 25 Multimodality
+Understanding Multimodal Capabilites of CLIP 
+•Aligns images to semantic  
+concepts thanks to language  
+supervision, rather than just  
+aligning texture and shapes. 
+•Case where multimodal learning  
+was a big breakthrough for  
+learning high-quality, unimodal  
+representations (image) 
+CSE 156 NLP 26
+Multimodality 
+Vision and Language Systems 
+Image & Text Alignment Image to Text Understanding Text to Image Generation 
+A person throwing  
+a frisbee. 
+What is the object 
+being thrown? 
+A person throwing  
+a frisbee. 
+A frisbee 
+Note: For simplicity, we will cover image and text as the two modalities. CSE 156 NLP 27
+Multimodality 
+CLIP for Visual Reasoning? 
+• Supports retrieval but not capable of generation 
+• VQA Prompt: “question: [question text] answer: [answer text]” • Note: CLIP is trained to align images with alt-text captions • Not suitable for reasoning tasks such as question answering. Near Chance Performance 
+CSE 156 NLP 28
+Multimodality 
+Image and Text Understanding 
+
+What is the object being thrown? 
+CLIP, ViT, ResNet 
+Image 
+Encoder 
+fv 
+Word2Vec, BERT, … 
+Text 
+Encoder 
+ft 
+xv xt 
+Fusion Model A frisbee ℒ 
+CSE 156 NLP 29
+Multimodality 
+Embedding vs Fusion Trade Offs  
+Cosine Distance 
+Perhaps, need  stronger fusion  mechanism  for complex  
+reasoning tasks Enough for  image-text  
+matching 
+CLIP 
+CSE 156 NLP 30
+Multimodality 
+Vision and Language Fusion 
+• Is there a good model that can efficiently encode interactions among  the sequence? 
+• Hint: What models have been covered in this class? 
+Fusion Model? 
+xt xv 
+CSE 156 NLP 31
+Multimodality 
+VILT: The Vision-Language Transformer xt xv 
+CSE 156 NLP 32
+Multimodality 
+VILT: The Vision-Language Transformer ℒ = ℒITM + ℒMLM + ℒWPA 
+ITM 
+- Classify 0/1 if image and text are  matching 
+- Negative pairs are sampled randomly  every batch 
+MLM  
+- Predict the masked text  tokens 
+- Without masking the images 
+WPA  
+- Align image patches and word  tokens together. 
+CSE 156 NLP 33
+Multimodality 
+The “Vision-Language” BERTs 
+• Before Vision Transformer: Tokenize images with detected objects  and region-wise ConvNet features instead of raw image patches. 
+• Intuition: We understand images based on interaction among objects,  so let’s directly encode this inductive bias to the model.  
+Models: 
+LXMERT 
+ViLBERT, 
+VLBERT, 
+UNITER 
+OSCAR 
+CSE 156 NLP 34
+Multimodality 
+Potential Pre-Training Objectives 
+• Masked Language Modeling (MLM): Predict labels of masked text  tokens. 
+• Image-Text Matching (ITM): Classify if image-text pairs are aligned • Word Region/Patch Alignment (WPA): Align image regions/patches with  text tokens 
+CSE 156 NLP 35 Multimodality
+Potential Pre-Training Objectives 
+• Masked Language Modeling (MLM): Predict labels of masked text  tokens. 
+• Image-Text Matching (ITM): Classify if image-text pairs are aligned • Word Region/Patch Alignment (WPA): Align image regions/patches with  text tokens 
+• Image to Text Generation (ITG): Generate the next text tokens. • Masked Image Modeling (MIM): Predict/Regress masked image patches • Region Prediction: Predict object labels of provided regions. • Many more…. 
+CSE 156 NLP 36 Multimodality
+Thank you
+CSE 156 NLP 37 

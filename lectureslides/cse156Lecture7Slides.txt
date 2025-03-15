@@ -1,0 +1,934 @@
+
+CSE 156 Natural Language Processing 
+7 - Transformer
+Instructor: Lianhui Qin 
+Slides adapted from Yejin Choi 
+1 
+Additional Sources
+• Google 
+• Youtube 
+• ChatGPT 
+CSE 156 NLP 2 Transformer 
+Recap 
+CSE 156 NLP 3 Transformer
+Self-Attention: Basic Concepts 
+[Lena Viota Blog] 
+Query: asking for  
+• Query-Key-Value Attention 
+information 
+• 
+Key: saying that it  
+has some information 
+Value: giving the  
+information
+CSE 156 NLP 4 Transformer 
+Self-Attention: Analogy
+CSE 156 NLP 5 Transformer 
+Self-Attention: Walk-through 
+output input 
+b1 b2 b3 b4 
+Self-Attention Layer 
+a1 a2 a3 a4 The cat sat on
+The cat sat on the mat. 
+CSE 156 NLP 6 Transformer 
+How to compute α? α = q ⋅ k 
+q . k 
+α 
+W 
+tanh 
+q k + 
+WQ 
+a1 
+The on
+WK a4 
+We’ll use this! 
+WQ a1 
+WK a4 
+Method 1 (most common): Dot product Method 2: Additive 
+7 
+CSE 156 NLP Transformer 
+How to compute α? 
+α = q ⋅ k 
+α = q ⋅ k 
+q . k 
+q . k 
+WQ 
+WQ 
+a1 
+a1 
+The on
+WK WK 
+a4 
+a4 
+Method 1 (most common): Dot product 
+8 
+CSE 156 NLP Transformer 
+Self-Attention: Walk-through 
+α1,2 = q1 ⋅ k2 α1,3 = q1 ⋅ k3 α1,4 = q1 ⋅ k attention scores 4 0
+q1 query q1 = WQ a1 
+k key 2 
+k2 = WK a2 
+k3 
+k4 
+k3 = WK a3 
+k4 = WK a4 
+a1 a2 a3 a4 
+9 
+CSE 156 NLP Transformer 
+Attention score=[1.0, 0.0, 1.0, 0.5] 
+1.0
+α1,1 = q1 ⋅ k1 α1,2 = q1 ⋅ k2 α1,3 = q1 ⋅ k3 α1,4 = q1 ⋅ k4 
+query q1 q1 = WQ a1 
+k3 
+k1 
+k1 = WK a1 
+k key 2 
+k2 = WK a2 
+k4 
+k3 = WK a3 
+k4 = WK a4 
+a1 a2 a3 a4 
+10 
+CSE 156 NLP Transformer 
+α′1,i =eα1,i 
+∑jeα1,j 
+′1,1 
+α′1,2 α′1,3 α′ 
+α 1,4 Attention score=[1.0, 0.0, 1.0, 0.5]
+Softmax 
+α1,1 = q1 ⋅ k1 α1,2 = q1 ⋅ k2 α1,3 = q1 ⋅ k3 α1,4 = q1 ⋅ k4 
+query q1 q1 = WQ a1 
+k3 
+k1 
+k1 = WK a1 
+k key 2 
+k2 = WK a2 
+k4 
+k3 = WK a3 
+k4 = WK a4 
+a1 a2 a3 a4 
+11 
+CSE 156 NLP Transformer 
+a1 
+Denote how relevant each token are to ! Use attention scores to extract information 
+′1,1 
+α′1,2 α′1,3 α′ 
+α 1,4 Attention score=[1.0, 0.0, 1.0, 0.5] 
+Softmax 
+α1,1 = q1 ⋅ k1 α1,2 = q1 ⋅ k2 α1,3 = q1 ⋅ k3 α1,4 = q1 ⋅ k4 
+query q1 q1 = WQ a1 
+k3 
+k1 
+k1 = WK a1 
+k key 2 
+k2 = WK a2 
+k4 
+k3 = WK a3 
+k4 = WK a4 
+a1 a2 a3 a4 
+The cat sat on
+12 
+CSE 156 NLP Transformer 
+Use attention scores to extract information 
+b1 =[0.668,0.774]b1 
+b1 = ∑iα′1,i vi 
+′1,1 × × × × α′1,2 α′1,3 α′ 
+α 1,4 q1 k2 k4 k3 k1 
+v1 
+v1 = WV a1 
+v2 
+v2 = WV a2 
+v3 
+v3 = WV a3 
+v4 
+v4 = WV a4 
+a1 a2 a3 a4 
+13 
+CSE 156 NLP Transformer 
+Use attention scores to extract information 
+b1 = ∑iα′1,i vi 
+b1 
+′1,1 × × × × α′1,2 α′1,3 α′ 
+α 1,4 α′1,i 
+The higher the attention score is, the  
+ai b1 
+more important is to composing  
+q1 k2 k4 k3 k1 
+v1 
+v1 = WV a1 
+v2 
+v2 = WV a2 
+v3 
+v3 = WV a3 
+v4 
+v4 = WV a4 
+a1 a2 a3 a4 
+14
+CSE 156 NLP Transformer 
+Repeat the same calculation for all a to obtain  i bi 
+b2 
+b2 = ∑iα′2,i vi 
+′2,1 α′2,4 
+α′2,2 α′ 
+α × × 2,3 × × 
+q1 k2 k4 k3 k1 v1 v2 v3 v4 q3 q4 q2 
+a1 a2 a3 a4 
+15
+CSE 156 NLP Transformer 
+Repeat the same calculation for all a to obtain  i bi 
+b2 
+b2 = ∑iα′2,i vi 
+′2,1 α′2,4 
+α′2,2 α′ 
+α × × 2,3 × × bi 
+Note that the computation of can be  
+parallelized, as they are independent to  
+each other 
+q1 k2 k4 k3 k1 v1 v2 v3 v4 q3 q4 q2 
+a1 a2 a3 a4 
+16
+CSE 156 NLP Transformer 
+Parallelize the computation! QKV 
+Q I 
+q1 a1 
+q2 a2 
+= WQ 
+q3 a3 
+q4 a4 
+K I 
+k1 a1 
+k2 a2 
+= WK 
+k3 a3 
+k4 a4 
+17
+V I 
+v1 a1 
+v2 a2 
+= WV 
+v3 a3 
+v4 a4 
+CSE 156 NLP Transformer 
+Parallelize the computation! Attention Scores α1,1 
+α1,2 
+α1,3 
+α1,4 
+q1 
+k4 = 
+k1 
+k2 
+k3 
+′1,1 
+α′1,2 α′1,3 α′ 
+α 1,4 q1 k2 k4 k3 k1 
+v1 
+v1 = WV a1 
+v2 
+v2 = WV a2 
+v3 
+v3 = WV a3 
+v4 
+v4 = WV a4 
+a1 a2 a3 a4 
+18
+CSE 156 NLP Transformer 
+Parallelize the computation! Attention Scores 
+α1,1 
+α1,2 
+α1,3 
+α1,4 
+q1 
+k4 = 
+19
+k1 
+k2 
+k3 
+CSE 156 NLP Transformer 
+Parallelize the computation! 
+Attention Scores 
+A′ AQKT 
+′1,1 
+α′1,2 
+α′1,3 
+α′1,4 
+q1 
+α α1,1 α1,2 α1,3 α1,4 
+α′2,1 α′3,1 α′4,1 
+α′2,2 α′3,2 α′4,2 
+α′2,3 α′3,3 α′4,3 
+α′2,4 α′3,4 α′4,4 
+α2,1 α2,2 α2,3 α2,4 q2 
+= 
+α3,1 α3,2 α3,3 α3,4 q3 α4,1 α4,2 α4,3 α4,4 q4 
+20
+k1 k2 k3 k4 
+CSE 156 NLP Transformer 
+α′1,1 v1 α′1,2 v2 + α′1,3 v3 + α′1,4 v4 + b1α′1,1v1 
+= 
+α′1,2 
+v2 
+v3 
+v4 
+α′1,3 
+α′1,4 
+Parallelize the computation! 
+Weighted Sum of Values with Attention Scores 
+21
+CSE 156 NLP Transformer 
+Parallelize the computation! 
+O V A′ 
+b1 b2 
+= 
+α′1,1 α′1,2 α′1,3 α′1,4 α′2,1 α′2,2 α′2,3 α′2,4 
+v1 v2 
+α′3,1 α′3,2 α′3,3 α′ b3 3,4 α′4,1 α′4,2 α′4,3 α′4,4 b4 
+v3 v4 
+Parallelize the computation! 
+Weighted Sum of Values with Attention Scores 
+22
+CSE 156 NLP Transformer 
+Limitations and Solutions of Self-Attention 
+No Sequence Order No Nonlinearities Looking into the Future 
+Position Embedding Adding Feed-forward Networks Masking 23
+CSE 156 NLP Transformer 
+No Sequence Order → Position Embedding 
+• All tokens in an input sequence are simultaneously fed into self-attention  blocks. Thus, there’s no difference between tokens at different positions. • We lose the position info! 
+• How do we bring the position info back, just like in RNNs? 
+• Representing each sequence index as a vector: p , for i ∈ ℝd i ∈ {1,...,n} 
+• How to incorporate the position info into the self-attention blocks? • Just add the to the input:  
+pi âi = ai + pi 
+• where is the embedding of the word at index . 
+ai i 
+• In deep self-attention networks, we do this at the first layer. • We can also concatenate and , but more commonly we add them. 
+ai pi 
+24
+qi ki vi 
+pi ai + 
+CSE 156 NLP Transformer 
+Learnable Position Representation Vectors  pi 
+Learned absolute position representations: contains learnable parameters. p ∈ ℝd×n pi 
+• Learn a matrix , and let each be a column of that matrix 
+• Most systems use this method. 
+• Flexibility: each position gets to be learned to fit the data • Cannot extrapolate to indices outside 1,...,n. 
+Sometimes people try more flexible representations of position: 
+• Relative linear position attention [Shaw et al., 2018] 
+• Dependency syntax-based position [Wang et al., 2019] 
+25
+CSE 156 NLP Transformer 
+Limitations and Solutions of Self-Attention 
+• →→→ Masking 
+No Sequence Order Position Embedding No Nonlinearities Adding Feed-forward Networks Looking into the Future Masking 
+26
+CSE 156 NLP Transformer 
+No Nonlinearities → Add Feed-forward Networks 
+c1 
+There are no element-wise nonlinearities in  
+c2 cn … 
+self-attention; stacking more self-attention  layers just re-averages value vectors. 
+FF FF … FF Self-Attention 
+b1 
+… 
+b2 bn 
+Easy Fix: add a feed-forward network  to post-process each output vector. 
+27
+FF FF … FF Self-Attention 
+a1 a2 an … 
+CSE 156 NLP Transformer 
+Limitations and Solutions of Self-Attention 
+
+No Sequence Order Position Embedding No Nonlinearities Adding Feed-forward Networks Looking into the Future Masking 
+28
+CSE 156 NLP Transformer 
+Looking into the Future → Masking We can look at these (not  
+• In decoders (language modeling,  producing the next word given  
+αi,j = {qi kj, j ≤ i −∞, j > i 
+greyed out) words [START] 
+previous context), we need to  
+The 
+chef 
+who 
+ensure we don’t peek at the future. • At every time-step, we could  change the set of keys and queries  to include only past words.  
+(Inefficient!) 
+• To enable parallelization, we mask  out attention to future words by  setting attention scores to −∞. 
+For encoding  these words 
+29
+[START] The 
+chef 
+who 
+
+
+CSE 156 NLP Transformer 
+Now We Put Things Together 
+• Self-attention 
+• The basic computation 
+Output 
+Probabilities 
+Softmax 
+Linear 
+• Positional Encoding 
+Repeat for number  
+• Specify the sequence order 
+• Nonlinearities 
+• Adding a feed-forward network at the  output of the self-attention block 
+• Masking 
+of encoder blocksBlock 
+Feed-Forward 
+Masked Self-Attention 
++ 
+• Parallelize operations (looking at all tokens)  while not leaking info from the future 
+30
+Position Embedding Input Embeddings 
+Inputs 
+CSE 156 NLP Transformer 
+The Transformer Decoder • A Transformer decoder is what we use  
+Output Probabilities Softmax 
+Linear 
+Add & Norm 
+to build systems like language models. 
+Repeat for number  
+of encoder blocks 
+• It’s a lot like our minimal self-attention  
+architecture, but with a few more  
+components. 
+• Residual connection (“Add”) 
+• Layer normalization (“Norm") 
++ 
+• Replace self-attention with multi-head  
+self-attention. 
+31
+Feed-Forward 
+Add & Norm 
+Masked Multi-head Attention 
+Position Embedding Input Embeddings 
+Inputs 
+CSE 156 NLP Transformer 
+Why Multi-head Attention? 
+What if we want to look in  
+multiple places in the  
+sentence at once? 
+?Instead of having only one  
+attention head, we can create  
+multiple sets of (queries, keys,  
+values) independent from each  
+other! 
+
+32
+CSE 156 NLP Transformer 
+Multi-Head Attention: Walk-through 
+bi,1 
+α′i,i,1 α′i,j,1 
+× × 
+qi,1 qi,2 ki,1 ki,2 vi,1 vi,2 qj,1 qj,2 kj,1 kj,2 vj,1 vj,2 
+qi ki vi ai 
+qj kj vj 
+aj Multi-head Attention 33
+CSE 156 NLP Transformer 
+bi,2 
+α′i,i,2 α′i,j,2 
+× × 
+qi,1 qi,2 ki,1 ki,2 vi,1 vi,2 qj,1 qj,2 kj,1 kj,2 vj,1 vj,2 
+qi ki vi ai 
+qj kj vj 
+aj Multi-head Attention 34
+CSE 156 NLP Transformer 
+bi,1 
+b = Y i 
+bi,2 
+Some  
+transformation 
+Concatenation 
+× × × × 
+qi,1 qi,2 ki,1 ki,2 vi,1 vi,2 qj,1 qj,2 kj,1 kj,2 vj,1 vj,2 
+qi ki vi ai 
+Multi-head Attention 35
+qj kj vj aj 
+CSE 156 NLP Transformer 
+Recall the Matrices Form of Self-Attention 
+Q = I WQ K = I WK V = I WV 
+A = Q KT 
+I = {a , where 1, . . . , an} ∈ ℝn×d ai ∈ ℝd WQ, WK, WV ∈ ℝd×d 
+Q,K, V ∈ ℝn×d 
+A′, A ∈ ℝn×n A = I WQ (I WK)T = I WQ WTK IT A′= softmax(A) 
+O = A′V 
+36
+O ∈ ℝn×d 
+CSE 156 NLP Transformer 
+Multi-head Attention in Matrices 
+• Multiple attention “heads” can be defined via multiple matrices 
+WQ, WK, WV 
+WlQ, WlK, WlV ∈ ℝd×dh h l 
+• Let , where is the number of attention heads, and ranges  h 
+from 1 to . 
+• Each attention head performs attention independently: 
+Ol = softmax(I WlQ WlKT IT) I WlV 
+• 
+Ol 
+• Concatenating different from different attention heads. 
+O = [O1; . . . ; On] Y Y ∈ ℝd×d 
+• , where  
+37
+CSE 156 NLP Transformer 
+The Matrices Form of Multi-head Attention 
+Ql = I WlQ 
+Kl = I WlK 
+Vl = I WlV 
+Al = Ql KlT 
+Al′= softmax(Al) 
+I = {a , where 1, . . . , an} ∈ ℝn×d ai ∈ ℝd WlQ, WlK, WlV ∈ ℝd×dh 
+Ql,Kl, Vl ∈ ℝn×dh 
+? 
+Al′, Al ∈ ℝn×n 
+? 
+Ol = Al′Vl 
+O = [O1; . . . ; Oh] Y 
+Ol ∈ ℝn×dh 
+? 
+Y ∈ ℝd×d 
+[O1; . . . ; Oh] ∈ ℝn×d ? O ∈ ℝn×d 
+? 
+38
+Dimensions? 
+CSE 156 NLP Transformer 
+The Matrices Form of Multi-head Attention 
+Ql = I WlQ 
+Kl = I WlK 
+Vl = I WlV 
+Al = Ql KlT 
+Al′= softmax(Al) Ol = Al′Vl 
+O = [O1; . . . ; Oh] Y 
+I = {a , where 1, . . . , an} ∈ ℝn×d ai ∈ ℝd WlQ, WlK, WlV ∈ ℝd×dh 
+Ql,Kl, Vl ∈ ℝn×dh 
+Al′, Al ∈ ℝn×n 
+Dimensions? 
+Ol ∈ ℝn×dh 
+Y ∈ ℝd×d 
+[O1; . . . ; Oh] ∈ ℝn×d 
+O ∈ ℝn×d 
+39
+CSE 156 NLP Transformer 
+Multi-head Attention is Computationally Efficient • Even though we compute many attention heads, it’s not more costly. 
+h 
+I WQ ∈ ℝn×d ℝn×h×dh 
+• We compute , and then reshape to . 
+• 40 
+• Likewise for and . 
+I WK I WV 
+ℝh×n×dh 
+• Then we transpose to ; now the head axis is like a batch axis. • Almost everything else is identical. All we need to do is to reshape the tensors! 
+I WQ WTK IT I WQ WTK IT = 
+h sets of attention scores! ∈ ℝh×n×n 
+Softmax( ) I WV = O′Y = O ∈ ℝn×d 
+I WQ WTK IT 
+40
+CSE 156 NLP Transformer 
+Scaled Dot Product [Vaswani et al., 2017] 
+• “Scaled Dot Product” attention aids in training. 
+• When dimensionality becomes large, dot products between vectors tend to become  
+d 
+large. 
+• Because of this, inputs to the softmax function can be large, making the gradients small. 
+• Instead of the self-attention function we’ve  
+seen: 
+Ol = softmax(I WlQ WlKT IT) I WlV • 
+Ol = softmax(I WlQ WlKT IT 
+) I WlV 
+• We divide the attention scores by , to  
+d/h 
+stop the scores from becoming large just as a  d/h 
+function of (the dimensionality divided by the  number of heads). 
+41
+d/h 
+CSE 156 NLP Transformer 
+The Transformer Decoder 
+Output Probabilities Softmax 
+Linear 
+Add & Norm 
+Repeat for number  
+of encoder blocks 
+• Now that we’ve replaced self-attention  
+with multi-head self-attention, we’ll go  
+through two optimization tricks: 
+• Residual connection (“Add”) 
+• Layer normalization (“Norm”) 
++ 
+42
+Feed-Forward 
+Add & Norm 
+Masked Multi-head Attention 
+Block 
+Position Embedding Input Embeddings 
+Inputs 
+CSE 156 NLP Transformer 
+The Transformer Encoder: Residual connections [He et al., 2016] Residual Connections [He et al., 2016] 
+• Residual connections are a trick to help models train better. 
+X(i) = Layer(X(i−1)) i 
+• Instead of (where represents the layer) 
+X(i−1) Layer X(i) 
+X(i) = X(i−1) + Layer(X(i−1)) 
+• We let (so we only have to learn “the residual” from  the previous layer) 
+X(i−1) Layer X(i) + 
+• Gradient is great through the residual connection; it’s 1! 
+• Bias towards the identity function! 43
+[no residuals] [residuals] 
+[Loss landscape visualization, Li et al., 2018, on a ResNet] 
+CSE 156 NLP Transformer 
+Layer Normalization • Layer normalization is a trick to help models train faster. 
+[Ba et al., 2016] 
+• Idea: cut down on uninformative variation in hidden vector values by normalizing to unit mean  and standard deviation within each layer. 
+• LayerNorm’s success may be due to its normalizing gradients [Xu et al., 2019] • Let be an individual (word) vector in the model. 
+∈ ℝ 
+= ∑=1∈ ℝ 
+• Let ; this is the mean; . 
+=1∑=1( − )2∈ ℝ 
+•Let ; this is the standard deviation; . 
+• Let and be learned “gain” and “bias” parameters. (Can omit!) 
+∈ ℝ ∈ ℝ 
+• Then layer normalization computes: 
+Normalize by  scalar mean and  variance 
+output = −+∗ + • 
+44
+Modulate by learned  element-wise gain and  bias 
+CSE 156 NLP Transformer 
+The Transformer Decoder 
+Output Probabilities Softmax 
+Linear 
+Add & Norm 
+Repeat for number  
+• The Transformer Decoder is a stack of  
+of encoder blocks 
+Transformer Decoder Blocks. 
+• Each Block consists of: 
+• Masked Multi-head Self-attention 
+• Add & Norm 
+• Feed-Forward 
+• Add & Norm 
++ 
+45
+Feed-Forward 
+Add & Norm 
+Masked Multi-head Attention 
+Block 
+Position Embedding Input Embeddings 
+Inputs 
+CSE 156 NLP Transformer 
+The Transformer Encoder • The Transformer Decoder 
+Output Probabilities Softmax 
+Linear 
+Add & Norm 
+constrains to unidirectional 
+Repeat for number  
+of encoder blocks 
+context, as for language  
+models. 
+• What if we want bidirectional 
+context, like in a bidirectional  
+RNN? 
+• We use Transformer Encoder —  
+Feed-Forward 
+Add & Norm 
+Multi-head 
+Attention 
+Block 
+the ONLY difference is that we  remove the masking in self attention. 
+No masks! 46
++ 
+Position Embedding Input Embeddings 
+Encoder Inputs 
+CSE 156 NLP Transformer 
+The Transformer Encoder-Decoder 
+• More on Encoder-Decoder models will be  
+introduced in the next lecture! 
+• Right now we only need to know that it processes the  source sentence with a bidirectional model  
+(Encoder) and generates the target with a  
+wt1+2, . . . 
+unidirectional model (Decoder). 
+• The Transformer Decoder is modified to perform  cross-attention to the output of the Encoder. w1, . . . ,wt1 
+47
+wt1+1, . . . ,wt2 
+CSE 156 NLP Transformer 
+Cross-Attention 
+• 48 
+Add & Norm 
+Feed-Forward 
+Add & Norm 
+Multi-head 
+Attention 
+Block 
++ + 
+Position Embedding 
+Input Embeddings 
+Encoder Inputs 
+48
+Add & Norm 
+Feed-Forward 
+Add & Norm 
+Masked Multi-head 
+Attention 
+K V Q 
+Add & Norm 
+Masked Multi-head 
+Attention 
+Block 
+Position Embedding Input Embeddings 
+Decoder Inputs 
+Linear 
+Softmax 
+Output Probabilities 
+CSE 156 NLP Transformer 
+Cross-Attention Details  
+• Self-attention: queries, keys, and values come from the same source. • Cross-Attention: keys and values are from Encoder (like a memory); queries are  from Decoder. 
+h1, …, h hi ∈ ℝd 
+• Let be output vectors from the Transformer encoder, . 1, …, zi ∈ ℝd 
+• Let be input vectors from the Transformer decoder, . • Keys and values from the encoder: 
+• • 
+ki = WK hi vi = WV hi 
+• Queries are drawn from the decoder: 
+• 
+qi = WQ zi 
+49
+CSE 156 NLP Transformer 
+The Revolutionary Impact of Transformers 
+• Almost all current-day leading language models use Transformer building blocks. • E.g., GPT1/2/3/4, T5, Llama 1/2, BERT, … almost anything we can name • Transformer-based models dominate nearly all NLP leaderboards. 
+• Since Transformer has been popularized in  
+language applications, computer vision also  
+adapted Transformers, e.g., Vision  
+Transformers. 
+[Khan et al., 2021] 
+What’s next after  
+Transformers? 
+50
+CSE 156 NLP Transformer 
+Consider the the task of Sentiment Analysis 
+Food Review: “I recently had the pleasure of dining at Fusion Bites, and the  
+Say that we are given a dataset of 100K food reviews with sentiment labels,  experience was nothing short of spectacular. The menu boasts an exciting  
+how do we train a model to perform sentiment analysis over unseen food  blend of global flavors, and each dish is a masterpiece in its own right.” reviews? 
+
+We can directly train a randomly initialized model to take in food  review texts and output “positive” or “negative” sentiment labels. 
+CSE 156 NLP 51 Transformer
+Overview: The Paradigm Shift 
+Training Set (Dev) 
+Train Development Set  
+slow Classic Deep Learning 
+(Dev) 
+Validation Set (Val) Validate 
+Test Set (Test) Test 
+Lecture 10 
+CSE 156 NLP 52 Transformer
+Consider the the task of Sentiment Analysis 
+Food Review: “I recently had the pleasure of dining at Fusion Bites, and the  
+If we are instead given movie reviews to classify, can we use the same system  experience was nothing short of spectacular. The menu boasts an exciting  
+trained from food reviews to predict the sentiment? 
+blend of global flavors, and each dish is a masterpiece in its own right.” 
+Movie Review: "The narrative unfolds with a steady pace, showcasing a  
+blend of various elements. While the performances are competent, and the  
+cinematography captures the essence of the story, the overall impact falls  
+somewhere in the middle." 
+
+May NOT generalize well due to distributional shift! 
+53
+CSE 156 NLP Transformer 
+Lots of Information in Raw Texts 
+The dish was a symphony of flavors, with each bite delivering a harmonious blend  
+of sweet and savory notes that left my taste buds in a state of culinary __________. 
+euphoria 
+
+The dish fell short of expectations, as the flavors lacked depth and the texture was  letdown 
+disappointingly bland, leaving me with a sense of culinary __________. 
+
+Overall, the value I got from the two hours watching it was the sum total of the  
+popcorn and the drink. The movie was _______________. 
+disappointing 
+
+Despite a promising premise, the movie failed to live up to its potential, as the  
+plot felt disjointed, the characters lacked depth, and the pacing left me  
+disengaged, resulting in a rather __________ cinematic experience. 
+amazing 
+
+54
+CSE 156 NLP Transformer 
+Lots of Information in Raw Texts 
+Verb watching I went to Hawaii for snorkeling, hiking, and whale __________. 
+Preposition over 
+I walked across the street, checking for traffic ________ my shoulders. 
+Commonsense knife 
+I use __________ and fork to eat steak. 
+Time 1933 
+Ruth Bader Ginsburg was born in __________. 
+Location Seattle 
+University of Washington is located at __________, Washington. 
+
+I was thinking about the sequence that goes 1, 1, 2, 3, 5, 8, 13, 21, ______.  
+Math 34 
+Chemistry oxygen 
+Sugar is composed of carbon, hydrogen, and __________. 
+… 
+55
+CSE 156 NLP Transformer 
+How to Harvest Underlying Patterns, Structures, and  Semantic Knowledge from Raw Texts? 
+• Say that we are given a dataset of 100K food reviews with sentiment  labels, how do we train a model to perform sentiment analysis  over unseen food reviews? 
+Pre-training! (aka self-supervised learning)  
+56
+CSE 156 NLP Transformer 
+Overview: The Paradigm Shift Training Set (Dev) 
+Classic Deep Learning 
+Train Development Set  
+slow 
+(Dev) 
+Validation Set (Val) Validate 
+Test Set (Test) Test 
+Pre-training Set (Pre) 
+Development Set  (Dev) 
+Test Set (Test) 
+Pre-train 
+slow 
+Fine 
+Test fast Tune 
+Since 2018 (Elmo) 
+CSE 156 NLP 57 Transformer
+Overview: The Paradigm Shift Training Set (Dev) 
+Classic Deep Learning 
+Train Development Set  
+slow 
+(Dev) 
+Validation Set (Val) Validate 
+Test Set (Test) Test 
+Pre-training Set (Pre) 
+Development Set  (Dev) 
+Test Set (Test) 
+Pre-training Set (Pre) 
+Pre-train 
+slow 
+Pre-train 
+slow 
+Fine 
+Test fast Tune 
+Since 2018 (Elmo) Since 2020 (GPT-3) 
+Test Set (Test) 
+In-Context Learning (Zero-shot Learning) 
+Test 
+CSE 156 NLP 58 Transformer
+Self-supervised Pre-training for Learning Underlying  Patterns, Structures, and Semantic Knowledge 
+• Pre-training through language modeling [Dai and Le, 2015] • Model , the probability distribution of the next word  
+Pθ(wt|w1:t−1) 
+given previous contexts. 
+are composed of tiny water droplet EOS 
+• There’s lots of (English) data for this! E.g., books, websites. 
+Decoder 
+• Self-supervised training of a neural network to perform the  
+(Transformers, LSTM, …) 
+language modeling task with massive raw text data. 
+• Save the network parameters to reuse later. 
+Clouds are composed of tiny water droplet 
+CSE 156 NLP 59 Transformer
+Pretraining 
+• Evolution tree 
+• Until Apr 2023 
+Yang et al. "Harnessing the power of llms  in practice: A survey on chatgpt and  beyond." ACM Transactions on  
+Knowledge Discovery from Data 18, no. 6  (2024): 1-32. 
+GLM-4 (Jun 2024) now is  decoder only too
+CSE 156 NLP 60 Transformer 
+Pre-training Data 
+• Ideally, we want high-quality data for pre-training. 
+• High-quality: natural, clean, informative, and diverse; 
+• Books, Wikipedia, news, scientific papers; 
+• High quality data eventually runs out.  
+• In practice, internet is the most viable option for data. 
+• In the digital era, the web is the go-to place for general domain human knowledge; • It is massive and unlikely to grow slower than computing resources* 
+• Publicly available* 
+* Are these claim still true these days? Questionable. 
+Lecture 10
+CSE 156 NLP 61 Transformer 
+Pre-training Data 
+• Web data is plentiful, but can be challenging to work with. • Data is noisy, dirty, and biased 
+• Recency bias / Demographic biases /Language biases 
+• Web is much more dynamic than static HTML pages 
+• CSS, JavaScript, interactivity, etc. 
+• Responsive design 
+• Many HTML pages involves 20+ secondary URLs, iframes, etc. 
+CSE 156 NLP 62 Transformer
+Pre-training Data 
+• Web data is plentiful, but can be challenging to work with. • What counts as content? 
+• Ads, recommendation, navigation, etc. 
+• Multimedia: images, videos, tables, etc. 
+• HTML? What if you want to train a code language model? 
+• Spam? 
+• Copyright and usage constraints can get extremely complicated • Data is contaminated with auto-generated text 
+• Not just from LLM usage, but also tons of templated text. 
+• Training on synthetic data can lead to language model collapse (Seddik et al 2024). 
+Seddik et al. "How bad is training on synthetic data? a statistical analysis of language model collapse." arXiv preprint arXiv:2404.05090  (2024).
+CSE 156 NLP 63 Transformer 
+Pre-training Data 
+• The Web Data Pipeline 
+• Content is posted to the web. 
+• Webcrawlers identify and download a portion of this content. 
+• The data is filtered and cleaned. 
+• Content extraction from webpages is a well-studied problem in  industry.  
+• ClueWeb22 Content Extraction Pipeline from Bing 
+
+Lecture 10
+CSE595 - Natural Language Processing - Fall 2024 
+DSC 190: Machine Learning with Few Labels Pretraining 
+Pre-training Data 
+• General Idea 
+• Start with a set of seed websites 
+• Explore outward by following all hyperlinks on the webpage. • Systematically download each webpage and extract the raw text. 
+
+Lecture 10
+CSE595 - Natural Language Processing - Fall 2024 
+DSC 190: Machine Learning with Few Labels Pretraining 
+Pre-training Data
+• How to harvest a large number of seed URLs efficiently? 
+• How to select “high quality” URLs and skip over “bad” URLs • Some cases are clear cut: spammy, unsafe, NSFW, etc. 
+• Some are hard to detect or up to debate: toxic and biased content 
+• How to keep the crawl up-to-date  
+• Given a fixed compute budget each month, is it better to crawl new webpages,  or recrawl old ones that might’ve changed? 
+Lecture 10 
+CSE595 - Natural Language Processing - Fall 2024 
+DSC 190: Machine Learning with Few Labels Pretraining 
+Pre-training Data
+• WebText: The pretraining corpus of GPT-2 • Harvested all outbound links from Reddit 
+• These are all URLs that were manually mentioned by humans • Only kept links that received >= 3 “Karma” 
+• Karma is basically your reputation on Reddit. 
+• Deduplicated URLs 
+• Total 45 million URLs deduped to 8 million web pages 
+• Pros 
+• Easy to harvest a relatively large set of URLs from a common resource • Human votes on the URLs 
+• Cons 
+• Since then, Reddit has forbid the use of its data for pretraining LLMs • Limited scale, and Reddit is not super clean 
+Lecture 10 
+CSE595 - Natural Language Processing - Fall 2024 
+DSC 190: Machine Learning with Few Labels Pretraining 
+Pre-training Data 
+• Rule-based filtering in C4 (pre-training dataset for T5) • Start from Common Crawl’s official extracted texts from HTML • Only keep text lines ended with a terminal punctuation mark • Discard pages with fewer than 5 sentences 
+• Only keep lines with at least 3 words 
+• Remove any line with the word “Javascript” 
+• Remove any page 
+• with any words in a toxic word dictionary 
+• with the phrase “lorem ipsum” 
+• With “{“ 
+• De-dup at three-sentence span level 
+Lecture 10
+DSC 190: Machine Learning with Few Labels Pretraining 
+Pre-training Data 
+• The diversity of pre-training data matters 
+• Meta Llama-3 team (2024) performed extensive experiments to evaluate the  best ways of mixing data from different sources in our final pretraining  dataset. 
+• Llama-3 final data mix:  
+• 50% of tokens corresponding to general knowledge; 
+• 25% of mathematical and reasoning tokens; 
+• 17% code tokens; 
+• 8% multilingual tokens. 
+Dubey, Abhimanyu, Abhinav Jauhri, Abhinav Pandey, Abhishek Kadian, Ahmad Al-Dahle, Aiesha Letman, Akhil Mathur et al. "The  llama 3 herd of models." arXiv preprint arXiv:2407.21783 (2024).
+Lecture 10 
+DSC 190: Machine Learning with Few Labels Pretraining 
+Pre-training Data 
+• The diversity of pre-training data matters 
+Zhao et al. "A survey of large language models." arXiv preprint arXiv:2303.18223 (2023).
+Lecture 10 
+DSC 190: Machine Learning with Few Labels Pretraining 
+Transformer types  
+and examples  
+https://magazine.sebastianraschka.com/p/understanding-encoder-and-decoder 
+71
+CSE 156 NLP Transformer 
+Thank you!
+CSE 156 NLP 72 Transformer 

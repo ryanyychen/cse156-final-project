@@ -1,0 +1,967 @@
+
+CSE 291: Large Model Reasoning 
+14 - Evaluation, Alignment 
+Instructor: Lianhui Qin 
+1 Slides adapted from Yejin Choi
+Types of text evaluation methods 
+Ref: They walked to the grocery store. 
+Gen: The woman went to the hardware store. 
+Content Overlap Metrics Model-based Metrics Human Evaluation 
+CSE 156 NLP 2
+Evaluation 
+Content Overlap Metrics 
+Ref: They walked to the grocery store. 
+Gen: The woman went to the hardware store. 
+• Compute a score that indicates the similarity between generated and gold-standard (often  human-written) text 
+• Fast and efficient; widely used (e.g. for MT and summarization) 
+• Dominant approach: N-gram overlap metrics 
+• e.g., BLEU, ROUGE, METEOR, CIDEr, etc. 
+CSE 156 NLP 3
+Evaluation 
+Content Overlap Metrics 
+• Dominant approach: N-gram overlap metrics 
+• e.g., BLEU, ROUGE, METEOR, CIDEr, etc. 
+• Not ideal even for less open-ended tasks - e.g., machine translation 
+• They get progressively much worse for more open-ended tasks 
+• Worse for summarization, as longer summaries are harder to measure • Much worse for dialogue (in how many ways can you respond to your friend?) • Much, much worse for story generation, which is also open-ended, but whose sequence  length can make it seem you're getting decent scores! 
+CSE 156 NLP 4
+Evaluation 
+A simple failure case 
+• N-gram overlap metrics have no concept of semantic relatedness! 
+Are you enjoying the 
+NLP class? 
+For sure! 
+Score: 
+False negative False positive 
+0.61 0.25 0.0 
+0.61 
+Yes for sure! Sure I do! 
+Yes! 
+No for sure... 
+CSE 156 NLP 5
+Evaluation 
+A more comprehensive failure analysis 
+• Higher n-gram overlap does not imply higher human score. 
+CSE 156 NLP 6
+Evaluation 
+Model-based metrics to capture more semantics 
+• Use learned representation of words and  
+sentences to compute semantic similarity  
+between generated and reference texts 
+• No more n-gram bottleneck: text units  
+are represented as embeddings! 
+• Even though embeddings are pre 
+trained, distance metrics used to measure  
+similarity can be fixed. 
+CSE 156 NLP 7
+Evaluation 
+Model-based metrics: Word distance functions 
+Vector Similarity 
+Embedding-based similarity for  
+semantic distance between text. 
+• Embedding Average (Liu et al., 2016)  
+• Vector Extrema (Liu et al., 2016) 
+• MEANT (Lo, 2017) 
+• YISI (Lo, 2019) 
+CSE 156 NLP 8
+Evaluation 
+Model-based metrics: Word distance functions 
+Vector Similarity 
+Embedding-based similarity for  
+semantic distance between text. 
+• Embedding Average (Liu et al., 2016)  
+• Vector Extrema (Liu et al., 2016) 
+• MEANT (Lo, 2017) 
+• YISI (Lo, 2019) 
+CSE 156 NLP 9
+Word Mover's 
+Distance 
+Measures the distance between  two sequences using word  
+embedding similarity matching. • (Kusner et al., 2015; Zhao et al., 2019) 
+Evaluation 
+Model-based metrics: Word distance functions 
+Word Mover's 
+Distance 
+Measures the distance between  
+two sequences using word  
+embedding similarity matching. 
+• (Kusner et al., 2015; Zhao et al., 2019) 
+BERTSCORE 
+Vector Similarity Embedding-based similarity for  semantic distance between text. 
+• Embedding Average (Liu et al., 2016)  • Vector Extrema (Liu et al., 2016) • MEANT (Lo, 2017) 
+• YISI (Lo, 2019) 
+Uses pre-trained contextual embeddings from BERT  
+and matches words in candidate and reference  
+sentences by cosine similarity. 
+• (Zhang et al., 2019) 
+CSE 156 NLP 10
+Evaluation 
+Model-based metrics: Beyond word matching 
+Sentence Mover's Similarity 
+Extends word mover's distance to multi-sentence level. Evaluates similarity  
+using sentence embeddings from recurrent neural network representations. 
+• (Clark et al., 2019) 
+CSE 156 NLP 11
+Evaluation 
+Model-based metrics: Beyond word matching 
+Sentence Mover's Similarity 
+Extends word mover's distance to multi-sentence level. Evaluates similarity  
+using sentence embeddings from recurrent neural network representations. 
+• (Clark et al., 2019) 
+BLEURT 
+A regression model on top of BERT, returns a score that  
+indicates to what extent the candidate text is grammatical  
+and conveys meaning of the reference text. 
+• (Sellam et al., 2020) 
+CSE 156 NLP 12
+Evaluation 
+MAUVE: Beyond single sample matching 
+• In open-ended generation, comparing with a single reference may not say much.  Can we instead compare the distribution of machine text vs. human text? • MAUVE (Pillutla et al., 2021) 
+P 
+• Computes the information divergence between the human text distribution and the  
+machine text distribution  
+Q 
+CSE 156 NLP 13
+Evaluation 
+MAUVE: Beyond single sample matching 
+• Divergence Curve 
+
+KL Divergence: Distance between  two distributions Q and Rλ 
+Interpolate between P and Q to draw a curve 
+KL(P|Q) KL(Q|P) Rλ 
+• or can be infinite, so measure errors softly using mixtures λ 
+• Draw a curve by varying the mixture weight : captures both type I / type 2 error! 
+CSE 156 NLP 14
+Evaluation 
+MAUVE: Beyond single sample matching 
+• Divergence Curve 
+
+KL Divergence: Distance between  
+two distributions Q and Rλ 
+
+Interpolate between P and Q to draw a curve 
+• If P and Q are close, KL divergence will be lower, thus the 
+divergence curve will be higher 
+• MAUVE(P, Q): Area under the divergence curve  
+ (value in 0~1, higher is better!) Nucleus sampling is better than  naive sampling / greedy decoding. 
+CSE 156 NLP 15
+Evaluation 
+MAUVE: Beyond single sample matching 
+• Problem: P and Q are distributions over all possible text! 
+
+ How do we compute the KL divergence? 
+• Solution: Compute it over quantized embedding distribution 
+x 
+ (1) Embed each sample into latent space using e.g. GPT-2 
+ (2) Quantize them into clusters 
+ (3) Count cluster assignments to form histograms  
+Do (1) ~ (3) for both P and Q, now KL divergence is tractable � 
+Quantized Embedding Distribution 
+CSE 156 NLP 16
+Evaluation 
+Model-based metrics: LLM as evaluator 
+• Directly prompt LLM (GPT-4) to evaluate generated  
+text. 
+• Can be customized with evaluation criteria 
+• (Often) better correlation with human evaluators 
+than task-specific metrics (e.g. ROUGE) 
+• (Often) is cheaper than human evaluation 
+Liu et al. 2023 
+• Limitations 
+• Brittleness: LLM evaluation can significantly vary  
+when given different prompts! 
+• Potential self-bias - LLMs may prefer what LLMs  
+have generated... 
+Hsu et al. EMNLP Findings, 2023 
+CSE 156 NLP 17
+Evaluation 
+Human Evaluations 
+
+• Automatic metrics fall short of matching human decisions • Most important form of evaluation for text generation systems 
+• Gold standard in developing new automatic metrics 
+• Better automatic metrics will better correlate with human judgements! CSE 156 NLP 18
+Evaluation 
+Human Evaluations 
+• Sounds easy, but hard in practice: Ask humans to evaluate the quality of text 
+• Typical evaluation dimensions: 
+• fluency 
+• coherence / consistency 
+• factuality and correctness 
+• commonsense 
+• style / formality 
+• grammaticality 
+• typicality 
+• redundancy 
+• ... 
+CSE 156 NLP 19
+Note: Don't compare human  evaluation scores across  
+different studies 
+Even if they claim to evaluate  on the same dimensions! 
+Evaluation 
+Human Evaluations 
+• Human judgments are regarded as gold standard • Of course, we know that human eval is slow and expensive • Beyond its cost, human eval is still far from perfect: 
+• Human judgements 
+• are inconsistent / irreproducible 
+• can be illogical 
+• can be misinterpreting your questionnaire 
+• ... 
+• and recently, use of LLMs by crowd-source workers � (Veselovsky et al., 2023) 
+CSE 156 NLP 20
+Evaluation 
+Learning metrics from humans 
+ADEM 
+A learned metric from human judgments for dialog  
+system evaluation in a chatbot setting 
+• (Lowe et al., 2017) 
+CSE 156 NLP 21
+HUSE 
+Human Unified with Statistical Evaluation (HUSE), determines the similarity of the output distribution and  a human reference distribution 
+• (Hashimoto et al., 2019) 
+Evaluation 
+Evaluation: Takeaways 
+• Content-overlap metrics provide a good starting point for evaluating the generation quality,  but they're not good enough on their own 
+• Model-based metrics can be more correlated with human judgment, but often are not  interpretable 
+• Human judgments are critical 
+• But humans are inconsistent! 
+• In many cases, the best judge of output quality is YOU! 
+• Look at the actual generations - don't just rely on numbers. 
+• Publicly release large samples of outputs from your system! 
+CSE 156 NLP 22
+Evaluation 
+Large language models 
+ are getting widely deployed 
+
+Applying to critical domain … 
+Health: 
+Judicial system: 
+23 
+Large language models are not good reasoners 
+Applying to critical domain …
+Health: 
+Judicial system: 
+24 
+Large language models are not good reasoners 
+It takes 3 hours for 2 cars driving from  
+Seattle to Portland. How long would  
+it take for 4 cars? 
+It would take them 3 hours 
+to travel to Portland. 
+ChatGPT 
+3 hours ? hours 
+It takes 3 hours for 2 cars driving from  
+Seattle to Portland. Explain briefly how  
+long it would take for 4 cars? 
+It would take them 6 hours 
+to travel to Portland. 
+ChatGPT
+Seattle Portland 
+25 
+Large language models are not good reasoners One is a number that comes after zero. 
+This claim is true. 
+One is a number that comes before zero. 
+This claim is true. 
+-1 0 1 2 3… 
+？？ GPT3 
+？？GPT3 
+26 
+Why is Reasoning for Language Generation Challenging？ Constraints Cause-Effect Logic
+One is a number that comes after zero. 
+This statement is true. 
+GPT3 
+One is a number that comes before zero. 
+This statement is true. 
+GPT3 
+-1 0 1 2 3 … 
+Logical consistency  requires integrating  neural reasoning with  logic structures 
+27 
+Outline of this talk 
+Constraints Cause-Effect Logic 
+Maieutic Prompting COLD Decoding TimeTravel Delorean 
+• Guarantee consistent answers with logic 
+• Recover from wrong reasoning paths 
+
+LM reasoning is often 
+logically inconsistent 
+Maieutic prompting: Logically consistent reasoning with recursive explanations, Jung, Qin et al., EMNLP 2022
+28 
+Outline of this talk 
+Constraints Cause-Effect Logic 
+Maieutic Prompting COLD Decoding TimeTravel Delorean 
+• Guarantee consistent answers with logic 
+• Recover from wrong reasoning paths 
+Q 
+T, because F, because 
+Q 
+Entail Contradic 
+ET LM reasoning is often 
+T, because EFT 
+EF 
+F, because 
+EFF 
+ET0EF0 w(E = 0.9588 T0) 
+EF0T0 
+w(E = 0.9132 T0F0) 
+logically inconsistent 
+Recursive abductive reasoning 
+Weighted Max-SAT 
+Maieutic prompting: Logically consistent reasoning with recursive explanations, Jung, Qin et al., EMNLP 2022
+29 
+LM reasoning is often logically inconsistent Claim Verification
+One is a number that comes after zero. 
+This claim is true. 
+GPT3 
+One is a number that comes before zero. 
+This claim is true. 
+GPT3 
+- 1 0 1 2 3 … 
+30 
+LM reasoning is often logically inconsistent Claim Verification 
+One is a number that comes after zero. 
+This claim is true. 
+Invariant to negation
+One is a number that comes before zero. 
+This claim is true. 
+- 1 0 1 2 3 … 
+GPT3 GPT3 
+31 
+LM reasoning is often logically inconsistent One is a number that comes after zero. 
+This claim is True. Invariant to negation
+One is a number that comes before zero. 
+This claim is True. 
+32 
+Actual generation from 175B GPT-3, 6-shot C-o-T prompting (Wei et al. 2022) 
+LM reasoning is often logically inconsistent One is a number that comes after zero. 
+This claim is True. 
+One is a number that comes before zero. This claim is True. 
+Smoke is not the source of fire. Smoke is a result of fire. Therefore,  
+the claim is False. 
+Invariant to negation 
+Explanation does not  
+logically lead to answer
+33 
+Actual generation from 175B GPT-3, 6-shot C-o-T prompting (Wei et al. 2022) 
+LM reasoning is often logically inconsistent One is a number that comes after zero. 
+This claim is True. Invariant to negation 
+One is a number that comes before zero. 
+This claim is True. 
+Smoke is not the source of fire. 
+Smoke is a result of fire. Therefore,  
+the claim is False. 
+Butterflies fly with 3 wings. 
+Butterflies have 4 wings. Therefore,  
+the claim is False. 
+Butterflies fly with 4 wings. Butterflies have 2 wings on each side of their  
+Explanation does not  logically lead to answer 
+Falsifies its own  explanation
+
+body. Therefore, the claim is False. 34 Actual generation from 175B GPT-3, 6-shot C-o-T prompting (Wei et al. 2022) 
+LM reasoning is often logically inconsistent One is a number that comes after zero. 
+This claim is True. Invariant to negation 
+One is a number that comes before zero. 
+This claim is True. 
+Smoke is not the source of fire. 
+Smoke is a result of fire. Therefore,  
+the claim is False. 
+Butterflies fly with 3 wings. 
+Butterflies have 4 wings. Therefore,  
+the claim is False. 
+Butterflies fly with 4 wings. Butterflies have 2 wings on each side of their  body. Therefore, the claim is False. 
+Explanation does not  
+logically lead to answer 
+Falsifies its own  explanation 
+
+35 
+Actual generation from 175B GPT-3, 6-shot C-o-T prompting (Wei et al. 2022)
+Prior approach: majority vote 
+Zero comes after one. The answer is True. 
+One is a number that  comes before zero. 
+LM 
+Zero is the number that comes before one.  The answer is False. 
+Zero is the number that comes after  
+negative numbers. The answer is False.[Wang et al., 2022] “Self-Consistency Improves Chain of Thought Reasoning in Language Models” 
+False 36 
+Prior approach: majority vote 
+One is a number that  comes before zero? 
+61.4 58.1 
+LM 
+Com2Sense 
+Base (GPT-3) Majority Vote 
+Zero comes before one. The answer is True. 
+Limited improvement
+Zero comes after one. The answer is True. 
+Zero is the number that comes after  
+negative numbers. The answer is False. [Wang et al., 2022] “Self-Consistency Improves Chain of Thought Reasoning in Language Models” 
+True 37 
+Our Approach：neural reasoning with structured logic 
+Maieutic prompting: Logically consistent reasoning with recursive explanations, Jung, Qin et al., EMNLP 2022
+38 
+Our Approach：neural reasoning with structured logic 
+Inspired from 
+Socrates’ Maieutic Method  
+(1) Stimulate critical thinking with continuous questioning 
+(2) Discover and eliminate contradictions 
+Maieutic prompting: Logically consistent reasoning with recursive explanations, Jung, Qin et al., EMNLP 2022
+39 
+Our Approach：neural reasoning with structured logic 
+(1) Stimulate critical thinking with continuous questioning 
+(2) Discover and eliminate contradictions 
+Maieutic prompting: Logically consistent reasoning with recursive explanations, Jung, Qin et al., EMNLP 2022
+40 
+Our Approach：neural reasoning with structured logic 
+(1) Stimulate critical thinking with continuous questioning (1) Stimulate critical thinking with continuous questioning (2) Discover and eliminate contradictions
+(2) Discover and eliminate contradictions 
+Q : 
+ If you travel west far enough from the west coast,  
+ you will reach the east coast. Consider both claims and counter-claims 
+Maieutic prompting: Logically consistent reasoning with recursive explanations, Jung, Qin et al., EMNLP 2022 41 
+Our Approach：neural reasoning with structured logic 
+(1) Stimulate critical thinking with continuous questioning (2) Discover and eliminate contradictions 
+Q : 
+ If you travel west far enough from the west coast,  
+ you will reach the east coast. 
+ET : 
+True, because 
+the Earth is round and if you travel in any direction long  
+enough, you will eventually return to where you started. 
+EF : False, because 
+you cannot reach the east coast by going west. 
+Consider both claims and counter-claims
+42 
+Our Approach：neural reasoning with structured logic 
+(1) Stimulate critical thinking with continuous questioning (2) Discover and eliminate contradictions 
+Q : 
+ If you travel west far enough from the west coast,  
+Maieutic Tree G 
+ you will reach the east coast. 
+ET : True, because 
+the Earth is round and if you travel in any direction long  
+Q 
+True, because False, because 
+enough, you will eventually return to where you started. 
+EF
+ET 
+EF : False, because 
+you cannot reach the east coast by going west. 
+Consider both claims and counter-claims 
+43 
+Our Approach：neural reasoning with structured logic 
+(1) Stimulate critical thinking with continuous questioning (2) Discover and eliminate contradictions 
+Q : 
+ If you travel west far enough from the west coast,  
+Maieutic Tree G 
+ you will reach the east coast. 
+ET : True, because 
+the Earth is round and if you travel in any direction long  
+Q 
+True, because False, because 
+enough, you will eventually return to where you started. 
+EF 
+ET 
+EF : False, because 
+you cannot reach the east coast by going west.
+44 
+Our Approach：neural reasoning with structured logic 
+(1) Stimulate critical thinking with continuous questioning (2) Discover and eliminate contradictions 
+Q : 
+ If you travel west far enough from the west coast,  
+Maieutic Tree G 
+ you will reach the east coast. 
+ET : True, because 
+the Earth is round and if you travel in any direction long  
+Q 
+True, because False, because 
+enough, you will eventually return to where you started. 
+ET 
+EF : False, because 
+you cannot reach the east coast by going west.
+True, because 
+EF 
+False, because 
+EFT : 
+False, because … 
+EFT 
+EFF 
+EFF : True, because … 
+45 
+Our Approach：neural reasoning with structured logic 
+(1) Stimulate critical thinking with continuous questioning (2) Discover and eliminate contradictions 
+Maieutic Tree G 
+Q 
+F, because Ture, because False, because 
+ET EF 
+True, because False, because 
+EFT EFF
+46 
+Our Approach：neural reasoning with structured logic 
+(1) Stimulate critical thinking with continuous questioning (2) Discover and eliminate contradictions 
+Maieutic Tree G 
+Q 
+F, because 
+E : All directions eventually meet at the North and South Poles. T2
+EF2 
+ET0EF0 
+: You can only travel so far before you reach the  
+end of the earth. 
+E : The Earth is round and there is no end to it. F2F0 
+ET1 
+: The world is round and if you continue to travel in a  
+straight line, you will eventually reach the other side. 
+E : A straight line on a sphere makes a circle. T1T0 
+E : The world is not round. T1F0 
+EF0T0 
+EF1 
+: If you travel far enough in any direction, you will  
+eventually reach the opposite coast. 
+E : It is impossible to travel to the other side of the Earth. F1F0 
+47 
+Our Approach：neural reasoning with structured logic 
+(1) Stimulate critical thinking with continuous questioning (2) Discover and eliminate contradictions 
+Maieutic Tree G 
+Q 
+F, because 
+E : All directions eventually meet at the North and South Poles. T2
+EF2 
+ET0EF0 
+: You can only travel so far before you reach the  
+end of the earth. 
+E : The Earth is round and there is no end to it. F2F0 
+ET1 
+: The world is round and if you continue to travel in a  
+straight line, you will eventually reach the other side. 
+E : A straight line on a sphere makes a circle. T1T0 
+E : The world is not round. T1F0 
+EF0T0 
+EF1 
+: If you travel far enough in any direction, you will  
+eventually reach the opposite coast. 
+E : It is impossible to travel to the other side of the Earth. F1F0 
+48 
+Our Approach：neural reasoning with structured logic 
+(1) Stimulate critical thinking with continuous questioning (2) Discover and eliminate contradictions 
+Maieutic Tree G 
+Q 
+F, because 
+E : All directions eventually meet at the North and South Poles. T2 
+EF2 
+ET0EF0 
+: You can only travel so far before you reach the  
+end of the earth. 
+E : The Earth is round and there is no end to it. F2F0 
+ET1 
+: The world is round and if you continue to travel in a  
+straight line, you will eventually reach the other side. 
+E : A straight line on a sphere makes a circle. T1T0 
+E : The world is not round. T1F0 
+EF0T0 
+EF1 
+: If you travel far enough in any direction, you will  eventually reach the opposite coast. 
+Weighted Maximum Satisfiability  (Max-SAT) 
+Determines the truth values of nodes that  
+E : It is impossible to travel to the other side of the Earth. F1F0 
+maximize the weight of satisfied logical clauses
+49 
+Our Approach：neural reasoning with structured logic 
+(1) Stimulate critical thinking with continuous questioning CSE 517 Natural Language Processing 
+(2) Discover and eliminate contradictions 
+Maieutic Tree G 
+Q 
+University of Washington 
+Assignment #5 
+Jaehun Jung 
+Inference 
+F, because 
+EF2 
+: You can only travel so far before you reach the  
+E : All directions eventually meet at the North and South Poles. T2 Logically Integral 
+Although this may seem arbitrary, the process essentially follows one simple constraint: leave only tend of the earth. 
+ations that lead to a logically integral result. Our original problem was that using belief computed for ET0EF0 
+in G was too noisy to initialize MAX-SAT problem. Now, since all the leaves in the updated G are integral, we can count on the credibility of belief computed for these nodes. 
+w(E = 0.9588 T0) 
+E : The Earth is round and there is no end to it. F2F0 
+ET1 
+: The world is round and if you continue to travel in a  
+Objective function 
+Logically Integral 
+straight line, you will eventually reach the other side. 
+EF0T0 
+We now define clauses and their weights to initialize MAX-SAT problem: 
+Weighted Max-SAT )
+EF1 
+w(E = 0.9132 T0F0 
+: If you travel far enough in any direction, you will  eventually reach the opposite coast. 
+E : A straight line on a sphere makes a circle. T1T0 logical clauses (I):  
+For each leaf node E in G, we define strength of LM’s belief on either E or ¬E as following: Logically Integral 
+Logically Integral 
+Unary logical clauses:  
+E : The world is not round. T1F0 
+8>>< 
+w(E) :=pLM(True|E,...) 
+pLM(True|E,...) + pLM(True|¬E,...) if E is True E : It is impossible to travel to the other side of the Earth. F1F0 
+Logically Integral 
+how strongly does LM believe in each node E? 
+Belief 
+>>: 
+w(¬E) :=pLM(True|¬E,...) 
+Logically Integral 
+pLM(True|¬E,...) + pLM(True|E,...) if E is False 
+50 
+ssgnmen  
+Jaehun Jung 
+Our Approach：neural reasoning with structured logic 
+Inference 
+(1) Stimulate critical thinking with continuous questioning 
+Although this may seem arbitrary, the process essentially follows one simple constraint: l
+ations that lead to a logically integral result. Our original problem was that using belief com
+(2) Discover and eliminate contradictions 
+in G was too noisy to initialize MAX-SAT problem. Now, since all the leaves in the upda
+integral, we can count on the credibility of belief computed for these nodes. 
+Maieutic Tree G 
+Objective function 
+We now define clauses and their weights to initialize MAX-SAT problem: 
+Q 
+Entail Contradict 
+Measured by a standard NLI model  
+EF2 
+: You can only travel so far before you reach the  
+E : All directions eventually meet at the North and South Poles. T2 
+For each leaf node E in G, we define strength of LM’s belief on either E or ¬E as followion every pair of nodes
+Logically Integral 
+ET1 
+8>>< 
+ET0EF0 
+Belief 
+>>: 
+: The world is round and if you continue to travel in a  
+end of the earth. 
+w(E) :=pLM(True|E,...) 
+pLM(True|E,...) + pLM(True|¬E,...) if E is True 
+E : The Earth is round and there is no end to it. F2F0 
+w(¬E) :=pLM(True|¬E,...) 
+Logically Integral 
+straight line, you will eventually reach the other side. 
+Weighted Max-SAT 
+EF0T0 
+EF1 
+pLM(True|¬E,...) + pLM(True|E,...) if E is Fals : If you travel far enough in any direction, you will  
+E : A straight line on a sphere makes a circle. T1T0 logical clauses (II):  
+For all pairs of nodes (E1, E2) in G, we define the logical consistency between the prop
+eventually reach the opposite coast. 
+labels, with weights fixed to 1: 
+Logically Integral 
+Logically Integral 
+Binary logical clauses:  
+E : The world is not round. T1F0 
+(w(E1 ! E2)=1 if Entail(E1, E2) E : It is impossible to travel to the other side of the Earth. F1F0 
+Logically Integral 
+Do the two nodes support or contradict each other? 
+Consistency 
+w(E1 ! ¬E2)=1 if Contradict(E1, E2) Logically Integral 
+51 
+Our Approach：neural reasoning with structured logic 
+(1) Stimulate critical thinking with continuous questioning (2) Discover and eliminate contradictions 
+Maieutic Tree G 
+Q 
+E : All directions eventually meet at the North and South Poles. T2 Logically Integral 
+Entail Contradict 
+ET0EF0 w(E = 0.9588 T0) 
+EF2 
+: You can only travel so far before you reach the  
+end of the earth. 
+E : The Earth is round and there is no end to it. F2F0 
+Max-SAT output: 
+ET1 
+: The world is round and if you continue to travel in a  
+Logically Integral 
+straight line, you will eventually reach the other side. 
+EF0T0 
+Q 
+: True 
+Weighted Max-SAT
+w(E = 0.9132 T0F0) 
+EF1 
+: If you travel far enough in any direction, you will  
+ET0 
+: True 
+E : A straight line on a sphere makes a circle. T1T0 
+eventually reach the opposite coast. 
+Logically Integral 
+Objective Logically Integral 
+E : The world is not round. T1F0 
+EF0T0 
+: True 
+Logically Integral 
+E : It is impossible to travel to the other side of the Earth. F1F0 Logically Integral 
+Cu ∪ Cb 
+EF0 
+: False 
+52 
+CSQA 2.0 
+(Talmor et al. 2021) 
+Better than supervised fine-tuned T5! 
+Accuracy (%) 
+69.5 
+59.7 60.8 59.6 
+54.1 
+Standard Acc 
+Canonical Prompting 
+Chain-of-Thought (Wei et al. 2022) Self-Consistency (Wang et al. 2022) GKP + GPT-3 (Liu et al. 2021) Maieutic Prompting 
+68.5 
+T5 
+-11B 
+Maieutic prompting: Logically consistent reasoning with recursive explanations, Jung, Qin et al., EMNLP 2022
+CSQA 2.0 
+(Talmor et al. 2021) 
+Better than supervised fine-tuned T5!
+80 
+
+72 
+CREAK 
+(Onoe et al. 2022) 
+
+77.4 
+Com2Sense 
+(Singh et al. 2021) 
+80 
+72 
+69.5 
+68.5 
+68.3 67.9 
+68.7 
+Accuracy (%)-11B 
+Accuracy (%) 
+Accuracy (%) 
+64 
+64 
+62.1 
+59.7 60.8 59.6 
+60.8 61.1 
+54.1 
+Standard Acc 
+T5 
+56 48 40 
+55.8 
+Contrast Acc 
+56 48 40 
+55.9 
+50.3 
+Pairwise Acc 
+Canonical Prompting 
+Chain-of-Thought (Wei et al. 2022) Self-Consistency (Wang et al. 2022) GKP + GPT-3 (Liu et al. 2021) Maieutic Prompting 
+Canonical Prompting 
+Chain-of-Thought (Wei et al. 2022) Self-Consistency (Wang et al. 2022) GKP + GPT-3 (Liu et al. 2021) Maieutic Prompting 
+Canonical Prompting 
+Chain-of-Thought (Wei et al. 2022) Self-Consistency (Wang et al. 2022) GKP + GPT-3 (Liu et al. 2021) Maieutic Prompting 
+Maieutic prompting: Logically consistent reasoning with recursive explanations, Jung, Qin et al., EMNLP 2022 
+Take aways 
+Logically consistent reasoning: 
+ - Integrate logic structure with neural reasoning 
+ Approach: 
+ - Stimulate critical thinking with continuous questioning Maieutic tree  - Discover and eliminate contradictions weighted MAX-SAT
+Maieutic prompting: Logically consistent reasoning with recursive explanations, Jung, Qin et al., EMNLP 2022 
+55 
+Outline 
+• Background: What is Alignment of LLMs? 
+• Data: How can we get the data for instruction learning? 
+• Method: How can we align LLMs with supervised fine-tuning (SFT)? • Evaluation: How can we compare different LLMs in terms of alignment? 
+CSE 156 NLP 56 Lecture17: Alignment
+What alignment are you talking about?
+Son, if you wanna be  ChatGPT, you will need  to be aligned! 
+Supervised Fine-Tuning  
+(SFT) Instruction Following! 
+Hallucination! 
+Reinforcement Learning  
+from Human Feedback  
+(RLHF) 
+Safety! 
+Proximal Policy Optimization (PPO) 
+Task/Domain 
+Whaaat? Adaptation! Direct Preference Optim 
+(DPO) 
+
+Personalization! 
+CSE 156 NLP 57 
+What is Alignment of LLMs? 
+• Instruction Learning: teaching base LLMs to follow instructions • Preference Learning: adjusting instructed LLMs to behave as human expected 
+
+Base LLM e.g., Llama-2 
+I can complete  
+your text. 
+Instruction Learning (Part 1) 
+Preference Learning (Part 2) 
+I can better follow  
+your instructions. 
+Aligned LLM 
+e.g., Llama-2-chat 
+CSE 156 NLP 58
+Lecture17: Alignment 
+Llama-2Llama-2-Chat 
+How does alignment tuning teach LLM to be so good?
+59 
+Example: Llama-2’s alignment 
+Part 2! 
+Base LLM Aligned LLM 
+We are here for Part 1! 
+CSE 156 NLP 60
+Lecture17: Alignment 
+Dataset for Instruction Learning  
+• 1. Synthetic Conversion  
+• 2. Human Annotation  
+• 3. Collected from ChatGPT/GPT-4  
+• 3.1. Community Sharing  
+• 3.2. Strategic Collecting  
+CSE 156 NLP 61 Lecture17: Alignment
+Dataset for Instruction Learning  • 1. Synthetic Conversion of Existing NLP Datasets 
+https://blog.research.google/2021/10/introducing-flan-more-generalizable.html 
+CSE 156 NLP 62
+Lecture17: Alignment 
+Dataset for Instruction Learning  • 1. Synthetic Conversion of Existing NLP Datasets 
+An existing NLP task:  
+Binary Classification Converted to Seq2Seq tasks with different instruction templates.  —> Unified Data Formats for Massive Multi-Task Training 
+https://blog.research.google/2021/10/introducing-flan-more-generalizable.html 
+CSE 156 NLP
+63 
+Lecture17: Alignment 
+Dataset for Instruction Learning  • 2. Human Annotation:  
+
+OpenAssistant: An Open-Source Human Annotation Dataset 
+We are here for Part 1! Part 2. 
+ChatGPT’s pipeline for data collection. 
+CSE 156 NLP 64
+Lecture17: Alignment 
+Dataset for Instruction Learning  
+• 3.1. Community Sharing from ChatGPT 
+Natural Queries from  
+Human Users on GhatGPT 
+
+sharegpt.com 
+CSE 156 NLP 65
+WildChat: Providing Free GPT-4 APIs for Public Users  
+T-SNE plots of the embeddings of user prompts. 
+Lecture17: Alignment 
+Dataset for Instruction Learning  • 3.2. Strategical Collecting Data from ChatGPT 
+Self-instruct pipeline for data collection. https://arxiv.org/abs/2212.10560 
+CSE 156 NLP 66
+Lecture17: Alignment 
+Dataset for Instruction Learning  • 3.2. Strategic Collecting from ChatGPT 
+
+CSE 156 NLP 67
+Lecture17: Alignment 
+General Distribution of User-GPT Interactions 
+Coding & Creative  
+Writing are the major! 
+Most are classification &  
+reading comprehension. 
+https://arxiv.org/pdf/2310.12418.pdf 
+CSE 156 NLP 68
+Lecture17: Alignment 
+Supervised Fine-Tuning (SFT) for LLM Alignment 
+• 1. SFT  
+• 2. Efficient Fine-Tuning 
+CSE 156 NLP 69 Lecture17: Alignment
+Supervised Fine-Tuning (SFT) for Instruction Learning 
+Tokens for an example  
+(a pair of instruction & response) 
+x_1, …, x_N, y_1, y_2, …, y_M 
+Instruction Data 
+Instruction x 
+
+Output y 
+
+Context 
+Loss 
+LLM 
+Teacher  
+forcing 
+CSE 156 NLP 70
+Lecture17: Alignment 
+Supervised Fine-Tuning (SFT) for Instruction Learning 
+Full example 
+Teacher forcing 
+Learn the 1st output token 
+Learn the 2nd output token 
+ … 
+CSE 156 NLP 71
+Tokens for an example  
+(a pair of instruction & response) 
+x_1, …, x_N, y_1, y_2, …, y_M 
+Context 
+Loss 
+LLM 
+Teacher  
+forcing 
+Lecture17: Alignment 
+Efficient Fine-Tuning 
+• LoRA: Low-Rank Adaptation: Motivation 
+https://magazine.sebastianraschka.com/p/practical-tips-for-finetuning-llms 
+CSE 156 NLP 72
+Lecture17: Alignment 
+Efficient Fine-Tuning 
+• LoRA: Low-Rank Adaptation: before and after training 
+More Efficient SFT, and no  
+additional inference cost. 
+https://huggingface.co/docs/peft/conceptual_guides/lora 
+CSE 156 NLP 73
+Lecture17: Alignment 
+Efficient Fine-Tuning • Q-LoRA: Quantized LoRA 
+Optimizer state (32bit) Opt  (32bit) 
+Adapter  
+(16bit) 
+Opt  
+(32bit) 
+Adapter  (16bit) 
+Opt  
+(32bit) 
+Adapter  (16bit) 
+Opt  
+(32bit) 
+Adapter  (16bit) 
+Opt  
+(32bit) 
+Adapter  (16bit) 
+Opt  
+(32bit) 
+Adapter  (16bit) 
+
+CPU  
+Paging 
+Even more  
+efficient for  LoRA-tuning. 
+https://arxiv.org/abs/2305.14314 
+CSE 156 NLP 74
+Lecture17: Alignment 
+Evaluation of Alignment 
+• Benchmarking Datasets 
+• Human Annotation  
+• GPTs as Judges 
+• Open LLM Evaluators 
+• Safety Evaluation  
+CSE 156 NLP 75 Lecture17: Alignment
+Evaluation of LLM • Benchmarking Datasets 
+CSE 156 NLP 76
+Test base/aligned LLMs on a wide  range of reasoning tasks.  
+(Usually with few-shot ICL examples) 
+Not in conversation formats and many  tasks are less natural. 
+Lecture17: Alignment 
+Evaluation of LLM Alignment 
+• Human Votes 
+Elo Rating for  
+Ranking LLMs 
+Win-rate Matrix  
+
+CSE 156 NLP 77
+Lecture17: Alignment 
+Evaluation of LLM Alignment • GPTs as Judge Win Rates (as to text-davinci-003) 
+CSE 156 NLP 78
+Lecture17: Alignment 
+Evaluation of LLM Alignment • GPTs as Judge 
+MT-Bench: Scoring-based Evaluation of LLMs 
+Prompting  
+GPT-4 
+CSE 156 NLP 79
+Lecture17: Alignment 
+Open-Source LLM Evaluators 
+Collect GPT-4 evaluation annotation  
++ SFT on open-source LLMs 
+https://arxiv.org/pdf/2310.08491.pdf 
+CSE 156 NLP 80
+Lecture17: Alignment 

@@ -1,0 +1,1166 @@
+
+CSE 291: Large Model Reasoning 
+12 - Natural Language Generation 
+Instructor: Lianhui Qin 
+1 Slides adapted from Yejin Choi
+Categorization of NLG tasks 
+Less open-ended More open-ended 
+Translation Summarization Task-driven  
+Machine 
+Dialog 
+Chit-Chat  Dialog 
+Story  
+Generation 
+Less open-ended generation: the input mostly determines the correct output generation. More open-ended generation: the output distribution still has high degree of freedom. 
+Remark: One way of formalizing categorization is entropy. 
+Tasks with different characteristics require different decoding and/or training approaches! 
+CSE 156 NLP 2
+Natural Language Generation 
+Components of NLG Systems 
+• What is NLG? 
+• Formalizing NLG: a simple model and training algorithm 
+• Decoding from NLG models 
+• Training NLG models 
+• Evaluating NLG Systems 
+• Ethical Considerations 
+CSE 156 NLP 3 Natural Language Generation
+Basics of natural language generation 
+• In autoregressive text generation models, at each time step t, our model takes in a  sequence of tokens as input {y} and outputs a new token, <t ŷt 
+ŷt ŷt+1 
+ŷt+2... 
+
+...yt−4 yt−3 yt−2 yt−1 
+CSE 156 NLP 4
+ŷt ŷt+1 
+Natural Language Generation 
+A look at a single step 
+• In autoregressive text generation models, at each time step t, our model  takes in a sequence of tokens as input {y} and outputs a new token, <t ŷt 
+ŷt 
+...yt−4 yt−3 yt−2 yt−1 
+CSE 156 NLP 5
+Natural Language Generation 
+Basics of natural language generation 
+• At each time step t, our model computes a vector of scores for each token in  S ∈ 
+our vocabulary, : 
+S = f({y<t}; θ) 
+f( ⋅ ; θ) is your model 
+P w ∈ V 
+• Then, we compute a probability distribution over using these scores: P(yt = w|{y<t}) =exp(Sw) 
+∑w′∈V exp(Sw′) 
+CSE 156 NLP 6
+Natural Language Generation 
+A look at a single step 
+• At each time step t, our model computes a vector of scores for each token  S ∈ P 
+in our vocabulary, . Then, we compute a probability distribution  w ∈ V 
+over using these scores: 
+P(yt|{y<t}) 
+Softmax 
+S 
+...yt−4 yt−3 yt−2 yt−1 
+CSE 156 NLP 7
+Natural Language Generation 
+Training and Inference 
+g 
+• At inference time, our decoding algorithm defines a function to select a token  
+from this distribution: 
+ŷt = g(P(yt|{y<t})) g( ⋅ ) is your decoding algorithm 
+• An "obvious" decoding algorithm is to greedily choose the token with the highest probability at  each time step 
+• At train time, we train the model to minimize the negative log-likelihood of the next token in the given sequence: 
+Lt = − log P(y*t |{y*<t}) Remark: 
+w ∈ V 
+• This is just a classification task where each as a class. 
+y*t 
+• The label at each step is in the training sequence. 
+• This token is often called "gold" or "ground-truth" token. 
+• This algorithm is often called "teacher-forcing".  
+CSE 156 NLP 8
+Natural Language Generation 
+Maximum Likelihood Training (i.e. teacher-forcing) • Trained to generate the next word y* given a set of preceding words t {y*}<t L = − log P(y*1 | y*0 ) 
+y*1 
+y*0 
+CSE 156 NLP 9
+Natural Language Generation 
+Maximum Likelihood Training (i.e. teacher-forcing) 
+• Trained to generate the next word y* given a set of preceding words t {y*}<t L = − (log P(y*1 | y*0 ) + log P(y*2 | y*0 , y*1 )) 
+y*1 
+y*2 
+
+y*0 
+y*1 
+CSE 156 NLP 10
+Natural Language Generation 
+Maximum Likelihood Training (i.e. teacher-forcing) • Trained to generate the next word y* given a set of preceding words t {y*}<t L = − (log P(y*1 | y*0 ) + log P(y*2 | y*0 , y*1 ) + log P(y*3 | y*0 , y*1 , y*2 )) 
+y*1 
+y*2 y*3 
+
+y*0 
+y*1 
+y*2 
+CSE 156 NLP 11
+Natural Language Generation 
+Maximum Likelihood Training (i.e. teacher-forcing) 
+• Trained to generate the next word y* given a set of preceding words t {y*}<t T 
+L = − 
+∑ t=1 
+log P(y*t |{y*}<t) 
+<END> 
+y*1 
+y*2 y*3 
+...y*T−2 y*T−1 y*T 
+
+y*0 
+y*1 
+y*2... 
+y*T−2 y*T−1 y*T−1 
+CSE 156 NLP 12
+Natural Language Generation 
+Decoding: What is it all about? 
+• At each time step t, our model computes a vector of scores for each token in our  S ∈ 
+vocabulary, : 
+S = f({y<t}; θ) 
+f( ⋅ ; θ) is your model 
+P w ∈ V 
+• Then, we compute a probability distribution over using these scores: P(yt = w|{y<t}) =exp(Sw) 
+∑w′∈V exp(Sw′) 
+• Our decoding algorithm defines a function to select a token from this distribution: 
+ŷt = g(P(yt|{y<t})) 
+g( ⋅ ) is your decoding algorithm 
+CSE 156 NLP 13
+Natural Language Generation 
+How to find the most likely string? 
+• Obvious method: Greedy Decoding 
+P(yt| y<t) 
+• Selects the highest probability token according to  
+ŷt = argmaxw∈V P(yt = w| y<t) 
+• Beam Search 
+• Also aims to find the string with the highest probability, but with a wider exploration of  candidates. 
+CSE 156 NLP 14
+Natural Language Generation 
+Greedy Decoding vs. Beam Search 
+• Greedy Decoding 
+• Choose the "currently best" token at each time step 
+Step 0 (Initial): The 
+dog 
+and 
+runs 
+has 
+woman 
+0.4 0.4 
+0.05 0.05 0.9 
+The 
+great 
+0.5 
+house 
+guy 
+0.3 
+0.3 
+car 
+is 
+0.3 
+0.1 
+drives 
+0.5 
+turns 
+0.2 
+CSE 156 NLP 15
+Natural Language Generation 
+Greedy Decoding vs. Beam Search 
+• Greedy Decoding 
+• Choose the "currently best" token at each time step 
+Step 1: 
+The great (Score: 0.5) 
+dog 
+and 
+runs 
+has 
+woman 
+0.4 0.4 
+0.05 0.05 0.9 
+The 
+great 
+0.5 
+house 
+guy 
+0.3 
+0.3 
+car 
+is 
+0.3 
+0.1 
+drives 
+0.5 
+turns 
+0.2 
+CSE 156 NLP 16
+Natural Language Generation 
+Greedy Decoding vs. Beam Search 
+• Greedy Decoding 
+• Choose the "currently best" token at each time step 
+Step 2: 
+The great woman (score: 0.5 + 0.4) dog 
+and 
+runs 
+has 
+woman 
+0.4 0.4 
+0.05 0.05 0.9 
+The 
+great 
+0.5 
+house 
+guy 
+0.3 
+0.3 
+car 
+is 
+0.3 
+0.1 
+drives 
+0.5 
+turns 
+0.2 
+CSE 156 NLP 17
+Natural Language Generation 
+Greedy Decoding vs. Beam Search 
+• Beam Search (in this example, beam_width = 2) 
+• At each step, retain 2 hypotheses with the highest probability 
+Step 0 (Initial): The 
+dog 
+and 
+runs 
+has 
+woman 
+0.4 0.4 
+0.05 0.05 0.9 
+The 
+great 
+0.5 
+house 
+guy 
+0.3 
+0.3 
+car 
+is 
+0.3 
+0.1 
+drives 
+0.5 
+turns 
+0.2 
+CSE 156 NLP 18
+Natural Language Generation 
+Greedy Decoding vs. Beam Search 
+• Beam Search (in this example, beam_width = 2) 
+• At each step, retain 2 hypotheses with the highest probability 
+Step 1 hypotheses: 
+The great (score: 0.5) 
+The dog (score: 0.4) 
+dog 
+and 
+runs 
+has 
+woman 
+0.4 0.4 
+0.05 0.05 0.9 
+The 
+great 
+0.5 
+house 
+guy 
+0.3 
+0.3 
+car 
+is 
+0.3 
+0.1 
+drives 
+0.5 
+turns 
+0.2 
+CSE 156 NLP 19
+Natural Language Generation 
+Greedy Decoding vs. Beam Search 
+• Beam Search (in this example, beam_width = 2) 
+• At each step, retain 2 hypotheses with the highest probability 
+Step 2 hypotheses: 
+The dog has (score: 0.4 + 0.9)  The great woman (score: 0.5 + 0.4) 
+dog 
+and 
+runs 
+has 
+woman 
+0.4 0.4 
+0.05 0.05 0.9 
+The 
+great 
+0.5 
+house 
+guy 
+0.3 
+0.3 
+car 
+is 
+0.3 
+0.1 
+drives 
+0.5 
+turns 
+0.2 
+CSE 156 NLP 20
+Natural Language Generation 
+How to find the most likely string? 
+• Beam Search 
+• A form of best-first-search for the most likely string, but with a wider exploration of  candidates. 
+• Compared to greedy decoding, beam search gives a better approximation of  brute-force search over all sequences 
+• A small overhead in computation due to beam width 
+Time complexity: O(beam width * vocab size * generation length) 
+* Naive brute-force search: O(vocab size ^ generation length), hence intractable! CSE 156 NLP 21 Natural Language Generation
+How to find the most likely string? 
+• Diverse Beam Search (Vijayakumar et al., 2016) 
+• Beam hypotheses tend to get similar to each  
+other, as generation length increases 
+• Improve diversity by dividing beams into groups  
+and enforcing difference between them 
+• Lexically-Constrained Beam Search  
+(Anderson et al., 2016, Lu et al., 2021) 
+• Enforce hard constraints during beam search  
+to include (exclude) a given set of keywords 
+Note: Overall, greedy / beam search is widely used for low-entropy tasks like MT and summarization. But, are greedy sequences always the best solution? � 
+22
+Large Model Reasoning - CSE 291 Lecture11: Natural Language Generation 
+Most likely sequences are repetitive 
+Context: 
+In a shocking finding, scientist discovered a herd of unicorns  living in a remote, previously unexplored valley, in the  Andes Mountains. Even more surprising to the researchers  was the fact that the unicorns spoke perfect English. 
+Continuation: The study, published in the Proceedings of the National  Academy of Sciences of the United States of America (PNAS),  
+was conducted by researchers from the Universidad  
+Nacional Autónoma de México (UNAM) and the  
+Universidad Nacional Autónoma de México (UNAM/ 
+Universidad Nacional Autónoma de México/  
+Universidad Nacional Autónoma de México/  
+Universidad Nacional Autónoma de México/  
+Universidad Nacional Autónoma de México… 
+(Holtzman et al. ICLR 2020) 
+23
+Large Model Reasoning - CSE 291 Lecture11: Natural Language Generation 
+Most likely sequences are repetitive Probability of "I don't know" increases with each repetition, creating a positive  feedback loop. 
+(Holtzman et al. ICLR 2020) 
+24
+Large Model Reasoning - CSE 291 Lecture11: Natural Language Generation 
+And it keeps going... 
+
+Scale doesn't solve this problem - even GPT-4 can fall  
+into a repetition loop. 
+https://chat.openai.com/share/4d8eb91f-fe1c-430e-bdd3-cafd434ec3d4 
+25
+Large Model Reasoning - CSE 291 Lecture11: Natural Language Generation 
+How to reduce repetition? 
+Simple option: 
+• Heuristic: Don't repeat n-grams 
+More complex: 
+• Modify training objective: 
+• Unlikelihood training (Welleck et al., 2020) penalizes generation of already-seen tokens • Coverage loss (See et al., 2017) prevents attention mechanism from attending to the same   words 
+• Modify decoding objective: 
+• Contrastive decoding (Li et al., 2022) searches for sequence x that maximizes log Plarge LM(x) − log Psmall LM(x) 
+26
+Large Model Reasoning - CSE 291 Lecture11: Natural Language Generation 
+Are greedy methods reasonable for open-ended  
+generation? 1 
+  a    ar      t i         r ri i   
+Probability 
+0.8 
+0.6 
+0.4 
+0.2 
+0 
+0 20 40 60 80 100 
+ i   t   
+  a    ar      a  
+Greedy methods fail to capture the variance of human text distribution. 
+(Holtzman et al. ICLR 2020) 
+27
+Large Model Reasoning - CSE 291 Lecture11: Natural Language Generation 
+Time to get random: Sampling • Sample a token from the token distribution at each step! 
+ŷt∼ P(yt = w|{y}<t) 
+• It's inherently random so you can sample any token. 
+restroom 
+grocery 
+store 
+airport 
+He wanted 
+to go to the Model 28
+bathroom beach 
+doctor 
+hospital pub 
+gym 
+his 
+Large Model Reasoning - CSE 291 Lecture11: Natural Language Generation 
+Decoding: Top-k Sampling 
+• Problem: Vanilla sampling makes every token in the vocabulary an option • Even if most of the probability mass in the distribution is over a limited set of options, the  tail of the distribution could be very long and in aggregate have considerable mass  (statistics speak: we have “heavy tailed” distributions)  
+• Many tokens are probably really wrong in the current context. 
+• Although each of them may be assigned a small probability, in aggregate they still get a  high chance to be selected. 
+• Solution: Top-k sampling (Fan et al., 2018) 
+• Only sample from the top k tokens in the probability distribution. 
+29
+Large Model Reasoning - CSE 291 Lecture11: Natural Language Generation 
+Decoding: Top-k Sampling 
+• Solution: Top-k sampling (Fan et al., 2018) 
+• Only sample from the top k tokens in the probability distribution. • Common values for k = 10, 20, 50 (but it's up to you!) 
+He wanted 
+to go to the Model 
+• Increasing k yields more diverse, but risky outputs • Decreasing k yields more safe but generic outputs 
+30
+restroom grocery store 
+airport 
+bathroom beach 
+doctor 
+hospital pub 
+gym 
+his 
+Large Model Reasoning - CSE 291 Lecture11: Natural Language Generation 
+Issues with Top-k Sampling 
+For flat distribution, 
+Top-k Sampling may cut off too quickly! 
+For peaked distribution, 
+Top-k Sampling may also cut off too slowly! 
+31
+Large Model Reasoning - CSE 291 Lecture11: Natural Language Generation 
+Decoding: Top-p (Nucleus) Sampling 
+• Problem: The token distributions we sample from are dynamic 
+Pt k 
+• When the distribution is flat, small removes many viable options. 
+Pt k 
+• When the distribution is peaked, large allows too many options a chance to be  selected. 
+• Solution: Top-p sampling (Holtzman et al., 2020) 
+p 
+• Sample from all tokens in the top cumulative probability mass (i.e., where mass is  concentrated) 
+k Pt 
+• Varies according to the uniformity of  
+32
+Large Model Reasoning - CSE 291 Lecture11: Natural Language Generation 
+Decoding: Top-p (Nucleus) Sampling 
+• Solution: Top-p sampling (Holtzman et al., 2020) 
+p 
+• Sample from all tokens in the top cumulative probability mass (i.e., where mass is  concentrated) 
+k Pt 
+• Varies according to the uniformity of  
+Pt(yt = w|{y}<t) Pt(yt = w|{y}<t) 
+Pt(yt = w|{y}<t) 
+
+p=0.2 
+33
+p=0.12 p=0.8 
+Large Model Reasoning - CSE 291 Lecture11: Natural Language Generation 
+Beyond Top-k and Top-p 
+• Typical Sampling (Meister et al., 2022) 
+• Re-weights the scores based on the entropy of the distribution. • Epsilon Sampling (Hewitt et al., 2022) 
+• Set a threshold to lower-bound valid probabilities. Pt(yt = w|{y}<t) Pt(yt = w|{y}<t) 
+Pt(yt = w|{y}<t) 
+
+p=0.2 
+34
+p=0.12 p=0.8 
+Large Model Reasoning - CSE 291 Lecture11: Natural Language Generation 
+Scaling randomness: Softmax temperature Pt 
+• Recall: At time step t, model computes a distribution by applying softmax to a vector of  
+scores  
+S ∈ ℝ|V| 
+Pt(yt = w|{y<t}) =exp(Sw) 
+∑w′∈V exp(Sw′) 
+τ Pt 
+•Here, you can apply temperature hyperparameter to the softmax to rebalance : Pt(yt = w|{y<t}) =exp(Sw/τ) 
+∑w′∈V exp(Sw′/τ) 
+τ > 1 Pt 
+• Raise the temperature : becomes more uniform 
+• More diverse output (probability is spread across vocabulary) 
+τ < 1 Pt 
+• Lower the temperature : becomes more spiky 
+• Less diverse output (probability concentrated to the top tokens) 
+35
+Large Model Reasoning - CSE 291 Lecture11: Natural Language Generation 
+Scaling randomness: Softmax temperature τ Pt 
+• You can apply temperature hyperparameter to the softmax to rebalance : Pt(yt = w|{y<t}) =exp(Sw/τ) 
+∑w′∈V exp(Sw′/τ) 
+τ > 1 Pt 
+• Raise the temperature : becomes more uniform 
+• More diverse output (probability is spread across vocabulary) 
+τ < 1 Pt 
+• Lower the temperature : becomes more spiky 
+• Less diverse output (probability concentrated to the top tokens) 
+
+36
+Large Model Reasoning - CSE 291 Lecture11: Natural Language Generation 
+Scaling randomness: Softmax temperature τ Pt 
+• You can apply temperature hyperparameter to the softmax to rebalance : Pt(yt = w|{y<t}) =exp(Sw/τ) 
+∑w′∈V exp(Sw′/τ) 
+τ > 1 Pt 
+• Raise the temperature : becomes more uniform 
+• More diverse output (probability is spread across vocabulary) 
+τ < 1 Pt 
+• Lower the temperature : becomes more spiky 
+• Less diverse output (probability concentrated to the top tokens) 
+NOTE: Temperature is a hyperparameter for decoding algorithm,  not an algorithm itself! It can be applied for both beam search and  sampling methods. 
+37
+Large Model Reasoning - CSE 291 Lecture11: Natural Language Generation 
+Toward better generation: Re-ranking • Problem: What if I already have decoded a bad sequence from my model? 
+• Decode a bunch of sequences 
+n = 
+• Sample 10, 20, 50, ... sequences with the same input given 
+• Define a score to approximate quality of sequences and re-rank by this score • Simplest score: (low) perplexity 
+• Careful! Remember that even the repetitive sequences get low perplexity in general... • Re-rankers can evaluate a variety of properties: 
+• Style (Holtzman et al., 2018), Discourse (Gabriel et al., 2021), Factuality (Goyal et al.,  2020), Logical Consistency (Jung et al. 2022), and many more 
+• Can compose multiple re-rankers together. 
+38
+Large Model Reasoning - CSE 291 Lecture11: Natural Language Generation 
+Speeding-up generation: Speculative Sampling • Problem: Generating with a large LM takes a long time 
+• Intuition: Not all tokens are equally hard to generate! 
+Easy to predict: May be a 1B LM  can predict this too 
+ 100B LM 
+of 
+ 100B LM 
+Washington 
+Hard to predict: 
+Can really make use  
+of the 100B LM here 
+Bruce Lee attended  the University 
+Bruce Lee attended  the University of 
+• Idea: Use a generation from small LM to assist large LM generation 
+* Same idea independently proposed from DeepMind and Google - see Chen et al., 2023; Leviathan et al., 2023 
+39
+Large Model Reasoning - CSE 291 Lecture11: Natural Language Generation 
+Speeding-up generation: Speculative Sampling 
+• First, sample a draft of length K (= 5 in this example) from a small LM Mp y1 ∼ p( ⋅ | x), y2 ∼ p( ⋅ | x, y1),⋯, y5 ∼ p( ⋅ | x, y1, y2, y3, y4) 
+Input prefix 
+• Then, compute the token distribution at each time step with a large target LM Mq q( ⋅ | x), q( ⋅ | x, y1), q( ⋅ | x, y1, y2),⋯, q( ⋅ | x, y1,⋯, y5) 
+Next token distribution of M , when given q x, y1, y2 
+• Note: This can be computed in a single forward pass of M (Why?) q 
+pi = p( ⋅ | x, y1,⋯, yi−1) qi = q( ⋅ | x, y1,⋯yi−1) 
+• Let's denote and  
+q2 = q( ⋅ | x, y1) Mq 
+ e.g., , i.e. next token distribution predicted by the target model ,  x y1 
+ when given and  
+40
+Large Model Reasoning - CSE 291 Lecture11: Natural Language Generation 
+Speeding-up generation: Speculative Sampling Mp 
+• Now, we can compare the probability of each token assigned by draft model and target  Mq 
+model  
+Draft model (1B) Target model (100B) 
+Token 
+pi 
+qi 
+y1 y2 y3 y4 y5 dogs love chasing after cars 0.8 0.7 0.9 0.8 0.7 0.9 0.8 0.8 0.3 0.8 
+• Starting from y , decide whether or not to accept the tokens generated by the draft model. 1 
+41
+Large Model Reasoning - CSE 291 Lecture11: Natural Language Generation 
+Speeding-up generation: Speculative Sampling Mp 
+• Now, we can compare the probability of each token assigned by draft model and target  Mq 
+model  
+Draft model (1B) Target model (100B) 
+Token 
+pi 
+qi 
+y1 y2 y3 y4 y5 dogs love chasing after cars 0.8 0.7 0.9 0.8 0.7 0.9 0.8 0.8 0.3 0.8 
+• Starting from y , decide whether or not to accept the tokens generated by the draft model. 1 
+• Case 1:  
+qi ≥ pi 
+The target model (100B) likes this token, even more  than the draft model (which generated it).  => Accept this token! 
+42
+Generation after step 1: dogs 
+Large Model Reasoning - CSE 291 Lecture11: Natural Language Generation 
+Speeding-up generation: Speculative Sampling Mp 
+• Now, we can compare the probability of each token assigned by draft model and target  Mq 
+model  
+Draft model (1B) Target model (100B) 
+Token 
+pi 
+qi 
+y1 y2 y3 y4 y5 dogs love chasing after cars 0.8 0.7 0.9 0.8 0.7 0.9 0.8 0.8 0.3 0.8 
+• Starting from y , decide whether or not to accept the tokens generated by the draft model. 1 
+• Case 1:  
+qi ≥ pi 
+The target model (100B) likes this token, even more  than the draft model (which generated it).  => Accept this token! 
+43
+Generation after step 2: dogs love 
+Large Model Reasoning - CSE 291 Lecture11: Natural Language Generation 
+Speeding-up generation: Speculative Sampling Mp 
+• Now, we can compare the probability of each token assigned by draft model and target  Mq 
+model  
+Draft model (1B) 
+Target model (100B) 
+qi < pi 
+• Case 2: (accept) 
+Token 
+pi 
+qi 
+y1 y2 y3 y4 y5 dogs love chasing after cars 0.8 0.7 0.9 0.8 0.7 0.9 0.8 0.8 0.3 0.8 
+Target model doesn't like this token as much as the  
+Generation after step 3: 
+draft model... 
+=> Accept it with the probability  
+dogs love chasing 
+qi 
+In this example, assume  
+pi 
+we accepted it with  
+prob=0.8/0.9 
+44
+Large Model Reasoning - CSE 291 Lecture11: Natural Language Generation 
+Speeding-up generation: Speculative Sampling Mp 
+• Now, we can compare the probability of each token assigned by draft model and target  Mq 
+model  
+Draft model (1B) 
+Target model (100B) 
+qi < pi 
+• Case 3: (reject) qi pi 
+Token 
+pi 
+qi 
+y1 y2 y3 y4 y5 dogs love chasing after cars 0.8 0.7 0.9 0.8 0.7 0.9 0.8 0.8 0.3 0.8 
+Sample only from this region! 
+If <<< , we likely would have rejected it. 
+pi 
+In this case, we sample a new token from target model. 
+qi 
+• Specifically, we sample from (qi − pi)+ 
+45
+Large Model Reasoning - CSE 291 Lecture11: Natural Language Generation 
+Speeding-up generation: Speculative Sampling • But why specifically (q ? i − pi)+ 
+because our goal: to cover target LM distribution q .i pi 
+• Case 1:  
+qi ≥ piqi 
+Accept this token. 
+qi < piqi 
+• Case 2: (accept) 
+Case 3 
+Case 2 
+Case 1 
+Accept it with the probability  qi < pi 
+• Case 3: (reject) 
+pi Note: This sampling procedure, though  pi 
+sampling from small LM ( ), has the same  
+The only remaining case: if token rejected, we sample  a new token. 
+(qi − pi)+ qi  is the only region left to cover ! 
+46
+qi 
+effect as sampling from target LM ( ). Formal proof in Appendix I of (Chen et al., 2023) 
+Large Model Reasoning - CSE 291 Lecture11: Natural Language Generation 
+Speeding-up generation: Speculative Sampling 
+• Speculative sampling uses idea of rejection sampling. 
+• To sample from a easy-to-sample distribution p (small LM), in order to approximate  sampling from a more complex distribution q (large LM). 
+• Using 4B LM as a draft model and 70B LM as a target model, 
+ we get 2~2.5x faster decoding speed with negligible performance difference! 
+• Considerations before use 
+Mp Mq 
+• and should be pre-trained with the same tokenization scheme!  
+(e.g., GPT-2 and GPT- 3 would work, but not GPT-3 and LLaMa-7B) 
+• Hardware config matters: If you have 100 GPUs, running large model can actually be faster (rather than waiting for a small draft model that only takes up 10 GPU... => GPU utilization bottleneck, see page 5-6 in Chen et al.) 
+Large Model Reasoning - CSE 291 47 Lecture11: Natural Language Generation
+Decoding: Takeaways 
+• Decoding is still a challenging problem in NLG - there's a lot more work to be done! 
+• Different decoding algorithms can allow us to inject biases that encourage different  properties of coherent natural language generation 
+• Some of the most impactful advances in NLG of the last few years have come from  simple but effective modifications to decoding algorithms 
+48
+Large Model Reasoning - CSE 291 Lecture11: Natural Language Generation 
+Research project about decoding?
+Large Model Reasoning - CSE 291 49 Lecture14: Natural Language Generation 
+Why is Reasoning for Language Generation Challenging？ (Diverse) Constraints (e.g., linguistic, social, commonsense constraints)
+50 
+Why is Reasoning for Language Generation Challenging？ 
+(Diverse) Constraints 
+Many forms of reasoning Counterfactual Reasoning 
+[Qin et al., EMNLP 2019] 
+Temporal Reasoning 
+[Qin et al., ACL 2021] 
+Social Bias Reasoning 
+[Sap, Gabriel, Qin et al., ACL 2020] Deductive Reasoning 
+(e.g., linguistic, social, commonsense constraints)
+Abductive Reasoning 
+[Qin et al., EMNLP 2020] 
+Logical Reasoning 
+[Jung, Qin et al., EMNLP 2022] 
+Causal Reasoning 
+Commonsense Reasoning 
+… 
+Inductive Reasoning 
+51 
+Why is Reasoning for Language Generation Challenging？ 
+(Diverse) Constraints Many forms of reasoning 
+(e.g., linguistic, social, commonsense constraints)
+Counterfactual Reasoning Abductive Reasoning [Qin et al., EMNLP 2019] [Qin et al., EMNLP 2020] 
+Went to sushi bar last night… 
+Temporal Reasoning 
+[Qin et al., ACL 2021] 
+What if I ate salad? I  
+would be fine now. 
+Social Bias Reasoning 
+[Sap, Gabriel, Qin et al., ACL 2020] 
+Logical Reasoning 
+[Jung, Qin et al., EMNLP 2022] 
+Must because I ate  
+some bad sushi. 
+Causal Reasoning 
+Many forms of reasoning… 
+Wake up with violent stomach aches … 
+Deductive Reasoning 
+Commonsense Reasoning 
+… 
+Inductive Reasoning 
+52 
+Why is Reasoning for Language Generation Challenging？ 
+(Diverse) Constraints Many forms of reasoning 
+(e.g., linguistic, social, commonsense constraints)
+Counterfactual Reasoning Abductive Reasoning [Qin et al., EMNLP 2019] [Qin et al., EMNLP 2020] 
+Went to sushi bar last night… 
+(What if?) 
+Temporal Reasoning 
+•Coherent with context 
+（What might have happened?） 
+[Qin et al., ACL 2021] Logical Reasoning 
+What if I ate salad? I  
+would be fine now. 
+Social Bias Reasoning 
+[Sap, Gabriel, Qin et al., ACL 2020] 
+•Consistent with knowledge • Fluent language 
+•… 
+[Jung, Qin et al., EMNLP 2022] Must because I ate  
+some bad sushi. 
+Causal Reasoning 
+Many forms of reasoning… 
+Wake up with violent stomach aches … 
+Deductive Reasoning 
+Commonsense Reasoning 
+… 
+Inductive Reasoning 
+53 
+Why is Reasoning for Language Generation Challenging？ 
+(Diverse) Constraints 
+Many forms of reasoning 
+Counterfactual Reasoning [Qin et al., EMNLP 2019] 
+… 
+(What if?) 
+In infinite space of languageAbductive Reasoning 
+[Qin et al., EMNLP 2020] 
+（What might have happened?） 
+What if I ate beef taco? 
+What if I ate salad? I  
+would be fine now. 
+What if I cooked at home? I  would … 
+Went to sushi bar last night… 
+（What might have happened?） 
+Must because I ate  
+Must because I ate  
+some bad sushi. 
+some bad sushi. 
+
+What if I skipped dinner? I  would … 
+… 
+Not a multiple-choice problem 
+Choose one out of 3 options 
+Wake up with violent stomach aches … 
+54 
+Why is Reasoning for Language Generation Challenging？ 
+(Diverse) Constraints Many forms of reasoning … 
+(What if?) 
+In infinite space of languageAbductive Reasoning 
+[Qin et al., EMNLP 2020] 
+（What might have happened?） 
+Went to sushi bar last night… 
+（What might have happened?） 
+What if I ate beef taco? 
+N 
+Reasoning for a few out of  to satisfy the constraints 
+Must because I ate  
+Must because I ate  some bad sushi. 
+some bad sushi. 
+What if I cooked at home? I  
+(e.g., for text of length 20 and  
+would … 
+vocabulary size 50000, N = 50000 ) 20 
+Not a multiple-choice problem 
+What if I skipped dinner? I  would … 
+… 
+Choose one out of 3 options 
+Wake up with violent stomach aches … 
+55 
+Outline of this talk 
+Constraints Cause-Effect Logic 
+COLD Decoding 
+Steering machine reasoning to satisfy constraints 
+Many forms of reasoning Unified framework with energy-based modeling
+COLD Decoding: Energy-based constrained text generation with langevin dynamics [Qin et al., NeurIPS 2022] Oral 56 
+Outline of this talk 
+Constraints Cause-Effect Logic COLD Decoding 
+Steering machine reasoning to satisfy constraints 
+Many forms of reasoning In infinite space of language
+Unified framework with energy-based modeling Efficient differentiable reasoning on symbolic text 
+Oral 
+57 COLD Decoding: Energy-based constrained text generation with langevin dynamics [Qin et al., NeurIPS 2022] 
+Outline of this talk 
+Constraints Cause-Effect Logic 
+Maieutic Prompting COLD Decoding TimeTravel Delorean 
+Steering machine reasoning to satisfy constraints
+58 
+Text generation by language model Sampling from the LM distribution y ∼ pLM(y) 
+background 
+discrete text 
+y 
+my dog 
+is curious … LM 
+random content
+59 
+Reasoning requires to satisfy diverse constraints my dog … 
+Fluency 
+Self-consistency Right coherence 
+Left coherenceKeyword 
+LM 
+60 
+Reasoning requires to satisfy diverse constraints my dog … 
+Fluency 
+Self-consistency Right coherence 
+Left coherenceKeyword 
+LM 
+Prompted generation 
+Fluency Self-consistency 
+61 
+Reasoning requires to satisfy diverse constraints my dog … 
+Fluency 
+Self-consistency Right coherence 
+Left coherenceKeyword 
+LM 
+Data description 
+
+
+Lebron James dropped 26 points … Fluency Keyword 
+62 
+Reasoning requires to satisfy diverse constraints my dog … 
+Fluency 
+Self-consistency Right coherence 
+Left coherence Keyword 
+LM 
+Prompted generation 
+Data description 
+
+
+Lebron James dropped 26 points … 
+…
+Fluency Fluency Self-consistency Keyword 
+63 
+Reasoning requires to satisfy diverse constraints
+Fluency 
+Self-consistency Right coherence 
+Left coherence Keyword 
+Prior approach 
+Prompted generation 
+train the LM for each  combination of constraints 
+my dog is curious … 
+Data description 
+Abductive explanation 
+
+
+Left context Generation Right context 
+[Tan et al., 2021; Lu et al., 2022; Pyatkin, et al., 2022;  
+Welleck et al., 2023; Ramamurthy et al., 2023, etc.] Self-consistency 
+LM 
+left coherence Right coherence 
+Lebron James dropped 26 points … Fluency Keyword 
+64 
+Reasoning requires to satisfy diverse constraints 
+Fluency 
+Self-consistency Right coherence 
+Left coherence Keyword 
+Prior approach 
+Prompted generation 
+train the LM for each  combination of constraints 
+my dog is curious … 
+Data description 
+Abductive explanation 
+
+
+Left context Generation Right context 
+[Tan et al., 2021; Lu et al., 2022; Pyatkin, et al., 2022;  
+Welleck et al., 2023; Ramamurthy et al., 2023, etc.]Self-consistency 
+LM 
+left coherence Right coherence 
+Lebron James dropped 26 points … Fluency Keyword 
+Difficulty: too expensive!  
+65 
+Reasoning requires to satisfy diverse constraints 
+Self-consistency Left coherence 
+Fluency 
+Right coherence 
+Keyword 
+Prior approach 
+Prompted generation 
+train the LM for each  combination of constraints 
+my dog is curious … 
+Data description 
+Abductive explanation 
+
+
+Left context Generation Right context 
+[Tan et al., 2021; Lu et al., 2022; Pyatkin, et al., 2022;  
+Welleck et al., 2023; Ramamurthy et al., 2023, etc.] Self-consistency 
+LM 
+left coherence Right coherence 
+Lebron James dropped 26 points … (Fixed) 
+Fluency Keyword 
+Difficulty: too expensive!  
+Goal: to steer LM to reason with any  constraints, without need of training66 
+66 
+Reasoning requires to satisfy diverse constraints 
+Fluency 
+Self-consistency Right coherence 
+Our Approach: Overview Our Approach: Overview Left coherence 
+Keyword 
+COLD
+I. Many forms of reasoning (Energy-based modeling) 
+(i.e., combinations of constraints) 
+Prior approach 
+Prompted generation 
+my dog is curious … 
+A unified framework that allows plugging in arbitrary constraints  
+train/fi 
+Abductive explanation 
+II. In infinite space of language Left context Generation Right context 
+LM 
+Data description 
+
+
+Lebron James dropped 26 points … 
+[Tan et al., 2021; Lu et al., 2022; Pyatkin, et al., 2022; (Fixed) (Langevin dynamics) 
+Welleck et al., 2023; Ramamurthy et al., 2023, etc.] 
+left coherence Right coherence 
+Fluency Keyword 
+Self-consistency 
+Efficient differentiable reasoning on symbolic text 
+Difficulty: too expensive! Want to steer LM to reason with any  constraints, without need of training 
+67 
+67 
+Our Approach - I (Energy-based modeling) A unified framework that allows plugging in arbitrary constraints  
+Fluency 
+COLD
+Keyword 
+Left coherence 
+my dog is curious … 
+Self-consistency 
+Right coherence constraints 
+LM 
+(Fixed) 
+68 
+Our Approach - I (Energy-based modeling) A unified framework that allows plugging in arbitrary constraints  
+Fluency 
+my dog is curious … 
+“sleep” 
+COLD
+Left coherence Self-consistency 
+Right coherence constraints 
+“couch” Keyword 
+LM 
+(Fixed) 
+69 
+Our Approach - I (Energy-based modeling) A unified framework that allows plugging in arbitrary constraints  
+Fluency 
+COLD
+Left coherence 
+my dog 
+“sleep” 
+“couch” 
+Keyword 
+likes to sleep on couch 
+Self-consistency 
+Right coherence constraints 
+LM 
+(Fixed) 
+70 
+Our Approach - I (Energy-based modeling) A unified framework that allows plugging in arbitrary constraints  
+Fluency 
+COLD
+Left coherence 
+my dog 
+“sleep” 
+“couch” 
+Keyword 
+likes to sleep on couch 
+Self-consistency constraints 
+Right coherence 
+？ I love my cat. 
+LM 
+(Fixed) 
+71 
+Our Approach - I (Energy-based modeling) A unified framework that allows plugging in arbitrary constraints  
+Fluency 
+COLD
+Left coherence 
+my 
+“sleep” 
+“couch” 
+Keyword 
+cat 
+likes to sleep on couch 
+Self-consistency constraints 
+Right coherence 
+？ I love my cat. 
+LM 
+(Fixed) 
+72 
+Our Approach - I (Energy-based modeling) A unified framework that allows plugging in arbitrary constraints  
+Fluency 
+COLD
+Left coherence 
+my 
+“sleep” 
+“couch” 
+Keyword 
+cat 
+likes to sleep on couch 
+Right coherence Self-consistency ？ I love my cat. 
+LM 
+(Fixed) 
+Formulating constraints as energy functions 
+constraints 
+73 
+Our Approach - I (Energy-based modeling) A unified framework that allows plugging in arbitrary constraints  
+Energy functions 
+COLD 
+Fluency 
+E ( y ) Fluency 
+“sleep” 
+“couch” 
+=
+my 
+cat 
+likes to sleep on couch 
+The lower the energy value, the better satis y fies the constraint 
+Left coherence 
+Keyword 
+Right coherence Self-consistency ？ I love my cat. 
+LM 
+(Fixed) 
+Formulating constraints as energy functions 
+constraints 
+74 
+Our Approach - I (Energy-based modeling) A unified framework that allows plugging in arbitrary constraints  
+Energy functions 
+
+COLD
+my dog … LM 
+Fluency 
+E 
+y 
+E ( ) 
+Fluency 
+E ( y ; Keywords ) 
+KeywordE 
+Keyword 
+Left coherence Self-consistency 
+constraints 
+; E ( y left context) 
+Left coherence 
+. . . 
+？ I love my cat. 
+Formulating constraints as energy functions 
+75 
+Our Approach - I (Energy-based modeling) A unified framework that allows plugging in arbitrary constraints  
+Energy functions 
+
+COLD
+my dog … LM 
+Fluency 
+E( y ) = E + E + E +. . . 
+Keyword 
+Left coherence Self-consistency 
+Fluency 
+？ I love my cat. 
+Keyword Left coherence 
+Formulating constraints as energy functions 
+constraints 
+76 
+Our Approach - I (Energy-based modeling) A unified framework that allows plugging in arbitrary constraints  
+Energy functions 
+
+COLD
+my dog … LM 
+Fluency 
+E( y ) = E + E + E +. . . 
+Fluency 
+Keyword Left coherence 
+Keyword 
+Left coherence Self-consistency 
+constraints 
+Energy-based distribution: 
+penergy(y) = exp { − E(y)}/Z 
+？ I love my cat. 
+Formulating constraints as energy functions 
+77 
+Our Approach - I (Energy-based modeling) A unified framework that allows plugging in arbitrary constraints  
+Energy functions 
+COLD
+Fluency 
+E( y ) = E + E + E +. . . 
+Fluency 
+Keyword Left coherence 
+Keyword 
+Left coherence 
+Energy-based distribution: 
+penergy(y) = exp { − E(y)}/Z 
+discrete text 
+Self-consistency Right coherence 
+my 
+Fluency 
+Keyword 
+cat 
+likes to sleep on couch … 
+
+y 
+constraints 
+Right coherence 
+LM 
+(Fixed) 
+78 
+Our Approach - I (Energy-based modeling) A unified framework that allows plugging in arbitrary constraints  
+Energy functions 
+COLD 
+Fluency 
+E( y ) = E + E + E +. . . 
+Fluency 
+Keyword Left coherence 
+Keyword 
+Left coherence 
+Sampling from energy-based distribution: y ∼ penergy(y) = exp { − E(y)}/Z 
+discrete text 
+Self-consistency 
+Right coherence constraints 
+Fluency 
+Keyword 
+Right coherence 
+y 
+my cat likes to sleep on couch… 
+LM (Fixed) 
+79 
+Challenge: sampling text from energy-based  
+distribution is difficult! Energy functions 
+In infinite space of language
+Fluency 
+E( y ) = E + E + E +. . . 
+Fluency 
+Keyword Left coherence 
+Keyword 
+Sampling from energy-based distribution: 
+Left coherence 
+y ∼ 
+penergy(y) = exp { − E(y)}/Z 
+discrete text 
+my 
+cat 
+likes to sleep on couch 
+y 
+Self-consistency Right coherence 
+Z = ∑y′exp {−E(y′)} 
+… 
+Fluency 
+Intractable to sum over all possible text in  
+constraints 
+Keyword 
+Right coherence 
+the infinite space LM 
+(Fixed) 
+80 

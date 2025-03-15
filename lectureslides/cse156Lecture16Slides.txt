@@ -1,0 +1,737 @@
+
+CSE 291: Large Model Reasoning 
+15 - Alignment 
+Instructor: Lianhui Qin 
+1 Slides adapted from Yejin Choi
+Outline 
+• Background: What is Alignment of LLMs? 
+• Data: How can we get the data for instruction learning? 
+• Method: How can we align LLMs with supervised fine-tuning (SFT)? • Evaluation: How can we compare different LLMs in terms of alignment? 
+CSE 156 NLP 2 Lecture17: Alignment
+What alignment are you talking about?
+Son, if you wanna be  ChatGPT, you will need  to be aligned! 
+Supervised Fine-Tuning  
+(SFT) Instruction Following! 
+Hallucination! 
+Reinforcement Learning  
+from Human Feedback  
+(RLHF) 
+Safety! 
+Proximal Policy Optimization (PPO) 
+Task/Domain 
+Whaaat? Adaptation! Direct Preference Optim 
+(DPO) 
+
+CSE 156 NLP 3 
+Personalization! 
+What is Alignment of LLMs? 
+• Instruction Learning: teaching base LLMs to follow instructions • Preference Learning: adjusting instructed LLMs to behave as human expected 
+
+Base LLM e.g., Llama-2 
+I can complete  
+your text. 
+Instruction Learning (Part 1) 
+Preference Learning (Part 2) 
+I can better follow  
+your instructions. 
+Aligned LLM 
+e.g., Llama-2-chat 
+CSE 156 NLP 4
+Lecture17: Alignment 
+Llama-2Llama-2-Chat 
+How does alignment tuning teach LLM to be so good?
+5 
+Example: Llama-2’s alignment 
+Part 2! 
+Base LLM Aligned LLM 
+We are here for Part 1! 
+CSE 156 NLP 6
+Lecture17: Alignment 
+Dataset for Instruction Learning  
+• 1. Synthetic Conversion  
+• 2. Human Annotation  
+• 3. Collected from ChatGPT/GPT-4  
+• 3.1. Community Sharing  
+• 3.2. Strategic Collecting  
+CSE 156 NLP 7 Lecture17: Alignment
+Dataset for Instruction Learning  • 1. Synthetic Conversion of Existing NLP Datasets 
+https://blog.research.google/2021/10/introducing-flan-more-generalizable.html 
+CSE 156 NLP 8
+Lecture17: Alignment 
+Dataset for Instruction Learning  • 1. Synthetic Conversion of Existing NLP Datasets 
+An existing NLP task:  
+Binary Classification Converted to Seq2Seq tasks with different instruction templates.  —> Unified Data Formats for Massive Multi-Task Training 
+https://blog.research.google/2021/10/introducing-flan-more-generalizable.html 
+CSE 156 NLP
+9 
+Lecture17: Alignment 
+Dataset for Instruction Learning  • 2. Human Annotation:  
+
+OpenAssistant: An Open-Source Human Annotation Dataset 
+We are here for Part 1! Part 2. 
+ChatGPT’s pipeline for data collection. 
+CSE 156 NLP 10
+Lecture17: Alignment 
+Dataset for Instruction Learning  
+• 3.1. Community Sharing from ChatGPT 
+Natural Queries from  
+Human Users on GhatGPT 
+
+sharegpt.com 
+CSE 156 NLP 11
+WildChat: Providing Free GPT-4 APIs for Public Users  
+T-SNE plots of the embeddings of user prompts. 
+Lecture17: Alignment 
+Dataset for Instruction Learning  • 3.2. Strategical Collecting Data from ChatGPT 
+Self-instruct pipeline for data collection. https://arxiv.org/abs/2212.10560 
+CSE 156 NLP 12
+Lecture17: Alignment 
+Dataset for Instruction Learning  • 3.2. Strategic Collecting from ChatGPT 
+
+CSE 156 NLP 13
+Lecture17: Alignment 
+General Distribution of User-GPT Interactions 
+Coding & Creative  
+Writing are the major! 
+Most are classification &  
+reading comprehension. 
+https://arxiv.org/pdf/2310.12418.pdf 
+CSE 156 NLP 14
+Lecture17: Alignment 
+Supervised Fine-Tuning (SFT) for LLM Alignment 
+• 1. SFT  
+• 2. Efficient Fine-Tuning 
+CSE 156 NLP 15 Lecture17: Alignment
+Supervised Fine-Tuning (SFT) for Instruction Learning 
+Tokens for an example  
+(a pair of instruction & response) 
+x_1, …, x_N, y_1, y_2, …, y_M 
+Instruction Data 
+Instruction x 
+
+Output y 
+
+Context 
+Loss 
+LLM 
+Teacher  
+forcing 
+CSE 156 NLP 16
+Lecture17: Alignment 
+Supervised Fine-Tuning (SFT) for Instruction Learning 
+Full example 
+Teacher forcing 
+Learn the 1st output token 
+Learn the 2nd output token 
+ … 
+CSE 156 NLP 17
+Tokens for an example  
+(a pair of instruction & response) 
+x_1, …, x_N, y_1, y_2, …, y_M 
+Context 
+Loss 
+LLM 
+Teacher  
+forcing 
+Lecture17: Alignment 
+Efficient Fine-Tuning 
+• LoRA: Low-Rank Adaptation: Motivation 
+https://magazine.sebastianraschka.com/p/practical-tips-for-finetuning-llms 
+CSE 156 NLP 18
+Lecture17: Alignment 
+Efficient Fine-Tuning 
+• LoRA: Low-Rank Adaptation: before and after training 
+More Efficient SFT, and no  
+additional inference cost. 
+https://huggingface.co/docs/peft/conceptual_guides/lora 
+CSE 156 NLP 19
+Lecture17: Alignment 
+Efficient Fine-Tuning • Q-LoRA: Quantized LoRA 
+Optimizer state (32bit) Opt  (32bit) 
+Adapter  
+(16bit) 
+Opt  
+(32bit) 
+Adapter  (16bit) 
+Opt  
+(32bit) 
+Adapter  (16bit) 
+Opt  
+(32bit) 
+Adapter  (16bit) 
+Opt  
+(32bit) 
+Adapter  (16bit) 
+Opt  
+(32bit) 
+Adapter  (16bit) 
+
+CPU  
+Paging 
+Even more  
+efficient for  LoRA-tuning. 
+https://arxiv.org/abs/2305.14314 
+CSE 156 NLP 20
+Lecture17: Alignment 
+Evaluation of Alignment 
+• Benchmarking Datasets 
+• Human Annotation  
+• GPTs as Judges 
+• Open LLM Evaluators 
+• Safety Evaluation  
+CSE 156 NLP 21 Lecture17: Alignment
+Evaluation of LLM • Benchmarking Datasets 
+CSE 156 NLP 22
+Test base/aligned LLMs on a wide  range of reasoning tasks.  
+(Usually with few-shot ICL examples) 
+Not in conversation formats and many  tasks are less natural. 
+Lecture17: Alignment 
+Evaluation of LLM Alignment 
+• Human Votes 
+Elo Rating for  
+Ranking LLMs 
+Win-rate Matrix  
+
+CSE 156 NLP 23
+Lecture17: Alignment 
+Evaluation of LLM Alignment • GPTs as Judge Win Rates (as to text-davinci-003) 
+CSE 156 NLP 24
+Lecture17: Alignment 
+Evaluation of LLM Alignment • GPTs as Judge 
+MT-Bench: Scoring-based Evaluation of LLMs 
+Prompting  
+GPT-4 
+CSE 156 NLP 25
+Lecture17: Alignment 
+Open-Source LLM Evaluators 
+Collect GPT-4 evaluation annotation  
++ SFT on open-source LLMs 
+https://arxiv.org/pdf/2310.08491.pdf 
+CSE 156 NLP 26
+Lecture17: Alignment 
+Safety Evaluation: DecodingTrust https://arxiv.org/pdf/2306.11698.pdf 
+CSE 156 NLP 27
+Lecture17: Alignment 
+Safety Evaluation (cont.) CSE 156 NLP 28
+https://arxiv.org/pdf/2306.11698.pdf Lecture17: Alignment 
+Discussion  
+• Hallucination 
+• Retrieval Augmentation Generation (RAG) 
+• Superficial Alignment Hypothesis  
+• Etc. 
+CSE 156 NLP Alignment
+Hallucination Issues 
+Microsoft Bing (powered by ChatGPT + Web search) 1. Factual errors.  2. Fake information.  
+3. Bad coherence.  
+4. Contradiction.  
+5. Nonsensical outputs.  
+6. Fake/Wrong citations.  
+7. … 
+Aligned LLM 
+https://www.nytimes.com/2023/05/01/business/ai-chatbots-hallucination.html 
+Many instructions that contain  
+knowledge beyond pre-training corpora.  Base LLM 
+During SFT, we “force” the  
+LLM to memorize and answer  
+the questions that are beyond  
+their knowledge capacities. 
+Hallucinate when LLMs are uncertain  or have no enough knowledge. 
+CSE 156 NLP Alignment 
+Retrieval Augmentation Generation (RAG) 
+General SFT may not be enough for alignment.
+LLM’s internal knowledge can be  
+outdated or incomplete.  
+Users have their own personal docs &  data, but LLMs are not trained on them. 
+Users want to better control the LLMs by  customizing their knowledge and context. 
+Retrieval Augmentation Generation Workflow 
+1. Prepare an embedding model — usually a query encoder + a doc encoder  2. Index target docs as vector database.  
+3. Given a query, encode it and find most relevant docs.  
+4. Fuse the retrieved docs and augment LLM’s context for generalization. https://towardsdatascience.com/retrieval-augmented-generation-rag-from-theory-to-langchain-implementation-4e9bd5f6a4f2 
+CSE 156 NLP Alignment 
+What alignment are you talking about?
+Son, if you wanna be  ChatGPT, you will need  to be aligned! 
+Supervised Fine-Tuning  
+(SFT) Instruction Following! 
+Hallucination! 
+Reinforcement Learning  
+from Human Feedback  
+(RLHF) 
+Safety! 
+Proximal Policy Optimization (PPO) 
+Task/Domain 
+Whaaat? Adaptation! Direct Preference Optim 
+(DPO) 
+
+Personalization! 
+CSE 156 NLP Alignment 
+The Adaptation Recipe 
+Pre-training Instruction Tuning RLHF/RLAIF 
+In-Context Learning Alignment: • Instruction following 
+• Preference tuning 
+• Safety 
+• Etc.
+CSE 156 NLP Alignment 
+
+??? 
+
+Alignment = GPUs + Data + Human + Money + Time?
+250K SFT 
+326K SFT + 60K DPO 
+100K SFT + 1M RLHF 
+2024/01/27 
+CSE 156 NLP Alignment 
+What does alignment tuning teach? 
+Knowledge? Reasoning? Or, … just the Style?  
+How many examples should we use for alignment? The more the better? 100K, 1K, or, … only 3? 
+Do we have to tune model weights? 
+What if we only do in-context learning?
+CSE 156 NLP Alignment 
+Limitations of Instruction Tuning LM objective != human  
+• Why do we need RLHF? 
+preferences
+CSE 156 NLP Alignment 
+Limitations of Instruction Tuning 
+• Why do we need RLHF? • (Open-ended) generation: 
+LM objective != human  preferences
+• What makes one output better than the other? -> hard to define • What types of LM errors should be weighted more? 
+CSE 156 NLP Alignment 
+Limitations of Instruction Tuning • Why do we need RLHF? 
+• (Open-ended) generation: How do you capture all of the following and more  in a loss function: 
+• What is a helpful output? • What is a polite output? • What is a funny output? • What is a safe output? 
+LM objective != human  preferences
+CSE 156 NLP Alignment 
+RLHF! 
+arxiv in Sep 2019 
+NeurIPS 2020
+arxiv in Sep 2020 
+NeurIPS 2020 
+CSE 156 NLP Alignment 
+“Learning to Summarize with Human Feedback” 
+https://openai.com/research/learning-to-summarize-with-human-feedback 
+CSE 156 NLP Alignment
+“Learning to Summarize with Human Feedback” 
+RL methods don’t  always assume  “preference-based” (j is better than k)  human feedback  and reward model,  but that’s what’s  common with  
+current “RLHF”  approaches
+https://openai.com/research/learning-to-summarize-with-human-feedback 
+CSE 156 NLP Alignment 
+“Fine-Tuning Language Models with Human Feedback” 
+
+CSE 156 NLP Alignment
+The general RLHF pipeline 
+1 
+3 
+2 Train Reward  
+4 
+Use RL to  
+Instruction tuned Model 
+
+Collect  
+Comparison Data 
+Model on  Comparison  Data 
+✚
+Optimize a  Policy with the  Reward Model 
+
+CSE 156 NLP Alignment 
+Human Preferences 
+Prompt 
+A set of sampled  
+completions for a prompt.Sample A 
+Sample B 
+Sample C 
+Ranking of the samples. C ➡A ➡ B 
+CSE 156 NLP Alignment 
+Human Preferences 
+A set of sampled  
+completions for a prompt. 
+Triples 
+Prompt 
+Sample A Sample B 
+D = {xi, yiw, yil} 
+Sample C 
+Prompt Preferred  Response 
+Dispreferred  Response
+CSE 156 NLP Alignment 
+Example: Annotation 
+� Can you help me write a resignation letter to my current employer, while leaving on  good terms and expressing gratitude for the opportunities provided? 
+� Here are two responses from the chatbot. (Please scroll down on the content to see  the entire response if it is too long)
+• Annotator needs  
+to choose  
+whether they  
+prefer A or B.  
+CSE 156 NLP Alignment 
+Pairwise Comparison 
+Why do pairwise comparison and not rate outputs directly? 
+� Compose an engaging travel blog post about a recent trip to Hawaii, highlighting  cultural experiences and must-see attractions
+How would you rate this output? 
+• Hard to be consistent among different annotators! 
+• It’s more reliable (Phelps et al., 2015; Clark et al.,  
+2018) 
+• Can be used with the Bradley-Terry (1952) model 
+CSE 156 NLP Alignment 
+From Preference Data to Bradley-Terry Model 
+D = {xi, yiw, yil} 
+Prompt Preferred  Response 
+Dispreferred  Response 
+Reward for  
+preferred response 
+Reward for  
+dispreferred response 
+p(yw > yl|x) = (r(x, yw)  r(x, yl)) 
+Logistic function;  
+to using softmax: p(yw > yl|x) = exp(r(x, yw)) 
+which is equivalent  
+exp(r(x, yw)) + exp(r(x, yl)) 
+1 
+1 + ex
+CSE 156 NLP Alignment 
+But.. 
+• How do we get feedback for the reward while training our RL model? 
+� Which output do  
+you prefer? � Having a human in the loop  is very expensive!
+CSE 156 NLP Alignment 
+But.. 
+• How do we get feedback for the reward while training our RL model? 
+Instead: train a Reward  
+Model (RM) on preference  
+data to predict preferences! 
+Ziegler et al., 2019 “Fine-Tuning Language Models from Human Preferences”
+CSE 156 NLP Alignment 
+Reward Model • Train on preference data. 
+p(yw > yl|x) = exp(r(x, yw)) exp(r(x, yw)) + exp(r(x, yl)) 
+• Minimizing negative log likelihood. 
+Bradley-Terry Model 
+equivalent to 
+LR(, D) = E(x,yw,yl)sD[log (r(x, yw)  r(x, yl))] 
+• Train an LLM with an additional layer to minimize the neg. log likelihood CSE 156 NLP Alignment
+Evaluating Reward Models • Accuracy of predicting human preferences. 
+Preference Datasets 
+Reward  
+Models
+Cui et al., ArXiV 2023 “UltraFeedback: Boosting Language Models with High-quality Feedback” 
+CSE 156 NLP Alignment 
+Fun Facts about Reward Models 
+• Trained for 1 epoch (to avoid overfitting)! 
+• Evaluation often only has 65% - 75% agreement 
+Lambert et al., 2023
+CSE 156 NLP Alignment 
+Reinforcement Learning Basics 
+state 
+reward 
+Agent 
+⇡✓(·) St 
+rt 
+Target Environment 
+at s ⇡✓(St) : policy
+at 
+action 
+CSE 156 NLP Alignment 
+RL in the Context of Language Models… 
+Tokens generated state 
+reward 
+Agent 
+⇡✓(·) St rt 
+Language model at 
+action 
+Target Environment at s ⇡✓(St) : policy 
+Next token to generate
+CSE 156 NLP Alignment 
+REINFORCE (from the NLG module) 
+• Sample a sequence from your model, score the sequence, and use the score to train the  
+In a shocking finding, scientist discovered a herd of unicorns living in a remote,  model. 
+previously unexplored valley, in the Andes Mountains. Even more surprising to the  T 
+researchers was the fact that the unicorns spoke perfect English. 
+LRL = − 
+∑ t=1 
+r(ŷt) log P(ŷt|{y*}; {y}̂<t)
+<END> 
+ŷ1 ŷ2 
+...ŷT−2 ŷT−1 ŷT 
+y*−2 ŷ1 ... 
+y*−1 y*0 <START> 
+ŷ2 
+ŷT−3 ŷT−2 ŷT−1 
+CSE 156 NLP Alignment 
+REINFORCE (from the NLG module) 
+• Sample a sequence from your model, score the sequence, and use the score to train the  
+In a shocking finding, scientist discovered a herd of unicorns living in a remote,  model. 
+previously unexplored valley, in the Andes Mountains. Even more surprising to the  researchers was the fact that the unicorns spoke perfect English. 
+Next time, increase the probability of this  
+LRL = − 
+r( ⋅ ) 
+T 
+∑ t=1 
+sampled token in the same context. 
+r(ŷt) log P(ŷt|{y*}; {y}̂<t) 
+... but increase it more  
+if I get a higher reward 
+from the reward  
+function. 
+• : Your reward model 
+y* 
+• : Input sequence given to the model ŷy* • : The sequence sampled from the model given  
+ŷ1 ŷ2 
+<END> 
+... ŷT−2 ŷT−1 ŷT 
+y*−2 ŷ1... 
+y*−1 y*0 <START> 
+ŷ2 
+ŷT−3 ŷT−2 ŷT−1 
+CSE 156 NLP Alignment
+Summary of Policy Gradient for RL 
+REINFORCE Update: 
+✓t+1 := ✓t + ↵1mXm 
+i=1 
+R(Si)r✓t log p✓t (Si) 
+Simplified Intuition: good actions are reinforced and bad actions are discouraged.Williams, 1992 
+CSE 156 NLP Alignment 
+Summary of Policy Gradient for RL 
+REINFORCE Update: 
+✓t+1 := ✓t + ↵1mXm 
+i=1 
+R(Si)r✓t log p✓t (Si) 
+If: Reward is high/positive Then: maximize this 
+Simplified Intuition: good actions are reinforced and bad actions are discouraged Williams, 1992 
+CSE 156 NLP Alignment 
+Summary of Policy Gradient for RL 
+REINFORCE Update: 
+✓t+1 := ✓t + ↵1mXm 
+i=1 
+R(Si)r✓t log p✓t (Si) 
+If: Reward is negative/low Then: minimize this 
+Simplified Intuition: good actions are reinforced and bad actions are discouraged Williams, 1992 
+CSE 156 NLP Alignment 
+Policy 
+• We have: Reward Model 
+• Next step: learn a policy to maximize the reward (minus KL regularization term)  using the reward model 
+max 
+⇡✓ExsD,ys⇡✓(y|x)[r(x, y)]  DKL[⇡✓(y|x)||⇡ref (y|x)] 
+Sampling from policy 
+Reward given prompt  and sampled generation 
+KL-divergence between original model’s generation and the sampled generation
+CSE 156 NLP Alignment 
+Policy 
+• We have: Reward Model 
+• Next step: learn a policy to maximize the reward (minus KL regularization term)  using the reward model 
+max 
+⇡✓ExsD,ys⇡✓(y|x)[r(x, y)]  DKL[⇡✓(y|x)||⇡ref (y|x)] {
+Sampling from policy 
+{Should be low! 
+Reward given prompt  and sampled generation 
+Should be high! 
+KL-divergence between original model’s generation and the sampled generation 
+CSE 156 NLP Alignment 
+PPO!  
+Proximal Policy Optimization arxiv in July 2017 
+63
+PPO: builds on Policy Gradient Methods 
+Advantage function (we’ll come back to this later)
+Gradient Estimator 
+gˆ= Eˆt[5✓ log ⇡✓(at|st)Aˆt] 
+Aˆt 
+: estimator of the advantage function at timestep t 
+⇡✓ 
+Expectation: empirical average over a finite batch of samples 
+Objective / Loss: 
+LP G(✓) = Eˆt[log ⇡✓(at|st)Aˆt] 
+Often leads to (too) large policy updated 
+: policy that we are trying to learn via PPO;   this is initialized as a language model 
+Schulman, 2017 
+CSE 156 NLP Alignment 
+PPO: builds on Trust Region Methods (TRPO) 
+“Surrogate objective” 
+✓Eˆt[ ⇡✓(at|st) 
+⇡✓old (at|st)Aˆt] 
+Instead of using the learned policy  directly, we use the ratio between  learned & original policy 
+✓old maximize : original policy parameters subject to Eˆt[KL[⇡✓(·|st), ⇡✓old (·|st)]]  
+Constraint on the size of the policy update 
+Schulman, 2017 
+CSE 156 NLP Alignment 
+PPO: Clipped Surrogate Objective 
+“Surrogate objective”: 
+LCPI (✓) = Eˆt[ ⇡✓(at|st) 
+⇡✓old (at|st)Aˆt] = Eˆt[rt(✓)Aˆt] 
+Without constraint this leads to a too large policy update. Objective proposed by PPO paper: 
+ratio of policies,  not reward
+LCLIP (✓) = Eˆt[min(rt(✓)Aˆt, clip(rt(✓), 1  ✏, 1 + ✏)Aˆt] Schulman, 2017 
+CSE 156 NLP Alignment 
+PPO: Clipped Surrogate Objective 
+“Surrogate objective”: 
+LCPI (✓) = Eˆt[ ⇡✓(at|st) 
+⇡✓old (at|st)Aˆt] = Eˆt[rt(✓)Aˆt] 
+Without constraint this leads to a too large policy update. 
+ratio of policies,  not reward
+Objective proposed by PPO paper: 
+✏ : hyperparameter 
+LCLIP (✓) = Eˆt[min(rt(✓)Aˆt, clip(rt(✓), 1  ✏, 1 + ✏)Aˆt] 
+Clips the probability ratio (prevents r from  
+Take the minimum of the clipped and moving outside of the interval) unclipped objective: final objective is a lower  
+bound on the unclipped objective 
+Schulman, 2017 
+CSE 156 NLP Alignment 
+PPO: Clipped Surrogate Objective 
+If A>0, optimization  will want to raise L as  much as possible,  thus clip r at 1+  
+epsilon 
+If A<0, optimization  will want to lower L as  much as possible,  thus clip r at 1-  
+epsilon
+Schulman, 2017 
+CSE 156 NLP Alignment 
+PPO: the Value Model 
+• PPO trains two models (a is an action, s is a state): not just policy, but also value 
+• Policy model • Value model 
+⇡✓(at|st) V(st) 
+Value is  
+the expected return  of a state s_t 
+G_t is the  
+“empirical return” or  “discounted future reward” (starting at s_t) 
+• Value function  
+V(st) = E⇡[Gt] = E⇡[XT t0=t 
+t0trt0 |st = s] 
+• “Attempts to minimize the value estimation error against the empirical  LV F 
+return” 
+t (✓)=(V(st)  Gt)2
+Liu et al., 2023 
+CSE 156 NLP Alignment 
+PPO: the Advantage Function 
+Advantage function is about the advantage of taking action a_t at  
+state s_t over all other actions (computed in terms of the expected  
+discounted returns of any action versus action a_t)
+Aˆt = Aˆ(st, at) = V (st) + Gt : Advantage function 
+Gt = XT 
+t0trt0 : Empirical return (of taking a particular action a_t at a particular state s_t) 
+t0=t 
+rt = 
+( 
+ log ⇡✓(at|st) 
+⇡✓old (at|st) + r(sT +1) (where t = T) 
+ log ⇡✓(at|st) 
+⇡✓old (at|st) (where 1  t<T) 
+This way of setting the token-level  reward is the common implementation  among the original RLHF paper,  AlpacaFarm, Quark, Rainier etc 
+Schulman, 2017;  Liu et al., 2023 
+CSE 156 NLP Alignment 
+PPO: Final Objective 
+coefficients 
+t (✓) = Eˆt[LCLIP✓ 
+LCLIP +V F +S 
+t  c1LV F 
+t (✓) + c2S[⇡✓](st)] 
+entropy bonus: ensures  
+sufficient exploration 
+CLIP Objective: 
+Value Objective, 
+LCLIP (✓) = Eˆt[min(rt(✓)Aˆt, clip(rt(✓), 1  ✏, 1 + ✏)Aˆt] LV F 
+Squared-error loss: 
+Linear combination of policy and value objectives 
+t (✓)=(V(st)  Gt)2Schulman, 2017 
+CSE 156 NLP Alignment 
+PPO: Final Objective 
+coefficients 
+t (✓) = Eˆt[LCLIP✓ 
+LCLIP +V F +S 
+t  c1LV F 
+t (✓) + c2S[⇡✓](st)] 
+entropy bonus: ensures  
+sufficient exploration 
+CLIP Objective: 
+Value Objective, 
+t (✓)=(V(st)  Gt) LCLIP 2 (✓) = Eˆt[min(rt(✓)Aˆt, clip(rt(✓), 1  ✏, 1 + ✏)Aˆt]
+Squared-error loss: 
+Linear combination of policy and value objectives 
+LV F 
+This is abandoned in recent  implementations 
+Schulman, 2017 
+CSE 156 NLP Alignment 
+PPO 
+Lambert, 2023
+CSE 156 NLP Alignment 
+PPO 
+SFT 
+Instruction-tuned model Reward 
+GAE 
+Policy 
+&' (#$|%$) !(!"# 
+(2, 4) 
+6(2, 4) 
+(s$, #$) 
+!(&'(#$|%$) 
+div ÷ 
+KL 
+!!"#(#$|%$) 
+Model '-./ 
+Model !(#, %) 
+6(s$, #$) 
+• Advantage Function 87(s$, #$) = ∑ ;< )=$*) 
+LM '*+, 
+%$%&(''|)') %& (''|)') 
+%$!"# 
+"$ 
+(s$, #$) 
+! "!, … , "'(! 
+Value 
+%$ '(s$) 
+• TD Error 
++' = -(s', '') + 01(s')!) − 1 (s') • Return 
+87(s$, #$) 
+PPO-clip Loss 
+#$ (%$, #$) 
+"' 
+!% 
+Divide 
+Model (0()1) 
+)($ = 87(s$, #$) + '(s$) 
+LM Loss 
+(2, 4) ! "!, "", … , "# 
+87(s$, #$) )($ 
+Pretraining Data 
+&' (#$|%$) !%!"# 
+Policy LM 
++, 
+(s$, #$) 
+&' (#$|%$) !%!"# 
+(s$, #$) 
+87(s$, #$) Value Model 
+)($ 
+'*!"# 
+&' (#$|%$) !%!"# 
+)($ 
+%$ 
+(0()1) 
+' %$ 
+MSE Loss
+! User Query 
+Experience Buffer 
+Zheng et al., 2023 
+CSE 156 NLP Alignment 
+Evaluating the Learned Policy 
+• Win Rate: How often does my policy’s output win against a reference model’s  output, given the same instruction? 
+• Who compares the two outputs? 
+• Humans 
+• Simulate humans (and human variability!) using GPT-4 (f.ex. Alpacafarm  eval) 
+Dubois et al., 2023
+CSE 156 NLP Alignment 
+RLHF vs. finetuning 
+• Win-rate over human-written  
+reference summaries 
+• RLHF outperforms supervised  
+learning and pretraining only for  
+generating summaries. 
+Stiennon et al., 2023
+CSE 156 NLP Alignment 
+A short history of LLMs 
+• 2017: transformer 
+• 2018: Elmo, GPT-1 and BERT 
+• 2019: GPT-2, early research on RLHF 
+• 2020: GPT-3, “Learning to summarize with HF” 
+• 2022: ChatGPT, Claude, RLHF gains a lot of public attention • 2023: GPT-4 
+CSE 156 NLP Alignment
+*GPT 
+• InstructGPT 
+• Instruction Tuning + RLHF 
+• ChatGPT 
+• Instruction Tuning + RLHF for dialog agents 
+https://openai.com/blog/chatgpt
+CSE 156 NLP Alignment 
+Direct Preference Optimization
+DPO 
+• Key take-aways: 
+• DPO optimizes for human preferences while avoiding reinforcement learning. 
+• No external reward model / the DPO model is the reward model CSE 156 NLP Alignment
