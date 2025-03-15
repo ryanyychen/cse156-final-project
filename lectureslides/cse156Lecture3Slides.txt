@@ -1,0 +1,1121 @@
+
+CSE 156 Natural Language Processing 
+Language Modeling and N-Grams 
+Instructor Lianhui Qin 
+Slides adapted from Yejin Choi 
+1
+Prerequisites  
+ We would expect you to have decent foundations in probability and  statistics CSE 103 or equivalence, and strongly recommend background  with linear algebra, deep learning, and machine learning.  
+ You're also expected to develop the ability to program comfortably with  Python and using PyTorch through the course. We will have tutorial  sessions for these. 
+ If you're unsure about whether your background prepare you well in the  class, please consult the course staff during the first week of the class. We  are here to help  
+Some great tutorial notebooks available online Stanford CS224N, UW CS447517
+Statistical NLP - CSE 156 2 
+Advanced or conceptual questions 
+For basic questions 
+e.g., clarifications about lecture content, logistics, discussion,  or assignments
+Statistical NLP - CSE 156 3 
+Recap 4
+Learning Language Models 
+ps s 
+Goal Assign useful probabilities to sentences  
+ Input many observations of training sentences  
+D  s1, s2,...,sN  
+ Output system capable of computing  
+ps 
+Probabilities should broadly indicate plausibility 
+ 
+PI saw a van  Peyes awe of an 
+ Not necessarily same as grammaticality  
+Partichokes intimidate zippers  0 
+CSE 156 NLP 5 Language Modeling and N-Grams
+Learning LMs - Empirical Distribution 
+ps 
+How to estimate ? 
+ Empirical distribution over training sentences  
+D 
+ps  countDs 
+N for sentence s  x1, x2,...,xk with s 2 V, xi 2 V, and N  D  Problem does not generalize at all 
+ Need to assign non-zero probability to previously unseen sentences! CSE 156 NLP 6 Language Modeling and N-Grams
+Learning LMs - UnigramBag of Words s STOP 
+Assumption 1 All sentences are finite, and end with a token V0 V  STOP 
+xi qxi 
+Assumption 2 Each word is generated i.i.d. with probability  
+ps  x1, x2, , xn  Yn i1 
+qxi X xi2V0 
+qxi  1 8xi 2 V0, qxi  0 qxi STOP 
+Generative process Keep picking words from until is chosen 0th order MarkovGraphical Model Representation 
+x1 x2  xn1 STOP 
+Also known as bag of words because word order does not matter! 
+e.g.,  
+pI eat ice cream  peat I ice cream    pcream ice eat i 7
+CSE 156 NLP Language Modeling and N-Grams 
+UnigramBag of Words - Example 
+For example  
+D  ss 2 lines in Taylor Swift songs 
+V0 Cause, shouldve, her, . . . , river, When, STOP Unigram Model 
+Word Probability q 
+STOP 12.8 you 3.5 I 3.4 the 2.5 to 1.6 a 1.5   Time. 0.02 oceans 0.02 
+We dark last This just life back away, Eyes, like break, It's can't  cover STOP 
+STOP 
+STOP 
+'Til dress door. frustrating touch now love, STOP She you argue, about when And stood out can't STOP You're off heart memorized lights You back saw STOP only why the you my You they back spelling STOP the you say, And so a you STOP 
+leave you I was ey-eyes STOP 
+Give STOP 
+8
+CSE 156 NLP Language Modeling and N-Grams 
+Bigram 
+Assumption Each word depends only on its preceding neighbor 
+ps  x1,...,xn  Yn i1 
+qxi  xi1, and X xi2V0 
+qxi  xi11, with x0  START START 
+Generative process 1 generate the first word conditioning on special token,  qxixi1 STOP 
+2 Keep picking words from until 3 is chosen 1st order MarkovGraphical Model Representation 
+Note 
+START x1 x2  xn1 STOP 
+ When we introduce the token, we are making the assumption that the  
+START 
+START 
+sentence starts with the special start word . So, when we talk about  px1,  , xn px1,  , xnx0  START 
+ we are really talking about  
+STOP START 
+ While we needed to add to the vocab, we did not add . Why? 
+9
+CSE 156 NLP Language Modeling and N-Grams 
+Bigram - Example 
+Bigram Model 
+pv1, v2 
+Word 1 Word 2 Probability START And 1.5 START I 1.2 START You 0.6 START But 0.5 
+you, STOP 0.4 And I 0.3 in the 0.2 
+   
+you at 0.01 How strange 0.01 
+10
+Cause Ive left you for all night goes dark side of fate decides  STOP 
+And I know this Sunday STOP 
+Pierce the only friend STOP 
+Did you trying to let you call anymore STOP 
+And every laugh, STOP 
+in this was all that, STOP 
+No matter what you want you that I'll take a million little dream  STOP 
+In the rain STOP 
+Can't help it to joke about at the woods?! STOP Regretting him all the lights STOP 
+Any better? 
+CSE 156 NLP Language Modeling and N-Grams 
+N-Gram Model 
+Assumption Each word depends only on its N-1 preceding neighbors 
+ps  x1,...,xn  Yn i1 
+qxi  xiN1,  , xi1, and X xi2V0 
+qxi  xiN1,  , xi11 
+with xN1    x0  START 
+Generative process Same as bigram 
+N-1th order MarkovGraphical Model 
+E.g., trigram or 3-gram 
+pthe dog barks STOP qthe  START, START  qdog START, the  qbarks the, dog  qSTOP dog, barks 
+CSE 156 NLP 11 Language Modeling and N-Grams
+N-Gram Model - Examples Her down wearYou world first STOP 
+Unigram n1 Bigram n2 Trigram n3 
+you You Maybe STOP 
+This STOP 
+it STOP 
+distracted by surprise me on the woods?! STOP 
+But if time STOP 
+Hold on the dress STOP 
+This is danger STOP 
+South of France STOP 
+Wonderin which version of you STOP 
+Follow procedure, remember? Oh wait you got the keys to me like STOP And I'll never judge you STOP 
+ 
+6-gram 
+What do you notice about the fluency as N gets larger? 
+Mandolin STOP 
+And you were just gone and gone, gone and gone STOP 
+And swords and weapons that you use against me STOP 
+Wasn't it you that told me? STOP 
+12
+CSE 156 NLP Language Modeling and N-Grams 
+N-Gram Model - Parameter Estimation 
+Maximum Likelihood Estimation MLE 
+For u, v, w 2 V0 
+qu  countDu 
+x2V0 countDx qv  u  countDu, v 
+P 
+x2V0 countDu, x qw  u, v  countDu, v, w P 
+P 
+x2V0 countDu, v, x  
+How does the number of parameters needed to fit grow with N? 
+OV0N  
+ - exponential w.r.t. N! 
+Other notes 
+ For N1, text is not very fluent 
+ As N gets larger, the text becomes more fluent but more overfit on the  training corpus 
+CSE 156 NLP 13 Language Modeling and N-Grams
+Model quality 
+The goal isnt to pound out fake sentences! 
+ Sentences get better as we increase the model order, BUT  Using ML estimators, higher order is always better fit on train, but not  necessarily on test 
+What we really want to know is 
+ Will our model prefer good sentences to bad ones? 
+ Bad  ungrammatical! 
+ Bad  unlikely 
+CSE 156 NLP 14 Language Modeling and N-Grams
+Language Model Evaluation 
+Would like to understand how the LM performs on unseen text General Approach 
+ Take a training set and a test set  
+D D0 
+ Fit a model e.g., n-gram on training set  
+M D 
+ Evaluate the model on unseen test set  
+D0 
+M D0 
+ We care about performance of on not because it is special in any way, but  D0 
+because serves as a sample of the distribution of unseen text  Measure the likelihood of the samples in under the model  
+D0 M 
+  
+pMD0 
+CSE 156 NLP 15 Language Modeling and N-Grams
+Measures of fit 
+ Likelihood probability of the data under the model  
+pMD0 
+ Log Likelihood log of the probability of the data w.r.t model  logpMD0 
+ Negative log likelihood  
+logpMD0 
+ Perplexity inverse probability of the data, normalized by the number  
+of words or tokens  
+P PMD0  pMD0 1N 
+Want to find model that maximizes likelihood on training set 
+M arg max M 
+pMD 
+CSE 156 NLP 16 Language Modeling and N-Grams
+Measures of fit - Properties 
+ Likelihood  
+pMD0 
+ Easy to interpret - probability of the data under the model  Gets smaller as N decreases. Why? 
+ Negative Log Likelihood  
+logpMD0 
+ More numerically stable because can deal in sums instead of products  Negative because minimization is notationally used more in ML than  maximization 
+ Perplexity  
+P PMD0  pMD0 1N 
+ Amount of surprisal in the data 
+ Does not get smaller as N grows 
+CSE 156 NLP 17 Language Modeling and N-Grams
+Back to N-grams 
+Maximum Likelihood Estimation MLE For u, v, w 2 V0 
+qu  countDu 
+Training set 
+ denied the allegations  denied the reports  denied the claims  denied the request 
+x2V0 countDx qv  u  countDu, v P 
+P 
+x2V0 countDu, x  
+Test set 
+Assume we have fit an MLE k-gram model on our  training data, and we evaluate a sentence with an  n-gram not present in the training set. 
+ denied the offer  denied the loan 
+What happens to the likelihood and perplexity?  Likelihood is 0, cannot compute perplexity!  Ideas for how to fix? 
+18
+poerdenied the  0 
+CSE 156 NLP Language Modeling and N-Grams 
+Smoothing regularization 
+General procedure 
+ Take your empirical counts 
+ Modify them in various ways to improve estimates 
+General method mathematically 
+ Often can give estimators a formal statistical interpretation but not  always 
+ Approaches that are mathematically obvious arent always what works CSE 156 NLP 19 Language Modeling and N-Grams
+Smoothing regularization pxdenied the 
+ Often want to make estimates from  Probability 
+sparse statistics 
+ Smoothing flattens spiky  
+distributions so they generalize  
+50 
+37.5 
+25 
+12.5 
+0 
+allegations 
+reports 
+request 
+... 
+better 
+ Regularization is very important in  NLP and ML generally, but easy  
+Probability 
+to do badly! 
+ Question what are potential ways  
+claims 
+30 
+22.5 
+15 
+7.5 
+0 
+charges 
+benefits 
+motion 
+to do it? 
+allegations 
+reports 
+request 
+... 
+20
+claims 
+charges 
+benefits 
+motion 
+CSE 156 NLP Language Modeling and N-Grams 
+Add-one estimation 
+ Also called Laplace smoothing 
+ Pretend that we saw each word one more time than we did  Just add one to all the counts! 
+qMLExi  xiN1,...,xi1  countDxi  xiN1,...,xi1 
+P 
+xi2V0 countDxi  xiN1,...,xi1 
+qADD-1xi  xiN1,...,xi1  countDxi  xiN1,...,xi11 
+P 
+xi2V0 countDxi  xiN1,...,xi1 V0 
+CSE 156 NLP 21 Language Modeling and N-Grams
+Add-k 
+k  0, k 2 R 
+ In general, can add do add-k for  
+ Pretend that we saw each word k more times than we did qADD-kxi  xiN1,...,xi1  countDxi  xiN1,...,xi1  k 
+P 
+xi2V0 countDxi  xiN1,...,xi1 kV0 qMLE 
+ Side note 1 Equivalent to a convex combination between the and the  qUNI  UniformV0 
+uniform distribution  
+qADD-k  qMLE  1  qUNI  countDxi  xiN1,...,xi1 
+P 
+xi2V0 countDxi  xiN1,...,xi1 kV0 
+ Side note 2 Equivalent to a maximum a posteriori MAP estimate of the  
+distribution given a Bayesian prior of  
+qx  Dirichletk 
+ Convex combinations of multiple distributions are effective in general! CSE 156 NLP 22 Language Modeling and N-Grams
+Convex Combinations 
+Claim If p1, p2,...,pn are probability distributions with the same support, then for any 1, 2,..., n 
+s.t. XN i1 
+Proof 
+i  1 and i  0, then pcomb  Xn i1 
+ipi is a valid probability distribution. 
+1. Non-negativity 8x, ipix  0 since i  0 and pix  0. 
+Hence, pcombx  Xn i1 
+ipix  0. 
+2. Normalization X x 
+pcombx  X x 
+Xn i1 
+ipix  Xn 
+i 
+i1 
+X x 
+pix 
+ Xn i1 
+i  1  XN i1 
+i  1. 
+CSE 156 NLP 23 Language Modeling and N-Grams
+Convex Combinations 
+ Problem is supported by few counts 
+qw  u, v 
+ Classical solution mixtures of denser, related histories 
+qmixw  u, v  3qw  u, v  2qw  v  1qw s.t. 1  2  3  1 and 1, 2, 3  0  Often works better than Add-K for several reasons 
+ Can flexibly include multiple back-off contexts 
+ Good ways of learning the mixture weights with EM later 
+ Not entirely clear why it works so much better 
+ All the details you could ever want Chen and Goodman, 98 CSE 156 NLP 24 Language Modeling and N-Grams
+Experimental Design 
+Important tool for optimizing model generalization 
+Training Data Validation 
+Data 
+Test Data 
+ Training data used to estimate base n-gram or other models without  regularizationsmoothing 
+ Validation or development data used to estimate generalization to out-of distribution OOD data. Pick hyperparameters that control the degree of  regularization to maximize OOD generalization. 
+ Can use any optimization technique line search or EM often easiest  Test data important not to touch until you have finalized a model and  hyperparameters for scientific validity 
+25
+CSE 156 NLP Language Modeling and N-Grams 
+Unknown words 
+ If we know all of the words in advance is fixed, closed vocabulary task 
+V 
+ Often we dont know this 
+ Out of vocabulary  OOV words 
+ Open vocabulary task 
+ Create an unknown work token  
+UNK 
+ Training of probs 
+ Create a fixed lexicon  
+V 
+V UNK 
+UNK 
+ At text normalization phase, any training word not in changed to   Train its probabilities like a normal word 
+ At decoding time 
+UNK 
+ Use probabilities for any word not in training 
+CSE 156 NLP 26 Language Modeling and N-Grams
+Implementation Details 
+ Do everything in log space! 
+ Avoid underflow 
+ Adding is faster than multiplying 
+ Although log can be slower than multiplication logp1  p2  p3  p4  logp1  logp2  logp3  logp4 
+log
+ Yn i1 
+! 
+pi 
+ Xn i1 
+27
+logpi 
+CSE 156 NLP Language Modeling and N-Grams 
+Tokenization 
+Tokenization is the process of splitting a large chunk of text into  smaller, manageable pieces called tokens.
+
+Large Model Reasoning - CSE 291 28 Lecture 2 Basic of Language Model 
+Tokenization 
+Word-level Splits text at the word boundary. Simple but can lead  to issues like out-of-vocabulary OOV words. 
+Subword-level Breaks down words into smaller parts, used in  Byte-Pair Encoding BPE and SentencePiece to manage OOV  problems. 
+Character-level Splits text into individual characters. Less  common but useful in specific cases.
+Large Model Reasoning - CSE 291 29 Lecture 2 Basic of Language Model 
+Vocabulary - Word-Level 
+0.1 
+V 
+ Vocabulary is comprised of all of the words in a language  Some problems with this 
+0.01 
+V 
+ can be quite large - 470,000 words Websters English  Dictionary 3rd edition 
+0.001 
+ Language is changing all of the time - 690 words were  added to Merriam Webster's in September 2023 rizz,  goated, mid 
+0.0001 
+ Long tail of infrequent words. Zipfs law word frequency  is inversely proportional to word rank 
+ Some words may not appear in a training set of  
+documents 
+German - Simplicissimus 
+Russian - Roadside Picnic 
+French - Terre a la Lune 
+Italian - Promessi Sposi 
+M.English - Towneley Plays 
+1 10 100 1000 10000 
+Zipfs Law Word Rank vs. Word Frequency for Several Languages 
+ No modeled relationship between words - e.g., run,  ran, runs, runner are all separate entries despite being  linked in meaning 
+30
+word frequency 1 word rank 
+httpsen.wikipedia.orgwikiZipf'slaw 
+Large Model Reasoning - CSE 291 Lecture 2 Basic of Language Model 
+Character-level? 
+What about representing text with characters? 
+V  a, b, c, . . . , z 
+ 
+ Maybe add capital letters, punctuation, spaces,  
+ Pros 
+ Small vocabulary size  for English 
+V   26 
+ Complete coverage unseen words are represented by letters  Cons 
+ Encoding becomes very long -  chars instead of  words 
+ Poor inductive bias for learning 
+Large Model Reasoning - CSE 291 31 Lecture 2 Basic of Language Model
+Word Character Subword tokenization! 
+How can we combine the high coverage of character-level  
+representation with the efficiency of word-level representation? 
+Subword tokenization! e.g., Byte-Pair Encoding 
+ Start with character-level representations 
+ Build up representations from there 
+Original BPE Paper Sennrich et al., 2016 
+httpsarxiv.orgabs1508.07909 
+Large Model Reasoning - CSE 291 32 Lecture 2 Basic of Language Model
+Byte-pair encoding - algorithm 
+Required 
+D 
+ Documents  
+N D 
+ Desired vocabulary size greater than characters in  Algorithm 
+D 
+ Pre-tokenize by splitting into words split before whitespacepunctuation V D 
+ Initialize as the set of characters in  
+D 
+ Convert into a list of tokens characters 
+V N 
+ While   
+ Let  
+n  V  1 
+ Get counts of all bigrams in  
+Dvi, vj 
+ For the most frequent bigram breaking ties arbitrarily 
+ Let  
+vn  concatvi, vj  
+D vi, vj vn vn V 
+ Change all instances in of to and add to  
+Large Model Reasoning - CSE 291 33 Lecture 2 Basic of Language Model
+Byte-pair encoding - Example 
+Required 
+D 
+D  i hug pugs, hugging pugs is fun, i make puns 
+ Documents  
+N D 
+N  20 
+ Desired vocabulary size greater than chars in  Algorithm 
+D 
+ Pre-tokenize by splitting into words split before  whitespacepunctuation 
+V D 
+ Initialize as the set of characters in  
+D 
+ Convert into a list of tokens characters V N 
+ While   
+D  i,  hug,  pugs, hugging,  pugs,  is,  fun, i,  make,  puns 
+V   , a, e, f, g, h, i, k, m, n, p, s, u, V  13 
+ Let  
+n  V  1 
+ Get counts of all bigrams in  
+Dvi, vj 
+D   i ,  , h, u, g ,  , p, u, g, s , 
+ For the most frequent bigram breaking  ties arbitrarily 
+h, u, g, g, i, n, g ,  , p, u, g, s , 
+ Let  
+vn  concatvi, vj  
+D vi, vj vn 
+ , i, s ,  , f, u, n , i , 
+ Change all instances in of to  vn V 
+and add to  
+ , m, a, k, e ,  , p, u, n, s 
+Example inspired by httpshuggingface.codocstransformerstokenizersummary 
+Large Model Reasoning - CSE 291 34 Lecture 2 Basic of Language Model
+Byte-pair encoding - Example 
+Required 
+D 
+V  1, 2  a, 3  e, 4  f, 5  g, 6  h, 7  i, 
+ Documents  
+N D 
+8  k, 9  m, 10  n, 11  p, 12  s, 13  u 
+ Desired vocabulary size greater than chars in  Algorithm 
+D 
+ Pre-tokenize by splitting into words split before  whitespacepunctuation 
+V D 
+ Initialize as the set of characters in  
+D 
+ Convert into a list of tokens characters V N 
+ While   
+Implementation aside We normally  D 
+store with the token indices instead  of the text itself! 
+ Let  
+n  V  1 
+D   7 , 1, 6, 13, 5 , 1, 11, 13, 5, 12 , 
+ Get counts of all bigrams in  
+Dvi, vj 
+6, 13, 5, 5, 7, 10, 5 , 1, 11, 13, 5, 12 , 1, 7, 12 , 
+ For the most frequent bigram breaking  ties arbitrarily 
+1, 4, 13, 10 , 7 , 1, 9, 2, 8, 3 , 1, 11, 13, 10, 12 
+ Let  
+vn  concatvi, vj  
+D vi, vj vn 
+For legibility of the example, we will show  
+ Change all instances in of to  vn V 
+and add to  
+the text corresponding to each token 35
+Large Model Reasoning - CSE 291 Lecture 2 Basic of Language Model 
+Byte-pair encoding - Example 
+Required 
+D 
+D   i ,  , h, u, g ,  , p, u, g, s , 
+ Documents  
+N D 
+h, u, g, g, i, n, g ,  , p, u, g, s , 
+ Desired vocabulary size greater than chars in  Algorithm 
+D 
+ Pre-tokenize by splitting into words split before  whitespacepunctuation 
+V D 
+ Initialize as the set of characters in  
+D 
+ Convert into a list of tokens characters V N 
+ While   
+ , i, s ,  , f, u, n , i ,  , m, a, k, e ,  , p, u, n, s 
+Bigram Count 
+u,g 4 
+p, u 3 
+ Let  
+n  V  1 
+ , p 3 
+ Get counts of all bigrams in  
+Dvi, vj 
+h, u 2 
+ For the most frequent bigram breaking  ties arbitrarily 
+  
+ Let  
+vn  concatvi, vj  
+D vi, vj vn 
+vn Vv14  concatu, g  ug 
+ Change all instances in of to  
+and add to  
+36
+Large Model Reasoning - CSE 291 Lecture 2 Basic of Language Model 
+Byte-pair encoding - Example 
+Required 
+D 
+D   i ,  , h, u, g ,  , p, u, g, s , h, u, g, g, i, n, g ,  , p, u, g, s , 
+ Documents  
+N D 
+ Desired vocabulary size greater than chars in  Algorithm 
+D 
+ Pre-tokenize by splitting into words split before  whitespacepunctuation 
+V D 
+ Initialize as the set of characters in  
+D 
+ Convert into a list of tokens characters V N 
+ While   
+ , i, s ,  , f, u, n , i , 
+ , m, a, k, e ,  , p, u, n, s v14  concatu, g  ug 
+D   i ,  , h, ug ,  , p, ug, s , h, ug, g, i, n, g ,  , p, ug, s , 
+ Let  
+n  V  1 
+ Get counts of all bigrams in  
+Dvi, vj 
+ , i, s ,  , f, u, n , i , 
+ For the most frequent bigram breaking  ties arbitrarily 
+ , m, a, k, e ,  , p, u, n, s 
+ Let  
+vn  concatvi, vj  
+D vi, vj vn 
+V   , a, e, f, g, h, i, k, m, 
+ Change all instances in of to  
+vn V 
+and add to  
+37
+n, p, s, u, ug, V  14 
+Large Model Reasoning - CSE 291 Lecture 2 Basic of Language Model 
+Byte-pair encoding - Example 
+Required 
+D 
+D   i ,  , h, ug ,  , p, ug, s , h, ug, g, i, n, g ,  , p, ug, s , 
+ Documents  
+N D 
+ Desired vocabulary size greater than chars in  Algorithm 
+D 
+ Pre-tokenize by splitting into words split before  whitespacepunctuation 
+V D 
+ Initialize as the set of characters in  
+D 
+ Convert into a list of tokens characters V N 
+ While   
+ , i, s ,  , f, u, n , i ,  , m, a, k, e ,  , p, u, n, s 
+Bigram Count 
+ , p 3 
+p, ug 2 
+ug, s' 2 
+ Let  
+n  V  1 
+ Get counts of all bigrams in  
+Dvi, vj 
+u, n' 2 
+ For the most frequent bigram breaking  ties arbitrarily 
+  
+v15  concat , p   p 
+ Let  
+vn  concatvi, vj  
+D vi, vj vn 
+ Change all instances in of to  
+vn V 
+and add to  
+38
+Large Model Reasoning - CSE 291 Lecture 2 Basic of Language Model 
+Byte-pair encoding - Example 
+Required 
+D 
+D   i ,  , h, ug ,  , p, ug, s , h, ug, g, i, n, g ,  , p, ug, s , 
+ Documents  
+N D 
+ Desired vocabulary size greater than chars in  Algorithm 
+D 
+ Pre-tokenize by splitting into words split before  whitespacepunctuation 
+V D 
+ Initialize as the set of characters in  
+D 
+ Convert into a list of tokens characters V N 
+ While   
+ , i, s ,  , f, u, n , i , 
+ , m, a, k, e ,  , p, u, n, s 
+v15  concat , p   p 
+D   i ,  , h, ug ,  p, ug, s , h, ug, g, i, n, g ,  p, ug, s , 
+ Let  
+n  V  1 
+ Get counts of all bigrams in  
+Dvi, vj 
+ , i, s ,  , f, u, n , i , 
+ For the most frequent bigram breaking  ties arbitrarily 
+ , m, a, k, e ,  p, u, n, s 
+ Let  
+vn  concatvi, vj  
+D vi, vj vn 
+V   , a, e, f, g, h, i, k, m, 
+ Change all instances in of to  vn V 
+and add to  
+n, p, s, u, ug,  p, V  15 39
+Large Model Reasoning - CSE 291 Lecture 2 Basic of Language Model 
+Byte-pair encoding - Example 
+Required 
+D 
+Repeat until V  N 
+ Documents  
+N D 
+D   i ,  hug ,  pugs , 
+ Desired vocabulary size greater than chars in  Algorithm 
+D 
+ Pre-tokenize by splitting into words split before  whitespacepunctuation 
+V D 
+ Initialize as the set of characters in  
+D 
+ Convert into a list of tokens characters V N 
+ While   
+hug, g, i, n, g ,  pugs ,  , i, s ,  , f, un , i ,  , m, a, k, e ,  p, un, s 
+ Let  
+n  V  1 
+V   , a, e, f, g, h, i, k, m,n, p, s, u, 
+ Get counts of all bigrams in  
+Dvi, vj 
+ug,  p, hug,  pug,  pugs, un,  hug, 
+ For the most frequent bigram breaking  ties arbitrarily 
+V  20 
+ Let  
+vn  concatvi, vj  
+D vi, vj vn 
+ Change all instances in of to  
+vn V 
+and add to  
+40
+CHANGES FROM START 
+Large Model Reasoning - CSE 291 Lecture 2 Basic of Language Model 
+Byte-pair encoding - Example D   i ,  hug ,  pugs , 
+CHANGES FROM START 
+Questions to think about  Is every token we made used  in the corpus? Why or why  not? 
+hug, g, i, n, g ,  pugs ,  , i, s ,  , f, un , i , 
+ , m, a, k, e ,  p, un, s D   7 , 20 , 18 , 
+ How much memory tokens  have we saved for each  
+document? 
+16, 5, 7, 10, 5 , 18 , 1, 7, 12 , 1, 4, 19 , 7 , 1, 9, 2, 8, 3 , 15, 19, 12 
+as tokens  indices 
+ What would happen if you  
+V  1, 2  a, 3  e, 4  f, 5  g, 6  h, 7  i, 
+kept adding vocabulary until  you couldnt anymore? 
+8  k, 9  m, 10  n, 11  p, 12  s, 13  u, 14  ug, 15   p, 16  hug, 17   pug, 18   pugs 19  un, 20   hug 
+CSE 156 NLP 41 Language Modeling and N-Grams
+Byte-pair encoding - TokenizationEncoding 
+With this vocabulary, can you represent or, tokenizeencode  apple? 
+ No, there is no l in the vocabulary 
+ huge? 
+ Yes - 16, 3   huge? 
+ Yes - 17, 3   hugest? 
+V  1, 2  a, 3  e, 4  f, 5  g, 6  h, 7  i, 8  k, 9  m, 10  n, 11  p, 12  s, 13  u, 14  ug, 15   p, 16  hug, 17   pug, 18   pugs, 19  un, 20   hug 
+ No, there is no t in the vocabulary 
+ unassumingness? 
+ Yes - 19, 2, 12, 12, 13, 9, 7, 10, 5, 10, 3, 12, 12 
+42
+Large Model Reasoning - CSE 291 Lecture 2 Basic of Language Model 
+Byte-pair encoding - TokenizationEncoding V  1, 2  a, 3  e, 4  f, 5  g, 6  h, 7  i, 
+8  k, 9  m, 10  n, 11  p, 12  s, 13  u, 
+14  ug, 15   p, 16  hug, 17   pug, 18   pugs, 
+19  un, 20   hug 
+ Sometimes, there may be more than one way to represent a word with the  vocabulary 
+ E.g.,  hugs  20, 12  1, 16, 12  1, 6, 14, 12  1, 6, 13, 5, 13  Which is the best representation? Why? 
+43
+Large Model Reasoning - CSE 291 Lecture 2 Basic of Language Model 
+Byte-pair encoding - TokenizationEncoding V  1, 2  a, 3  e, 4  f, 5  g, 6  h, 7  i, 
+8  k, 9  m, 10  n, 11  p, 12  s, 13  u, 
+14  ug, 15   p, 16  hug, 17   pug, 18   pugs, 
+19  un, 20   hug 
+Encoding Algorithm 
+s V 
+Given string and ordered vocab ,  Pretokenize in same way as  
+D 
+before 
+ Tokenize into characters 
+D 
+ Perform merge rules in same order  as in training until no more merges  may be done 
+Encode hugs  20, 12 
+Encodemisshapenness  9, 7, 12, 12, 6, 2, 11, 3, 10, 10, 3, 12, 12 
+44
+Large Model Reasoning - CSE 291 Lecture 2 Basic of Language Model 
+Byte-pair encoding - Decoding V  1, 2  a, 3  e, 4  f, 5  g, 6  h, 7  i, 
+8  k, 9  m, 10  n, 11  p, 12  s, 13  u, 
+14  ug, 15   p, 16  hug, 17   pug, 18   pugs, 
+19  un, 20   hug 
+Decoding Algorithm T 
+Given list of tokens  
+Encode hugs  20, 12 
+Encodemisshapenness  9, 7, 12, 12, 6, 2, 
+ Initialize string  
+s   
+11, 3, 10, 10, 3, 12, 12 
+ Keep popping off tokens from the  Ts 
+front of and appending the  corresponding string to  
+Decode20, 12   hugs 
+Decode9, 7, 12, 12, 6, 2, 11, 3, 10, 10, 3, 12, 12  misshapenness 
+45
+Large Model Reasoning - CSE 291 Lecture 2 Basic of Language Model 
+Byte-pair encoding - Properties 
+ Efficient to run greedy vs. global optimization 
+ Lossless compression 
+ Potentially some shared representations - e.g., the token hug could  be used both in hug and hugging 
+Large Model Reasoning - CSE 291 46 Lecture 2 Basic of Language Model
+Byte-pair encoding - Usage 
+ Basically state of the art in tokenization 
+ Used in all modern left-to-right large language models LLMs,  including ChatGPT  
+ModelTokenizer Vocabulary Size 
+GPT-3.5GPT-4ChatGPT 100k 
+GPT-2GPT-3 50k 
+Llama2 32k 
+Falcon 65k 
+47
+Large Model Reasoning - CSE 291 Lecture 2 Basic of Language Model 
+Byte-pair encoding - ChatGPT Example Moby Dick as tokenized by ChatGPT 
+Large Model Reasoning - CSE 291 48 Lecture 2 Basic of Language Model
+Weird properties of tokenizers 
+ Token ! word 
+ Spaces are part of token 
+ run is a different token than  run 
+ Not invariant to case changes 
+ Run is a different token than run 
+Large Model Reasoning - CSE 291 49 Lecture 2 Basic of Language Model
+Weird properties of tokenizers 
+ Token ! word 
+ Spaces are part of token 
+ run is a different token than  run 
+ Not invariant to case changes 
+ Run is a different token than run 
+ Tokenization fits statistics of your data 
+ e.g., while these words are multiple tokens 
+ These words are all 1 token in GPT-3s tokenizer! 
+ Why? 
+ Reddit usernames and certain code attributes appeared  
+enough in the corpus to surface as its own token! 
+Example from httpswww.lesswrong.compostsaPeJE8bSo6rAFoLqgsolidgoldmagikarp-plus-prompt-generation 50
+Large Model Reasoning - CSE 291 Lecture 2 Basic of Language Model 
+Other Tokenization Variants 
+CSE 156 NLP 51 Language Modeling and N-Grams
+Variants - No spaces in tokens  The way we presented BPE, we included whitespace with the following word. E.g.,  pug 
+ This is most common in modern LMs 
+space 
+ However, in another BPE variant, you instead strip whitespace e.g., pug and add spaces  
+between words at decoding time 
+ This was the original BPE papers implementation!   Example 
+ I, hug, pugs - I hug pugs wout whitespace  I,  hug,  pugs - I hug pugs w whitespace 
+no space 
+Original w whitespace 
+Required 
+D 
+ Documents  
+N D 
+ Desired vocabulary size greater than chars in  Algorithm 
+D 
+- Pre-tokenize by splitting into words split  before whitespacepunctuation 
+V D 
+ Initialize as the set of characters in  
+52
+Updated wout whitespace 
+Required 
+D 
+ Documents  
+N D 
+ Desired vocabulary size greater than chars in  Algorithm 
+D 
+ Pre-tokenize by splitting into words  removing whitespace 
+V D 
+ Initialize as the set of characters in  
+CSE 156 NLP Language Modeling and N-Grams 
+Variants - No spaces in tokens 
+ For sub-word tokens, need to add continue word special character  E.g., for the word Tokenization, if the subword tokens are Token  and ization, 
+ Wout special character Token, ization - Token ization  W special character  Token, ization - Tokenization  When decoding, if does not have special character add a space  Example 
+ I, li, ke, to, hug, pug, s - I like to hug pugs 
+CSE 156 NLP 53 Language Modeling and N-Grams
+Variants - No spaces in tokens 
+ Loses some whitespace information lossy compression! 
+ E.g., TokenizeI eat cake.  Tokenize I eat cake . 
+ Especially problematic for code e.g., Python - why? 
+Example using  
+GPTs tokenizer,  
+which does not  
+include spaces in  
+the token 
+54
+CSE 156 NLP Language Modeling and N-Grams 
+Variants - No Pre-tokenization 
+ In the variant we proposed, we start by splitting into words 
+ This guarantees that each token will be no longer than one word  However, this does not work so well for character-based languages.  Why? 
+CSE 156 NLP 55 Language Modeling and N-Grams
+Variants - No Pre-tokenization  Instead, we could not pre-tokenize, and treat the entire document or  sentence as a single list of tokens 
+ Allows for tokens to span multiple wordscharacters  Sometimes called SentencePiece tokenization Kudo, 2018 
+ not to be confused with the  
+SentencePiece library, which  
+is an implementation of many 
+kinds of tokenization 
+Original w pre-tokenization 
+Required 
+D 
+ Documents  
+N D 
+ Desired vocabulary size greater than chars in  Algorithm 
+D 
+Paper httpsarxiv.orgabs1808.06226 
+Library httpsgithub.comgooglesentencepiece 
+Updated wout pre-tokenization 
+Required 
+D 
+ Documents  
+N D 
+ Desired vocabulary size greater than chars in  Algorithm 
+- Pre-tokenize by splitting into words  
+ Do not pre-tokenize 
+D 
+split before whitespacepunctuation V D 
+ Initialize as the set of characters in  D 
+56
+V D 
+ Initialize as the set of characters in  D 
+ Convert into a list of tokens characters 
+CSE 156 NLP Language Modeling and N-Grams  Convert into a list of tokens characters 
+Variants - No Pre-tokenization 
+ Allows sequences of wordscharacters to become tokens 
+SentencePiece paper example in Japanese 
+httpsarxiv.orgpdf1808.06226.pdf 
+
+Jurassic-1 model example in English 
+httpsuploads-ssl.webflow.com60fd4503684b466578c0d30761138924626a6981ee09caf6jurassictechpaper.pdf 
+57
+CSE 156 NLP Language Modeling and N-Grams 
+Variants - Byte-based 
+ Originally, we presented BPE as dealing with characters as the smallest unit  However, there are many characters - especially if you want to support  character-based languages e.g., Chinese has 100k characters!  non-alphanumeric characters like emojis Unicode 15 has 150k  
+characters! 
+ Instead, can initialize tokens as set of bytes! e.g., with UTF-8 
+Only 256 bytes!  Each Unicode  
+Original w characters 
+Required 
+D 
+ Documents  
+Modified w bytes 
+Required 
+D 
+ Documents  
+char is 1-4 bytes 
+N D 
+ Desired vocabulary size greater than chars in  Algorithm 
+D 
+ Pre-tokenize by splitting into words split before  whitespacepunctuation 
+V D 
+- Initialize as the set of characters in  D 
+- Convert into a list of tokens characters V N 
+58
+N D 
+ Desired vocabulary size greater than chars in  Algorithm 
+D 
+ Pre-tokenize by splitting into words split before  whitespacepunctuation 
+V D 
+ Initialize as the set of bytes in  D 
+ Convert into a list of tokens bytes V N 
+CSE 156 NLP Language Modeling and N-Grams 
+ While   
+ While   
+Variants - Byte-based 
+Instead, can initialize tokens as set of bytes! e.g., with UTF-8 
+
+UTF-8 Byte Encoding in Python 
+59
+CSE 156 NLP Language Modeling and N-Grams 
+Variants - Byte-based 
+While character-based GPT tokenizer  fails on emojis and Japanese 
+The Byte-based GPT-2 tokenizer  succeeds! 
+
+60
+CSE 156 NLP Language Modeling and N-Grams 
+Variants - WordPiece Objective 
+ To merge, we selected the bigram with highest  frequency 
+pvi, vj  
+ This is the same as bigram with highest probability!  Instead, we could choose the bigram which would  
+Modified Word Piece 
+maximize the likelihood of the data after the  merge is made also called WordPiece! 
+Original BPE 
+  
+  
+ For the bigram that would  maximize likelihood of the training  
+- For the most frequent bigram  
+data once the change is made  breaking ties arbitrarily 
+vi, vj 
+vi, vj 
+ breaking ties arbitrarily 
+ Same as bigram which maximizes 
+ Sam as bigram which  
+pvi, vj  
+maximizes -  
+61
+pvi, vj  pvipvj  
+  
+CSE 156 NLP Language Modeling and N-Grams 
+Variants - WordPiece Encoding 
+At inference time, instead of applying the merge rules in order, tokens are  selected left-to-right greedily 
+Encoding Algorithm 
+s V 
+Given string and unordered vocab , 
+ Initialize list of tokens  lens  0 
+T   
+ While  
+ti s 
+ Find longest token that matches the beginning of  
+ Let  
+T  T  ti 
+vi s 
+ Pop corresponding vocab off of front of  
+ Return  
+T 
+CSE 156 NLP 62 Language Modeling and N-Grams
+Variants - Unigram Objective 
+ BPE starts with a small vocabulary characters and builds up until the  N 
+desired vocabulary size  
+ The Unigram tokenization algorithm starts with a large vocabulary all  N 
+sub-word substrings and throws away tokens until we reach size  CSE 156 NLP 63 Language Modeling and N-Grams
+Variants - Unigram Objective High-level Algorithm 
+V D 
+ Initialize vocabulary with all sub-word substrings of  
+N 
+ Repeat until vocabulary is of size  
+vi 
+ For each token , 
+Vvi V vi 
+1. Estimate a Unigram model based on vocab vocab with removed. D 
+2. Calculate the probability of each word in based on the best possible tokenization  tokenization with highest probability under unigram model 
+ Can calculate this efficiently with Viterbi algorithmDynamic Programming 
+D 
+3. Calculate the likelihood of under the unigram model. Likelihood after removing the  vi 
+token  
+p p 
+ Remove where is hyper parameter of the tokens for which the likelihood of the  data is highest after removal e.g., the tokens which least impact loss 
+For more details and a worked example, see 
+httpshuggingface.colearnnlp-coursechapter67?fwpt 
+CSE 156 NLP 64 Language Modeling and N-Grams
+Examples of Models and their Tokenizers 
+SentencePiece treat whitespace like charBPE wspaces ModelTokenizer Objective Spaces part of token? Pre-tokenization Smallest unit 
+GPT BPE No Yes Character-level 
+GPT-234, ChatGPT,  
+Llama2, Falcon,  BPE Yes Yes Byte-level No. SentencePiece -  
+Jurassic BPE Yes Bert, DistilBert,  
+treat whitespace like  char 
+Byte-level 
+Electra WordPiece No Yes Character-level 
+T5, ALBERT, XLNet,  
+Marian Unigram Yes 
+No. SentencePiece -  treat whitespace like  char 
+Character-level 
+For non-English languages 
+65
+CSE 156 NLP Language Modeling and N-Grams 
+Tokenizer-free modeling 
+ ByT5 Xue, 2021 converts text to bytes e.g., UTF-8 encoding and  directly predicts bytes, treating each byte as a token 
+ Performs fairly well, especially at small model sizes! But, byte  sequences are longer than BPE-based tokenized sequences 
+httpsarxiv.orgpdf2105.13626.pdf 
+CSE 156 NLP 66 Language Modeling and N-Grams
+Tokens to features
+Large Model Reasoning - CSE 291 67 Lecture 2 Basic of Language Model 
+InputsOutputs 
+ Input sequences of words or tokens 
+ Output probability distribution over the next word token pxSTARTpxSTART Ipx went pxto pxthe px park pxSTART I went to the park.
+The 3 When 2.5 
+think 11 was 5 
+to 35 back 8 
+the 29 a 9 
+bathroo m 
+3 
+and 14 
+I 21 
+They 2   
+I 1 
+  
+Banana 0.1 
+went 2 am 1 will 1 like 0.5 
+  
+into 5 through 4 out 3 on 2   
+see 5 my 3 bed 2 
+school 1   
+doctor 2 hospita  
+2 
+l 
+store 1.5   
+park 0.5   
+with 9 , 8 to 7   . 6   
+It 6 
+The 3 There 3   STOP 1   
+Neural Network 
+START I went to the park . STOP 
+Large Model Reasoning - CSE 291 68 Lecture 2 Basic of Language Model 
+One-hot encoding 
+ In order to feed in the tokens to a machine learning algorithm, we  
+need to input them as standard features 
+2 
+3 
+2 
+3 
+2 
+3 
+666664100... 
+666664010... 
+666664000... 
+ One approach One-hot encoding 
+777775 If V  n 
+ Recall from linear algebra  One-hot encoding 
+Standard basis of Rn  e1  0 
+777775, e2  
+0 
+777775,...,en  1 
+featuresvi  ei 2 Rn
+ Sparse vector representation 
+Large Model Reasoning - CSE 291 69 Lecture 2 Basic of Language Model 
+One-hot encoding  
+Pros 
+ Sparse representation 
+ No learning necessary 
+Cons 
+ Feature space must be same size as vocabulary  No way to encode shared representations of words
+Large Model Reasoning - CSE 291 70 Lecture 2 Basic of Language Model 
+Embeddings 
+Alternatively - we could learn the feature space a.k.a., representation  learning! 
+n  V k 
+ Let be the size of the vocabulary, and choose as the feature  k  n 
+space size usually  
+W 2 Rkn 
+ Learn text embedding matrix such that  
+featuresvi  W ei 2 Rk  ith column of W
+ Could also be thought of as a lookup table 
+Large Model Reasoning - CSE 291 71 Lecture 2 Basic of Language Model 
+Embeddings
+Requires Some model and loss function built on top of the embeddings  to learn the weights. 
+Side note this is equivalent to one fully-connected neural network layer  on top of the one-hot encodings. 
+Large Model Reasoning - CSE 291 72 Lecture 2 Basic of Language Model 
+Embeddings
+ Word2Vec Mikolov, 2013, GloVe Pennington, 2014 trained  embeddings on word-level tokens 
+ Nearest neighbors embeddings are semantically similar 
+httpsnlp.stanford.eduprojectsglove 
+Large Model Reasoning - CSE 291 73 Lecture 2 Basic of Language Model 
+Embeddings 
+Some dimensions are semantically meaningful 
+Male - Female City - Zip Code 
+2-d projections of embedding space
+httpsnlp.stanford.eduprojectsglove 
+Large Model Reasoning - CSE 291 74 Lecture 2 Basic of Language Model 
+Embeddings 
+ Semantically meaningful dimensions allow for some analogous  reasoning Mikolov, 2013 
+ vectorKing - vectorMan  vectorWoman is closest to the  vector for Queen 
+ Paris - France  Italy   Rome 
+ Windows - Microsoft  Google  Android
+Large Model Reasoning - CSE 291 75 Lecture 2 Basic of Language Model 
+InputsOutputs 
+ Input sequences of words or tokens 
+ Output probability distribution over the next word token pxSTARTpxSTART Ipx went pxto pxthe px park pxSTART I went to the park.
+The 3 When 2.5 
+think 11 was 5 
+to 35 back 8 
+the 29 a 9 
+bathroo m 
+3 
+and 14 
+I 21 
+They 2   
+I 1 
+  
+Banana 0.1 
+went 2 am 1 will 1 like 0.5 
+  
+into 5 through 4 out 3 on 2   
+see 5 my 3 bed 2 
+school 1   
+doctor 2 hospita  
+2 
+l 
+store 1.5   
+park 0.5   
+with 9 , 8 to 7   . 6   
+It 6 
+The 3 There 3   STOP 1   
+Neural Network 
+START I went to the park . STOP 
+Large Model Reasoning - CSE 291 76 Lecture 2 Basic of Language Model 
+Thank you!
+Large Model Reasoning - CSE 291 77 Lecture 2 Basic of Language Model 
