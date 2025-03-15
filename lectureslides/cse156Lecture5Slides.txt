@@ -1,16 +1,16 @@
 
 CSE 156 Natural Language Processing 
 5 - Transformer
-Instructor Lianhui Qin 
+Instructor: Lianhui Qin 
 Slides adapted from Yejin Choi 
 1 
 Recap 
 CSE 156 NLP 2 Transformer
 News 
-We extend the due date for Homework 1 to Thursday Jan 30 
+We extend the due date for Homework 1 to Thursday (Jan 30) 
 CSE 156 NLP 3 Transformer
 One-hot encoding 
- In order to feed in the tokens to a machine learning algorithm, we  
+• In order to feed in the tokens to a machine learning algorithm, we  
 need to input them as standard features 
 2 
 3 
@@ -21,231 +21,231 @@ need to input them as standard features
 666664100... 
 666664010... 
 666664000... 
- One approach One-hot encoding 
-777775 If V  n 
- Recall from linear algebra  One-hot encoding 
-Standard basis of Rn  e1  0 
-777775, e2  
+• One approach: One-hot encoding 
+777775 If |V| = n: 
+• Recall from linear algebra: • One-hot encoding: 
+Standard basis of Rn : e1 = 0 
+777775, e2 = 
 0 
-777775,...,en  1 
-featuresvi  ei 2 Rn
- Sparse vector representation 
+777775,...,en = 1 
+features(vi) = ei 2 Rn
+• Sparse vector representation 
 CSE 156 NLP 4 Transformer 
 Embeddings 
-Alternatively - we could learn the feature space a.k.a., representation  learning! 
-n  V k 
- Let be the size of the vocabulary, and choose as the feature  k  n 
-space size usually  
-W 2 Rkn 
- Learn text embedding matrix such that  
-featuresvi  W ei 2 Rk  ith column of W
- Could also be thought of as a lookup table 
+Alternatively - we could learn the feature space (a.k.a., representation  learning!) 
+n = |V| k 
+• Let be the size of the vocabulary, and choose as the feature  k << n 
+space size (usually ) 
+W 2 Rk⇥n 
+• Learn text embedding matrix such that  
+features(vi) = W ei 2 Rk = ith column of W
+• Could also be thought of as a lookup table 
 CSE 156 NLP 5 Transformer 
 Embeddings 
- Semantically meaningful dimensions allow for some analogous  reasoning Mikolov, 2013 
- vectorKing - vectorMan  vectorWoman is closest to the  vector for Queen 
- Paris - France  Italy   Rome 
- Windows - Microsoft  Google  Android
+• Semantically meaningful dimensions allow for some analogous  reasoning (Mikolov, 2013) 
+• vector(“King”) - vector(“Man”) + vector(“Woman”) is closest to the  vector for “Queen” 
+• “Paris” - “France” + “Italy”  ≈ “Rome” 
+• “Windows” - “Microsoft” + “Google” ≈ “Android”
 CSE 156 NLP 6 Transformer 
-InputsOutputs 
- Input sequences of words or tokens 
- Output probability distribution over the next word token pxSTARTpxSTART Ipx went pxto pxthe px park pxSTART I went to the park.
-The 3 When 2.5 
-think 11 was 5 
-to 35 back 8 
-the 29 a 9 
+Inputs/Outputs 
+• Input: sequences of words (or tokens) 
+• Output: probability distribution over the next word (token) p(x|START)p(x|START I)p(x|··· went) p(x|···to) p(x|···the) p(x|··· park) p(x|START I went to the park.)
+The 3 When 2.5% 
+think 11% was 5% 
+to 35% back 8% 
+the 29% a 9% 
 bathroo m 
-3 
-and 14 
-I 21 
-They 2   
-I 1 
-  
-Banana 0.1 
-went 2 am 1 will 1 like 0.5 
-  
-into 5 through 4 out 3 on 2   
-see 5 my 3 bed 2 
-school 1   
-doctor 2 hospita  
-2 
+3% 
+and 14% 
+I 21% 
+They 2% … … 
+I 1% 
+… … 
+Banana 0.1% 
+went 2% am 1% will 1% like 0.5% 
+… … 
+into 5% through 4% out 3% on 2% … …% 
+see 5% my 3% bed 2% 
+school 1% … … 
+doctor 2% hospita % 
+2% 
 l 
-store 1.5   
-park 0.5   
-with 9 , 8 to 7   . 6   
+store 1.5% … … 
+park 0.5% … … 
+with 9 , 8% to 7% … … . 6% … … 
 It 6 
-The 3 There 3   STOP 1   
-Neural Network Neural Language Model 
+The 3% There 3% … … STOP 1% … … 
+Neural Network (Neural Language Model) 
 START I went to the park . STOP 
 CSE 156 NLP 7 Transformer 
-InputsOutputs 
- Input sequences of words or tokens 
- Output probability distribution over the next word token pxSTARTpxSTART Ipx went pxto pxthe px park pxSTART I went to the park.
-The 3 When 2.5 
-think 11 was 5 
-to 35 back 8 
-the 29 a 9 
+Inputs/Outputs 
+• Input: sequences of words (or tokens) 
+• Output: probability distribution over the next word (token) p(x|START)p(x|START I)p(x|··· went) p(x|···to) p(x|···the) p(x|··· park) p(x|START I went to the park.)
+The 3 When 2.5% 
+think 11% was 5% 
+to 35% back 8% 
+the 29% a 9% 
 bathroo m 
-3 
-and 14 
-I 21 
-They 2   
-I 1 
-  
-Banana 0.1 
-went 2 am 1 will 1 like 0.5 
-  
-into 5 through 4 out 3 on 2   
-see 5 my 3 bed 2 
-school 1   
-doctor 2 hospita  
-2 
+3% 
+and 14% 
+I 21% 
+They 2% … … 
+I 1% 
+… … 
+Banana 0.1% 
+went 2% am 1% will 1% like 0.5% 
+… … 
+into 5% through 4% out 3% on 2% … …% 
+see 5% my 3% bed 2% 
+school 1% … … 
+doctor 2% hospita % 
+2% 
 l 
-store 1.5   
-park 0.5   
-with 9 , 8 to 7   . 6   
+store 1.5% … … 
+park 0.5% … … 
+with 9 , 8% to 7% … … . 6% … … 
 It 6 
-The 3 There 3   STOP 1   
-Neural Network Neural Language Model 
+The 3% There 3% … … STOP 1% … … 
+Neural Network (Neural Language Model) 
 START I went to the park . STOP 
 CSE 156 NLP 8 Transformer 
 Neural Networks 
-Goal Approximate some function  Essential elements 
- Input Vector , Output  
-f  Rk ! Rd 
+Goal: Approximate some function  Essential elements: 
+• Input: Vector , Output:  
+f : Rk ! Rd 
 x 2 Rk y 2 Rd 
- Hidden representation layers  
+• Hidden representation layers  
 hi 2 Rdi 
- Non-linear, differentiable almost everywhere  activation function applied element-wise 
-  R ! R 
-W 2 Rdi1di 
- Weights connecting layers and bias  
+• Non-linear, differentiable (almost everywhere)  activation function (applied element-wise) 
+ : R ! R 
+W 2 Rdi+1⇥di 
+• Weights connecting layers: and bias  
 term  
-b 2 Rdi1 
-y W2W1x  b1  b2 
- Set of all parameters is often referred to as   
-where x 2 R3, y2 R2, W1 2 R43, W2 2 R24, b1 2 R4, and b2 2 R2 
-httpsen.wikipedia.orgwikiArtificialneuralnetwork
+b 2 Rdi+1 
+yˆ= W2(W1x + b1) + b2 
+• Set of all parameters is often referred to as  ✓ 
+where x 2 R3, yˆ2 R2, W1 2 R4⇥3, W2 2 R2⇥4, b1 2 R4, and b2 2 R2 
+https://en.wikipedia.org/wiki/Artificial_neural_network
 CSE 156 NLP 9 Transformer 
 Learning 
-Required training data, the model architecture, and a loss function. 
- Training data  
-D  x1, y1,...,xn, yn 
- Model family some specified function e.g.,  
-y W2W1x  b1  b2 
- Numbersize of hidden layers, activation function, etc. are FIXED  here 
- Differentiable Loss function  Learning Problem 
-Ly, y  Rd  Rd ! R 
-  arg min  
+Required: training data, the model architecture, and a loss function. 
+• Training data  
+D = {(x(1), y(1)),...,(x(n), y(n))} 
+• Model family: some specified function (e.g., ) 
+yˆ= W2(W1x + b1) + b2 
+• Number/size of hidden layers, activation function, etc. are FIXED  here 
+• (Differentiable) Loss function  Learning Problem: 
+L(y, yˆ) : Rd ⇥ Rd ! R 
+ˆ✓ = arg min ✓ 
 1 
 N 
-XN i1 
-Lyi, yi  fxi
+XN i=1 
+L(y(i), yˆ(i) = f✓(x(i)))
 CSE 156 NLP 10 Transformer 
 Common loss functions 
- Regression problems 
- Euclidean DistanceMean Squared ErrorL2 loss  
-L2y, y  y  y22 12Xk i1 
-yi  yi2 
-L1y, y  y  y1  Xk 
- Mean Absolute ErrorL1 loss   2-way classification 
-yi  yi 
-i1 
- Binary Cross Entropy Loss 
-LBCEy, y  y logy  1  y log1  y 
- Multi-class classification for example, words 
- Cross Entropy Loss Very related to perplexity! 
-LCEy, y  XC i1 
-yi logyi
+• Regression problems: 
+• Euclidean Distance/Mean Squared Error/L2 loss:  
+L2(y, yˆ) = ||y  yˆ||22 =12Xk i=1 
+(yi  yˆi)2 
+L1(y, yˆ) = ||y  yˆ||1 = Xk 
+• Mean Absolute Error/L1 loss:  • 2-way classification: 
+|yi  yˆi| 
+i=1 
+• Binary Cross Entropy Loss: 
+LBCE(y, yˆ) = [y log(ˆy) + (1  y) log(1  yˆ)] 
+• Multi-class classification: (for example, words…) 
+• Cross Entropy Loss: (Very related to perplexity!) 
+LCE(y, yˆ) = XC i=1 
+yi log(ˆyi)
 CSE 156 NLP 11 Transformer 
 Gradient Descent 
-Loss landscape - loss w.r.t  
- 
-Learning Problem  
-httpswww.cs.umd.edutomgprojectslandscapes 
-  arg min  
+“Loss landscape” - loss w.r.t  
+✓ 
+Learning Problem:  
+https://www.cs.umd.edu/~tomg/projects/landscapes/ 
+ˆ✓ = arg min ✓ 
 1 
 N 
-XN i1 
-Lyi, yi  fxi 
- Gradient is  
- However, finding the global minimum is often impossible  in practice need to search over all of ! 
-Rdim 
- Instead, get a local minimum with gradient descent 
- the vector of partial  derivatives of the  
+XN i=1 
+L(y(i), yˆ(i) = f✓(x(i))) 
+ Gradient is:  
+• However, finding the global minimum is often impossible  in practice (need to search over all of !) 
+Rdim(✓) 
+• Instead, get a local minimum with gradient descent 
+• the vector of partial  derivatives of the  
 parameters with respect to  the loss function 
- A linear approximation of  the loss function at i 
+• A linear approximation of  the loss function at ✓(i) 
 Gradient Descent 
 2 
 3 
-L 
- Learning rate often quite small e.g., 3e-4 
-i 
- 2 R,   0 
+@L 
+• Learning rate (often quite small e.g., 3e-4) 
+@✓(i) 
+↵ 2 R, ↵ > 0 
 666664 
 777775
-1 L 
-L 
-i 
- Randomly initialize  
-0 
+1 @L 
+@L 
+@✓(i) 
+• Randomly initialize  
+✓(0) 
 Next estimate 
-Learning rate step size 
- i  
+Learning rate (step size) 
+@✓ (✓(i)) = 
 2... 
- Iteratively get better estimate with  
-i1  i   L  i 
+• Iteratively get better estimate with:  
+✓(i+1) = ✓(i)  ↵ ⇤@L @✓ (✓(i)) 
 Previous Estimate 
-L 
-i n 
+@L 
+@✓(i) n 
 CSE 156 NLP 12 Transformer 
-Stochastic Gradient Descent SGD 
-Gradient Descent  
-i1  i   L 
- i
- Problem calculating the true gradient can be very expensive requires running model  on entire dataset! 
- Solution Stochastic Gradient Descent 
- Sample a subset of the data of fixed size batch size 
- Take the gradient with respect to that subset 
- Take a step in that direction repeat 
- Not only is it more computationally efficient, but it often finds better minima than  vanilla gradient descent 
- Why? Possibly because it does a better job skipping past plateaus in loss landscape 
+Stochastic Gradient Descent (SGD) 
+Gradient Descent:  
+✓(i+1) = ✓(i)  ↵ ⇤@L 
+@✓ (✓(i))
+• Problem: calculating the true gradient can be very expensive (requires running model  on entire dataset!) 
+• Solution: Stochastic Gradient Descent 
+• Sample a subset of the data of fixed size (batch size) 
+• Take the gradient with respect to that subset 
+• Take a step in that direction; repeat 
+• Not only is it more computationally efficient, but it often finds better minima than  vanilla gradient descent 
+• Why? Possibly because it does a better job skipping past plateaus in loss landscape 
 CSE 156 NLP 13 Transformer 
 Backpropagation 
-One efficient way to calculate the gradient is with backpropagation. Leverages the Chain Rule dy 
-dxdydudu 
+One efficient way to calculate the gradient is with backpropagation. Leverages the Chain Rule: dy 
+dx=dydudu 
 dx 
-1. Forward Pass h1  W1x  b2 h2  h1 
-y W2h2  b2 
-2. Calculate Loss Ly, y 
+1. Forward Pass h1 = W1x + b2 h2 = (h1) 
+yˆ= W2h2 + b2 
+2. Calculate Loss L(y, yˆ) 
 3. Backwards Pass 
 Calculate the gradient  of the loss w.r.t. each 
 parameter using the chain rule and intermediate outputs
 CSE 156 NLP 14 Transformer 
 Classification with Deep Learning 
- For classification problems like next word-prediction we want to  predict a probability distribution over the label space  However, neural networks output is not guaranteed or likely to  
+• For classification problems (like next word-prediction…) we want to  predict a probability distribution over the label space • However, neural networks’ output is not guaranteed (or likely) to  
 y 2 Rd 
 be a probability distribution 
- To force the output to be a probability distribution, we apply the  softmax function  
-softmaxyi expyi 
+• To force the output to be a probability distribution, we apply the  softmax function  
+softmax(y)i =exp(yi) 
 Pd 
-j1 expyj  
+j=1 exp(yj ) 
 y
- The values before applying the softmax are often called logits 
+• The values before applying the softmax are often called “logits” 
 CSE 156 NLP 15 Transformer 
-Softmax outputs a valid probability distribution softmaxyi expyi 
+Softmax outputs a valid probability distribution softmax(y)i =exp(yi) 
 Pd 
-j1 expyj 
-Proof that softmax is a valid probability distribution 1.Non-negativity 8i, softmaxyi expyi 
-j1 expyj  0 since expyi  0 for all i. 
+j=1 exp(yj )
+Proof that softmax is a valid probability distribution: 1.Non-negativity: 8i, softmax(y)i =exp(yi) 
+j=1 exp(yj ) 0 since exp(yi)  0 for all i. 
 Pd 
-2.Normalization Xd i1 
-softmaxyi  Xd i1 
-expyi 
-j1 expyj  Pd 
+2.Normalization: Xd i=1 
+softmax(y)i = Xd i=1 
+exp(yi) 
+j=1 exp(yj )= Pd 
 Pd 
-i1 expyi 
-j1 expyj  1. Pd 
+i=1 exp(yi) 
+j=1 exp(yj )= 1. Pd 
 CSE 156 NLP 16 Transformer 
 Outline 
 Deep Learning Review RNN 
@@ -253,121 +253,121 @@ LSTM
 Transformer 
 17
 CSE 156 NLP Transformer 
-InputsOutputs 
- Input sequences of words or tokens 
- Output probability distribution over the next word token pxSTARTpxSTART Ipx went pxto pxthe px park pxSTART I went to the park.
-The 3 When 2.5 
-think 11 was 5 
-to 35 back 8 
-the 29 a 9 
+Inputs/Outputs 
+• Input: sequences of words (or tokens) 
+• Output: probability distribution over the next word (token) p(x|START)p(x|START I)p(x|··· went) p(x|···to) p(x|···the) p(x|··· park) p(x|START I went to the park.)
+The 3 When 2.5% 
+think 11% was 5% 
+to 35% back 8% 
+the 29% a 9% 
 bathroo m 
-3 
-and 14 
-I 21 
-They 2   
-I 1 
-  
-Banana 0.1 
-went 2 am 1 will 1 like 0.5 
-  
-into 5 through 4 out 3 on 2   
-see 5 my 3 bed 2 
-school 1   
-doctor 2 hospita  
-2 
+3% 
+and 14% 
+I 21% 
+They 2% … … 
+I 1% 
+… … 
+Banana 0.1% 
+went 2% am 1% will 1% like 0.5% 
+… … 
+into 5% through 4% out 3% on 2% … …% 
+see 5% my 3% bed 2% 
+school 1% … … 
+doctor 2% hospita % 
+2% 
 l 
-store 1.5   
-park 0.5   
-with 9 , 8 to 7   . 6   
+store 1.5% … … 
+park 0.5% … … 
+with 9 , 8% to 7% … … . 6% … … 
 It 6 
-The 3 There 3   STOP 1   
+The 3% There 3% … … STOP 1% … … 
 Neural Network 
 START I went to the park . STOP 
 CSE 156 NLP 18 Transformer 
 Neural language models 
-But neural networks take in real-valued vectors, not words  Use one-hot or learned embeddings to map from words to vectors!  Learned embeddings become part of parameters  
- 
-Neural networks output vectors, not probability distributions  Apply the softmax to the outputs! 
- What should the size of our output distribution be? 
- Same size as our vocabulary  
-V
-Dont neural networks need a fixed-size vector as input? And isnt text  variable length? 
- Ideas? 
+But neural networks take in real-valued vectors, not words… • Use one-hot or learned embeddings to map from words to vectors! • Learned embeddings become part of parameters  
+✓ 
+Neural networks output vectors, not probability distributions… • Apply the softmax to the outputs! 
+• What should the size of our output distribution be? 
+• Same size as our vocabulary  
+|V|
+Don’t neural networks need a fixed-size vector as input? And isn’t text  variable length? 
+• Ideas? 
 CSE 156 NLP 19 Transformer 
 Sliding window 
-Dont neural networks need a fixed-size vector as input? And isnt text  variable length? 
-Idea 1 Sliding window of size N 
- Cannot look more than N words back 
- Basically, neural approximation of an N-gram model Neural Network 
-pxthe park. 
- 
-pxSTART I went 
-pxI went to Neural Network 
+Don’t neural networks need a fixed-size vector as input? And isn’t text  variable length? 
+Idea 1: Sliding window of size N 
+• Cannot look more than N words back 
+• Basically, neural approximation of an N-gram model Neural Network 
+p(x|the park.) 
+… 
+p(x|START I went) 
+p(x|I went to) Neural Network 
 Neural Network
 START I went to the park . STOP 
 CSE 156 NLP 20 Transformer 
 Recurrent Neural Networks 
-Idea 2 Recurrent Neural Networks RNNs 
-Essential components 
- One network is applied recursively to the sequence 
- Inputs previous hidden state , observation  
+Idea 2: Recurrent Neural Networks (RNNs) 
+Essential components: 
+• One network is applied recursively to the sequence 
+• Inputs: previous hidden state , observation  
 ht1 xt 
 ht yt
- Outputs next hidden state , optionally output  
- Memory about history is passed through hidden states 
-pxSTART pxSTART I    pxSTART I went to the park. h0 RNN h1 RNN h2 RNN h3 RNN h4 RNN h5 RNN h7 RNN h8 RNN 
+• Outputs: next hidden state , (optionally) output  
+• Memory about history is passed through hidden states 
+p(x|START) p(x|START I) ··· ··· ··· p(x|START I went to the park.) h0 RNN h1 RNN h2 RNN h3 RNN h4 RNN h5 RNN h7 RNN h8 RNN 
 START I went to the park . STOP 
 CSE 156 NLP 21 Transformer 
 Example RNN 
-pxSTART I 
-Variables 
+p(x|START I) 
+Variables: 
 pt 
 xt 
- input embedding vector 
+: input (embedding) vector 
 yt 
 Softmax 
 yt pt 
- output vector logits  probability over tokens 
+: output vector (logits) : probability over tokens 
 RNN
 y 
 ht1 
- previous hidden vector 
-Wyht  by 
+: previous hidden vector 
+Wyht + by 
 ht 
- next hidden vector 
-pxSTART 
- activation function for  h 
+: next hidden vector 
+p(x|START) 
+: activation function for  h 
 h0 RNN 
 ht1 
-Whxt  Uhht1  bh 
+Whxt + Uhht1 + bh 
 ht 
 hidden state 
 h 
 ht 
- output activation function y 
+: output activation function y 
 START 
 xt 
 Embedding 
 I 
-Equations 
-ht  hWhxt  Uhht1  bh yt  yWyht  by 
-ptiexpyti  
+Equations: 
+ht := h(Whxt + Uhht1 + bh) yt := y(Wyht + by) 
+pti=exp(yti ) 
 Pd 
-ij expytj  
+i=j exp(ytj ) 
 CSE 156 NLP 22 Transformer 
 Recurrent Neural Networks 
- How can information from time an earlier state e.g., time 0 pass to a  later state time t? 
- Through the hidden states! 
- Even though they are continuous vectors, can represent very rich  information up to the entire history from the beginning 
- Parameters are shared across all RNN units unlike in feedforward layers 
-pxSTART pxSTART I    pxSTART I went to the park. h0 RNN h1 RNN h2 RNN h3 RNN h4 RNN h5 RNN h7 RNN h8 RNN
+• How can information from time an earlier state (e.g., time 0) pass to a  later state (time t?) 
+• Through the hidden states! 
+• Even though they are continuous vectors, can represent very rich  information (up to the entire history from the beginning) 
+• Parameters are shared across all RNN units (unlike in feedforward layers) 
+p(x|START) p(x|START I) ··· ··· ··· p(x|START I went to the park.) h0 RNN h1 RNN h2 RNN h3 RNN h4 RNN h5 RNN h7 RNN h8 RNN
 START I went to the park . STOP 
 CSE 156 NLP 23 Transformer 
 Training procedure 
-E.g., if you wanted to train on STARTI went to the park.STOP 
-1. InputOutput Pairs
+E.g., if you wanted to train on “<START>I went to the park.<STOP>”… 
+1. Input/Output Pairs
 D 
-x input y output 
+x (input) y (output) 
 START I 
 START I went 
 START I went to 
@@ -376,9 +376,9 @@ START I went to the park
 START I went to the park . 
 START I went to the park. STOP 
 CSE 156 NLP 24 Transformer 
-Training procedure 1. InputOutput Pairs 
+Training procedure 1. Input/Output Pairs 
 D 
-x input y output 
+x (input) y (output) 
 START I 
 START I went 
 START I went to 
@@ -387,12 +387,12 @@ START I went to the park
 START I went to the park . 
 START I went to the park. STOP 
 x 
-2. Run model on batch of s from  D 
+2. Run model on (batch of) ’s from  D 
 data to get probability  
-y
-distributions running softmax at  end to ensure valid probability  distribution 
-y1 y2 y7 pxSTART pxSTART I pxSTART I went to the park. 
-   
+yˆ
+distributions (running softmax at  end to ensure valid probability  distribution) 
+yˆ1 yˆ2 yˆ7 p(x|START) p(x|START I) p(x|START I went to the park.) 
+··· ··· ··· 
 h0 RNN h1 RNN h2 RNN h3 RNN h4 RNN h5 RNN h7 RNN h8 RNN START I went to the park . STOP 
 CSE 156 NLP 25 Transformer 
 Training procedure 
@@ -400,13 +400,13 @@ x
 2 
 3 
 2 
-2. Run model on batch of s from  
+2. Run model on (batch of) ’s from  
 2 
 3 
 2 
 3 
 3 
-pSTOPSTART pTheSTART 
+p(STOP|START) p(The|START) 
 66666664.01 .03 
 77777775 
 666666640010... 
@@ -417,42 +417,42 @@ data to get probability
 77777775 
 666666641000... 
 77777775 
-pISTART 
+p(I|START) 
 .1 
 distributions  
-y 
-y7  
+yˆ 
+yˆ7 = 
 .12 
-y7  
-y1  
+y7 = 
+yˆ1 = 
 .001 
-y1  
+y1 = 
 .01 
 3. Calculate loss compared to true  
-pappleSTART 
+p(apple|START) 
 ... 
 .002 
 0 
 y 
-s Cross Entropy Loss 
+’s (Cross Entropy Loss) 
 ... 
 .001 
 0 
 LCE
-LCEy, y  XC i1 
-yi logyi 
-y1 y7 
-pxSTART    pxSTART I went to the park. h0 RNN h1 RNN h2 RNN h3 RNN h4 RNN h5 RNN h7 RNN h8 RNN 
+LCE(y, yˆ) = XC i=1 
+yi log(ˆyi) 
+yˆ1 yˆ7 
+p(x|START) ··· ··· ··· p(x|START I went to the park.) h0 RNN h1 RNN h2 RNN h3 RNN h4 RNN h5 RNN h7 RNN h8 RNN 
 START I went to the park . STOP CSE 156 NLP 26 Transformer 
 Training procedure 2 
-LCEy, y  XC i1 
-yi logyi 
+LCE(y, yˆ) = XC i=1 
+yi log(ˆyi) 
 2 
 3 
 3 
 66666664.01 
 66666664.01 
-pSTOPSTART 
+p(STOP|START) 
 2 
 2 
 666666640010... 
@@ -460,11 +460,11 @@ pSTOPSTART
 3 
 3 
 3. Calculate loss compared to true  
-pTheSTART Actual observed word77777775 
-pISTART 
-y1  
-y1  
-pappleSTART pappleSTART 
+p(The|START) (Actual observed word)77777775 
+p(I|START) 
+yˆ1 = 
+yˆ1 = 
+p(apple|START) p(apple|START) 
 .03 
 .03 
 .1 
@@ -474,45 +474,45 @@ pappleSTART pappleSTART
 ... 
 .002 .002 
 77777775 
-y1  
-y1  
+y1 = 
+y1 = 
 0 
 0 
 77777775 
 77777775 
-ys Cross Entropy Loss 
+y’s (Cross Entropy Loss) 
 LCE 
-y1 
-LCEy1, y1  0  log.01  0  log.03  1   log.1    0  log.002   log.1   logpISTART 
-pxSTART    
+yˆ1 
+LCE(y1, yˆ1) = 0 ⇤ log(.01)  0 ⇤ log(.03)  1 ⇤  log(.1)  ···  0 ⇤ log(.002) =  log(.1) =  log(p(I|START)) 
+p(x|START) ··· ··· ··· 
 h0 RNN h1 RNN h2 RNN h3 RNN h4 RNN h5 RNN h7 RNN h8 RNN START I went to the park . STOP CSE 156 NLP 27 Transformer 
 Training procedure - Gradient Descent Step 1. Get training x-y pairs from batch 
-y 
+yˆ 
 2. Run model to get probability distributions over  
 y 
 3. Calculate loss compared to true  
 4. Backpropagate to get the gradient 5. Take a step of gradient descent 
-y1 
-i1  i   L  i
-pxSTART    
+yˆ1 
+✓(i+1) = ✓(i)  ↵ ⇤@L @✓ (✓(i))
+p(x|START) ··· ··· ··· 
 h0 RNN h1 RNN h2 RNN h3 RNN h4 RNN h5 RNN h7 RNN h8 RNN START I went to the park . STOP 
 CSE 156 NLP 28 Transformer 
-RNNs - Vanishing Gradient Problem What word is likely to come next for this sequence? Anne said, Hi! My name is
+RNNs - Vanishing Gradient Problem What word is likely to come next for this sequence? Anne said, “Hi! My name is
 CSE 156 NLP 29 Transformer 
 RNNs - Vanishing Gradient Problem What word is likely to come next for this sequence? 
-Anne said, Hi! My name is 
-pxSTART Anne said, Hi! My name is 
+Anne said, “Hi! My name is 
+p(x|START Anne said, “Hi! My name is) 
 h0 RNN h1 START 
 RNN h2 Anne 
 RNN h3 said, 
-RNN h4 Hi! 
+RNN h4 “Hi! 
 RNN h5 My 
 RNN h7 name 
 RNN is 
- Need relevant information to flow across many time steps  When we backpropagate, we want to allow the relevant information to  flow 
+• Need relevant information to flow across many time steps • When we backpropagate, we want to allow the relevant information to  flow 
 CSE 156 NLP 30 Transformer 
-RNNs - Vanishing Gradient Problem pxSTART Anne said, Hi! My name is
-y L 
+RNNs - Vanishing Gradient Problem p(x|START Anne said, “Hi! My name is)
+yˆ =@L 
 h0 RNN h1 
 RNN h2 
 RNN h3 
@@ -520,170 +520,170 @@ RNN h4
 RNN h5 
 RNN h7 
 RNN 
-y 
+@yˆ 
 START Backprop steps 
 Anne 
 said, 
-Hi! 
- 
+“Hi! 
+… 
 My 
 name 
 is 
-h8 yWTy  0yWyh8  by 
-h7 h8UTh  0h h Whx8  Uhh7  bh t ht1UTh  0hWhxt1  Uhht  bh 
+h8= yˆWTy  0y(Wyh8 + by) 
+h7= h8UTh  0h h (Whx8 + Uhh7 + bh) t= ht+1UTh  0h(Whxt+1 + Uhht + bh) 
 However, when we backprop, it  
-involves multiplying a chain of  computations from time t7 to time t1 
-If any of the terms are close to zero,  the whole gradient goes to zero  vanishes! 
+involves multiplying a chain of  computations from time t7 to time t1… 
+If any of the terms are close to zero,  the whole gradient goes to zero  (vanishes!) 
 The vanishing gradient problem 
 CSE 156 NLP 31 Transformer 
 LSTMs 
-Idea 3 Long short-term  
+Idea 3: Long short-term  
 memory network 
-Essential components 
- It is a recurrent neural  
-network RNN 
- Has modules to learn when  to rememberforget  
+Essential components: 
+• It is a recurrent neural  
+network (RNN) 
+• Has modules to learn when  to “remember”/“forget”  
 information 
- Allows gradients to flow  more easily 
-httpsen.wikipedia.orgwikiLongshort-termmemory 
-ft  gWfxt  Ufht1  bf  
-it  gWixt  Uiht1  bi 
-ot  gWoxt  Uoht1  bo 
-ct  cWcxt  Ucht1  bc 
-ct  ft  ct1  it  ct 
-ht  ot  hct 
-xt 2 Rd input vector to the LSTM unit 
-ft 2 0, 1h forget gates activation vector it 2 0, 1h inputupdate gates activation vector ot 2 0, 1h output gates activation vector ht 2 1, 1h hidden state vector also known as output vector of the LSTM unit 
-ct 2 1, 1h cell input activation vector 
-ct 2 Rh cell state vector
+• Allows gradients to flow  more easily 
+https://en.wikipedia.org/wiki/Long_short-term_memory# 
+ft = g(Wfxt + Ufht1 + bf ) 
+it = g(Wixt + Uiht1 + bi) 
+ot = g(Woxt + Uoht1 + bo) 
+c˜t = c(Wcxt + Ucht1 + bc) 
+ct = ft  ct1 + it  c˜t 
+ht = ot  h(ct) 
+xt 2 Rd: input vector to the LSTM unit 
+ft 2 (0, 1)h: forget gate’s activation vector it 2 (0, 1)h: input/update gate’s activation vector ot 2 (0, 1)h: output gate’s activation vector ht 2 (1, 1)h: hidden state vector also known as output vector of the LSTM unit 
+c˜t 2 (1, 1)h: cell input activation vector 
+ct 2 Rh: cell state vector
 CSE 156 NLP 32 Transformer 
 LSTM Architecture 
-httpscolah.github.ioposts2015-08-Understanding-LSTMs
+https://colah.github.io/posts/2015-08-Understanding-LSTMs/
 CSE 156 NLP 33 Transformer 
 LSTM Architecture 
-Cell state long term  
-memory allows information  
+Cell state (long term  
+memory): allows information  
 to flow with only small, linear  
-interactions good for  
-gradients! 
- Gates optionally let  
+interactions (good for  
+gradients!) 
+• “Gates” optionally let  
 information through 
- 1 - retain information  
-remember 
- 0 - forget information  
-forget 
-httpscolah.github.ioposts2015-08-Understanding-LSTMs 
-ft  gWfxt  Ufht1  bf  it  gWixt  Uiht1  bi ot  gWoxt  Uoht1  bo ct  cWcxt  Ucht1  bc ct  ft  ct1  it  ct 
-ht  ot  hct 
-xt 2 Rd input vector to the LSTM uni ft 2 0, 1h forget gates activation vecit 2 0, 1h inputupdate gates activaot 2 0, 1h output gates activation veht 2 1, 1h hidden state vector also vector of the LSTM unit 
-ct 2 1, 1h cell input activation vectct 2 Rh cell state vector
+• 1 - retain information  
+(“remember”) 
+• 0 - forget information  
+(“forget”) 
+https://colah.github.io/posts/2015-08-Understanding-LSTMs/ 
+ft = g(Wfxt + Ufht1 + bf ) it = g(Wixt + Uiht1 + bi) ot = g(Woxt + Uoht1 + bo) c˜t = c(Wcxt + Ucht1 + bc) ct = ft  ct1 + it  c˜t 
+ht = ot  h(ct) 
+xt 2 Rd: input vector to the LSTM uni ft 2 (0, 1)h: forget gate’s activation vecit 2 (0, 1)h: input/update gate’s activaot 2 (0, 1)h: output gate’s activation veht 2 (1, 1)h: hidden state vector also vector of the LSTM unit 
+c˜t 2 (1, 1)h: cell input activation vectct 2 Rh: cell state vector
 CSE 156 NLP 34 Transformer 
 LSTM Architecture 
-Input Gate Layer Decide  
+Input Gate Layer: Decide  
 what information to  
-forget 
-httpscolah.github.ioposts2015-08-Understanding-LSTMs 
-ft  gWfxt  Ufht1  bf  
-it  gWixt  Uiht1  bi 
-ot  gWoxt  Uoht1  bo 
-ct  cWcxt  Ucht1  bc 
-ct  ft  ct1  it  ct 
-ht  ot  hct 
-xt 2 Rd input vector to the LSTM unit 
-ft 2 0, 1h forget gates activation vector it 2 0, 1h inputupdate gates activation vector ot 2 0, 1h output gates activation vector ht 2 1, 1h hidden state vector also known as output vector of the LSTM unit 
-ct 2 1, 1h cell input activation vector 
-ct 2 Rh cell state vector
+“forget” 
+https://colah.github.io/posts/2015-08-Understanding-LSTMs/ 
+ft = g(Wfxt + Ufht1 + bf ) 
+it = g(Wixt + Uiht1 + bi) 
+ot = g(Woxt + Uoht1 + bo) 
+c˜t = c(Wcxt + Ucht1 + bc) 
+ct = ft  ct1 + it  c˜t 
+ht = ot  h(ct) 
+xt 2 Rd: input vector to the LSTM unit 
+ft 2 (0, 1)h: forget gate’s activation vector it 2 (0, 1)h: input/update gate’s activation vector ot 2 (0, 1)h: output gate’s activation vector ht 2 (1, 1)h: hidden state vector also known as output vector of the LSTM unit 
+c˜t 2 (1, 1)h: cell input activation vector 
+ct 2 Rh: cell state vector
 CSE 156 NLP 35 Transformer 
 LSTM Architecture 
-Candidate state values  
+Candidate state values:  
 Extract candidate  
 information to put into the  
 cell vector
-httpscolah.github.ioposts2015-08-Understanding-LSTMs 
-ft  gWfxt  Ufht1  bf  
-it  gWixt  Uiht1  bi 
-ot  gWoxt  Uoht1  bo 
-ct  cWcxt  Ucht1  bc 
-ct  ft  ct1  it  ct 
-ht  ot  hct 
-xt 2 Rd input vector to the LSTM unit 
-ft 2 0, 1h forget gates activation vector it 2 0, 1h inputupdate gates activation vector ot 2 0, 1h output gates activation vector ht 2 1, 1h hidden state vector also known as output vector of the LSTM unit 
-ct 2 1, 1h cell input activation vector 
-ct 2 Rh cell state vector 
+https://colah.github.io/posts/2015-08-Understanding-LSTMs/ 
+ft = g(Wfxt + Ufht1 + bf ) 
+it = g(Wixt + Uiht1 + bi) 
+ot = g(Woxt + Uoht1 + bo) 
+c˜t = c(Wcxt + Ucht1 + bc) 
+ct = ft  ct1 + it  c˜t 
+ht = ot  h(ct) 
+xt 2 Rd: input vector to the LSTM unit 
+ft 2 (0, 1)h: forget gate’s activation vector it 2 (0, 1)h: input/update gate’s activation vector ot 2 (0, 1)h: output gate’s activation vector ht 2 (1, 1)h: hidden state vector also known as output vector of the LSTM unit 
+c˜t 2 (1, 1)h: cell input activation vector 
+ct 2 Rh: cell state vector 
 CSE 156 NLP 36 Transformer 
 LSTM Architecture 
-ft  gWfxt  Ufht1  bf  
-it  gWixt  Uiht1  bi 
+ft = g(Wfxt + Ufht1 + bf ) 
+it = g(Wixt + Uiht1 + bi) 
 ft If is 
-Update cell Forget the  information we decided to  forget and update with  new candidate information 
+Update cell: “Forget” the  information we decided to  forget and update with  new candidate information 
 If is 
- High we  
-remember  
+• High: we  
+“remember”  
 more previous  info 
- Low we forget  
-ot  gWoxt  Uoht1  bo ct  cWcxt  Ucht1  bc ct  ft  ct1  it  ct ht  ot  hct 
+• Low: we “forget”  
+ot = g(Woxt + Uoht1 + bo) c˜t = c(Wcxt + Ucht1 + bc) ct = ft  ct1 + it  c˜t ht = ot  h(ct) 
 it
- High we  add more  
+• High: we  add more  
 new info 
- Low we add 
+• Low: we add 
 more info 
-xt 2 Rd input vector to the LSTM unit 
+xt 2 Rd: input vector to the LSTM unit 
 less new info 
-httpscolah.github.ioposts2015-08-Understanding-LSTMs 
-ft 2 0, 1h forget gates activation vector it 2 0, 1h inputupdate gates activation vector ot 2 0, 1h output gates activation vector ht 2 1, 1h hidden state vector also known as output vector of the LSTM unit 
-ct 2 1, 1h cell input activation vector 
-ct 2 Rh cell state vector 
+https://colah.github.io/posts/2015-08-Understanding-LSTMs/ 
+ft 2 (0, 1)h: forget gate’s activation vector it 2 (0, 1)h: input/update gate’s activation vector ot 2 (0, 1)h: output gate’s activation vector ht 2 (1, 1)h: hidden state vector also known as output vector of the LSTM unit 
+c˜t 2 (1, 1)h: cell input activation vector 
+ct 2 Rh: cell state vector 
 CSE 156 NLP 37 Transformer 
 LSTM Architecture 
-OutputShort-term Memory 
-as in RNN 
+Output/Short-term Memory 
+(as in RNN): 
 Pass on  
-ft  gWfxt  Ufht1  bf  it  gWixt  Uiht1  bi ot  gWoxt  Uoht1  bo ct  cWcxt  Ucht1  bc 
-Pass information onto the next  statefor use in output e.g.,  probabilities 
+ft = g(Wfxt + Ufht1 + bf ) it = g(Wixt + Uiht1 + bi) ot = g(Woxt + Uoht1 + bo) c˜t = c(Wcxt + Ucht1 + bc) 
+Pass information onto the next  state/for use in output (e.g.,  probabilities) 
 different  
 information  than in the  
 long-term  
 memory vector
-ct  ft  ct1  it  ct 
-ht  ot  hct 
-xt 2 Rd input vector to the LSTM unit 
-ft 2 0, 1h forget gates activation vector it 2 0, 1h inputupdate gates activation vector ot 2 0, 1h output gates activation vector ht 2 1, 1h hidden state vector also known as output vector of the LSTM unit 
-ct 2 1, 1h cell input activation vector 
-ct 2 Rh cell state vector 
-httpscolah.github.ioposts2015-08-Understanding-LSTMs 
+ct = ft  ct1 + it  c˜t 
+ht = ot  h(ct) 
+xt 2 Rd: input vector to the LSTM unit 
+ft 2 (0, 1)h: forget gate’s activation vector it 2 (0, 1)h: input/update gate’s activation vector ot 2 (0, 1)h: output gate’s activation vector ht 2 (1, 1)h: hidden state vector also known as output vector of the LSTM unit 
+c˜t 2 (1, 1)h: cell input activation vector 
+ct 2 Rh: cell state vector 
+https://colah.github.io/posts/2015-08-Understanding-LSTMs/ 
 CSE 156 NLP 38 Transformer 
-LSTMs summary 
-Pros 
- Works for arbitrary sequence lengths as RNNs 
- Address the vanishing gradient problems via long- and short-term  memory units with gates 
-Cons 
- Calculations are sequential - computation at time t depends entirely  on the calculations done at time t-1 
- As a result, hard to parallelize and train 
-Enter transformers
+LSTMs (summary) 
+Pros: 
+• Works for arbitrary sequence lengths (as RNNs) 
+• Address the vanishing gradient problems via long- and short-term  memory units with gates 
+Cons: 
+• Calculations are sequential - computation at time t depends entirely  on the calculations done at time t-1 
+• As a result, hard to parallelize and train 
+Enter transformers…
 CSE 156 NLP 39 Transformer 
 Transformer 
 CSE 156 NLP 40 Transformer
-Attention Is All You Need NeurIPS 2017 CSE 156 NLP 41 Transformer
-Recall RNNs 
- Circa 2016, the de facto strategy in NLP is to encode sentences with a  bidirectional LSTM. 
- E.g., the source sentence in a translation 
- Today, we try to find the better building blocks than recurrence that  can solve the same problems, but are more efficient, more versatile,  and more flexible.? Lots of trial and error 
-2014 to 2017-ish Recurrence 
+Attention Is All You Need (NeurIPS 2017) CSE 156 NLP 41 Transformer
+Recall RNNs… 
+• Circa 2016, the de facto strategy in NLP is to encode sentences with a  bidirectional LSTM. 
+• E.g., the source sentence in a translation 
+• Today, we try to find the better building blocks than recurrence that  can solve the same problems, but are more efficient, more versatile,  and more flexible.? Lots of trial and error 
+2014 to 2017-ish: Recurrence 
 2021 onwards
 CSE 156 NLP 42 Transformer 
-Drawbacks of RNNs Linear Interaction Distance 
- RNNs are unrolled left-to-right. 
- Linear locality is a useful heuristic nearby words often affect each others meaning! 
- However, theres the vanishing gradient  problem for long sequences. 
- The gradients that are used to update the  network become extremely small or "vanish"  as they are backpropogated from the output  layers to the earlier layers. 
- Failing to capture long-term dependences. 
+Drawbacks of RNNs: Linear Interaction Distance 
+• RNNs are unrolled left-to-right. 
+• Linear locality is a useful heuristic: nearby words often affect each other’s meaning! 
+• However, there’s the vanishing gradient  problem for long sequences. 
+• The gradients that are used to update the  network become extremely small or "vanish"  as they are backpropogated from the output  layers to the earlier layers. 
+• Failing to capture long-term dependences. 
 Steve Jobs 
-Osequence length
-Steve Jobs who  Apple 
+O(sequence length)
+Steve Jobs who … Apple 
 CSE 156 NLP 43 Transformer 
-Drawbacks of RNNs Lack of Parallelizability 
- Forward and backward passes have Osequence length unparallelizable operations  GPUs can perform many independent computations like addition at once!  But future RNN hidden states cant be computed in full before past RNN hidden  states have been computed. 
- Training and inference are slow inhibits on very large datasets! 
+Drawbacks of RNNs: Lack of Parallelizability 
+• Forward and backward passes have O(sequence length) unparallelizable operations • GPUs can perform many independent computations (like addition) at once! • But future RNN hidden states can’t be computed in full before past RNN hidden  states have been computed. 
+• Training and inference are slow; inhibits on very large datasets! 
 1 
 0 
 h1 
@@ -691,13 +691,13 @@ h1
 1 2 h2 h3
 N 
 hT 
-Numbers indicate min  of steps before a state can be computed 
+Numbers indicate min # of steps before a state can be computed 
 CSE 156 NLP 44 Transformer 
-The New De Facto Method Attention 
+The New De Facto Method: Attention 
 Instead of deciding the  
 next token solely based on  
 the previously seen tokens,  
-each token will look at  
+each token will “look at”  
 all input tokens at the  
 same to decide which  
 ones are most important 
@@ -706,180 +706,180 @@ In practice, the actions of all tokens
 are done in parallel!
 CSE 156 NLP 45 Transformer 
 Building the Intuition of Attention 
- Attention treats each tokens representation as a query to access and incorporate  information from a set of values. 
- Today we look at attention within a single sequence. 
- Number of unparallelizable operations does NOT increase with sequence length.  Maximum interaction distance O1, since all tokens interact at every layer! 
+• Attention treats each token’s representation as a query to access and incorporate  information from a set of values. 
+• Today we look at attention within a single sequence. 
+• Number of unparallelizable operations does NOT increase with sequence length. • Maximum interaction distance: O(1), since all tokens interact at every layer! 
 attention 
 attention 
 embedding
 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 
 0 0 0 0 0 0 0 0 h1 h2 hT h3 
-All tokens attend to all tokens  in previous layer most  arrows here are omitted 
+All tokens attend to all tokens  in previous layer; most  arrows here are omitted 
 CSE 156 NLP 46 Transformer 
 Attention as a soft, averaging lookup table We can think of attention as performing fuzzy lookup in a key-value store. 
 In a lookup table, we have a table of keys that map to values. The query matches  one of the keys, returning its value. 
-In attention, the query matches all keys softly, to  a weight between 0 and 1. The keys values are  multiplied by the weights and summed.
+In attention, the query matches all keys softly, to  a weight between 0 and 1. The keys’ values are  multiplied by the weights and summed.
 CSE 156 NLP 47 Transformer 
 Attention as a soft, averaging lookup table 
 We can think of attention as performing fuzzy lookup in a key-value store. 
 web search analogy..
- Query Q is the search text you type in  the search engine bar.  
- Key K is the title of each web page in  the search result window.  
- Value V is the actual content of web  pages shown. 
-In attention, the query matches all keys softly, to  a weight between 0 and 1. The keys values are  multiplied by the weights and summed. 
+• Query (Q) is the search text you type in  the search engine bar.  
+• Key (K) is the title of each web page in  the search result window.  
+• Value (V) is the actual content of web  pages shown. 
+In attention, the query matches all keys softly, to  a weight between 0 and 1. The keys’ values are  multiplied by the weights and summed. 
 
 CSE 156 NLP 48 Transformer 
-Self-Attention Basic Concepts 
-Lena Viota Blog 
-Query asking for  
- Query-Key-Value Attention 
+Self-Attention: Basic Concepts 
+[Lena Viota Blog] 
+Query: asking for  
+• Query-Key-Value Attention 
 information 
- 
-Key saying that it  
+• 
+Key: saying that it  
 has some information 
-Value giving the  
+Value: giving the  
 information
 CSE 156 NLP 49 Transformer 
-Self-Attention Walk-through 
+Self-Attention: Walk-through 
 b1 b2 b3 b4 
-Each b is obtained by considering i ai
+Each b is obtained by considering i ∀ai
 Self-Attention Layer 
 a1 a2 a3 a4 Can be either input or a hidden layer 
 CSE 156 NLP 50 Transformer 
-Self-Attention Walk-through 
+Self-Attention: Walk-through 
 b1 
 How relevant are a to ? 2, a3, a4 a1 We denote the level  
-of relevance as  
+of relevance as α 
 a1 a2 a3 a4 
 51
 CSE 156 NLP Transformer 
-How to compute ?   q  k 
+How to compute α? α = q ⋅ k 
 q . k 
- 
+α 
 W 
 tanh 
-q k  
+q k + 
 WQ a1 
 WK a4 
-Well use this! 
+We’ll use this! 
 WQ a1 
 WK a4 
-Method 1 most common Dot product Method 2 Additive 
+Method 1 (most common): Dot product Method 2: Additive 
 52
 CSE 156 NLP Transformer 
-Self-Attention Walk-through 1,2  q1  k2 1,3  q1  k3 1,4  q1  k attention scores 4 
-q1 query q1  WQ a1 
+Self-Attention: Walk-through α1,2 = q1 ⋅ k2 α1,3 = q1 ⋅ k3 α1,4 = q1 ⋅ k attention scores 4 
+q1 query q1 = WQ a1 
 k key 2 
-k2  WK a2 
+k2 = WK a2 
 k3 
 k4 
-k3  WK a3 
-k4  WK a4 
+k3 = WK a3 
+k4 = WK a4 
 a1 a2 a3 a4 
 53
 CSE 156 NLP Transformer 
-1,1  q1  k1 1,2  q1  k2 1,3  q1  k3 1,4  q1  k4 
-query q1 q1  WQ a1 
+α1,1 = q1 ⋅ k1 α1,2 = q1 ⋅ k2 α1,3 = q1 ⋅ k3 α1,4 = q1 ⋅ k4 
+query q1 q1 = WQ a1 
 k3 
 k1 
-k1  WK a1 
+k1 = WK a1 
 k key 2 
-k2  WK a2 
+k2 = WK a2 
 k4 
-k3  WK a3 
-k4  WK a4 
+k3 = WK a3 
+k4 = WK a4 
 a1 a2 a3 a4 
 54
 CSE 156 NLP Transformer 
-1,i e1,i 
-je1,j 
-1,1 
-1,2 1,3  
- 1,4 Softmax 
-1,1  q1  k1 1,2  q1  k2 1,3  q1  k3 1,4  q1  k4 
-query q1 q1  WQ a1 
+α′1,i =eα1,i 
+∑jeα1,j 
+′1,1 
+α′1,2 α′1,3 α′ 
+α 1,4 Softmax 
+α1,1 = q1 ⋅ k1 α1,2 = q1 ⋅ k2 α1,3 = q1 ⋅ k3 α1,4 = q1 ⋅ k4 
+query q1 q1 = WQ a1 
 k3 
 k1 
-k1  WK a1 
+k1 = WK a1 
 k key 2 
-k2  WK a2 
+k2 = WK a2 
 k4 
-k3  WK a3 
-k4  WK a4 
+k3 = WK a3 
+k4 = WK a4 
 a1 a2 a3 a4 
 55
 CSE 156 NLP Transformer 
 a1 
 Denote how relevant each token are to ! 
 Use attention scores to extract information 
-1,1 
-1,2 1,3  
- 1,4 Softmax 
-1,1  q1  k1 1,2  q1  k2 1,3  q1  k3 1,4  q1  k4 
-query q1 q1  WQ a1 
+′1,1 
+α′1,2 α′1,3 α′ 
+α 1,4 Softmax 
+α1,1 = q1 ⋅ k1 α1,2 = q1 ⋅ k2 α1,3 = q1 ⋅ k3 α1,4 = q1 ⋅ k4 
+query q1 q1 = WQ a1 
 k3 
 k1 
-k1  WK a1 
+k1 = WK a1 
 k key 2 
-k2  WK a2 
+k2 = WK a2 
 k4 
-k3  WK a3 
-k4  WK a4 
+k3 = WK a3 
+k4 = WK a4 
 a1 a2 a3 a4 
 56
 CSE 156 NLP Transformer 
 Use attention scores to extract information 
-b1  i1,i vi 
+b1 = ∑iα′1,i vi 
 b1 
-1,1     1,2 1,3  
- 1,4 q1 k2 k4 k3 k1 
+′1,1 × × × × α′1,2 α′1,3 α′ 
+α 1,4 q1 k2 k4 k3 k1 
 v1 
-v1  WV a1 
+v1 = WV a1 
 v2 
-v2  WV a2 
+v2 = WV a2 
 v3 
-v3  WV a3 
+v3 = WV a3 
 v4 
-v4  WV a4 
+v4 = WV a4 
 a1 a2 a3 a4 
 57
 CSE 156 NLP Transformer 
 Use attention scores to extract information 
-b1  i1,i vi 
+b1 = ∑iα′1,i vi 
 b1 
-1,1     1,2 1,3  
- 1,4 1,i 
+′1,1 × × × × α′1,2 α′1,3 α′ 
+α 1,4 α′1,i 
 The higher the attention score is, the  
 ai b1 
 more important is to composing  
 q1 k2 k4 k3 k1 
 v1 
-v1  WV a1 
+v1 = WV a1 
 v2 
-v2  WV a2 
+v2 = WV a2 
 v3 
-v3  WV a3 
+v3 = WV a3 
 v4 
-v4  WV a4 
+v4 = WV a4 
 a1 a2 a3 a4 
 58
 CSE 156 NLP Transformer 
 Repeat the same calculation for all a to obtain  i bi 
 b2 
-b2  i2,i vi 
-2,1 2,4 
-2,2  
-   2,3   
+b2 = ∑iα′2,i vi 
+′2,1 α′2,4 
+α′2,2 α′ 
+α × × 2,3 × × 
 q1 k2 k4 k3 k1 v1 v2 v3 v4 q3 q4 q2 
 a1 a2 a3 a4 
 59
 CSE 156 NLP Transformer 
 Repeat the same calculation for all a to obtain  i bi 
 b2 
-b2  i2,i vi 
-2,1 2,4 
-2,2  
-   2,3   bi 
+b2 = ∑iα′2,i vi 
+′2,1 α′2,4 
+α′2,2 α′ 
+α × × 2,3 × × bi 
 Note that the computation of can be  
 parallelized, as they are independent to  
 each other 
@@ -891,53 +891,53 @@ Parallelize the computation! QKV
 Q I 
 q1 a1 
 q2 a2 
- WQ 
+= WQ 
 q3 a3 
 q4 a4 
 K I 
 k1 a1 
 k2 a2 
- WK 
+= WK 
 k3 a3 
 k4 a4 
 61
 V I 
 v1 a1 
 v2 a2 
- WV 
+= WV 
 v3 a3 
 v4 a4 
 CSE 156 NLP Transformer 
-Parallelize the computation! Attention Scores 1,1 
-1,2 
-1,3 
-1,4 
+Parallelize the computation! Attention Scores α1,1 
+α1,2 
+α1,3 
+α1,4 
 q1 
-k4  
+k4 = 
 k1 
 k2 
 k3 
-1,1 
-1,2 1,3  
- 1,4 q1 k2 k4 k3 k1 
+′1,1 
+α′1,2 α′1,3 α′ 
+α 1,4 q1 k2 k4 k3 k1 
 v1 
-v1  WV a1 
+v1 = WV a1 
 v2 
-v2  WV a2 
+v2 = WV a2 
 v3 
-v3  WV a3 
+v3 = WV a3 
 v4 
-v4  WV a4 
+v4 = WV a4 
 a1 a2 a3 a4 
 62
 CSE 156 NLP Transformer 
 Parallelize the computation! Attention Scores 
-1,1 
-1,2 
-1,3 
-1,4 
+α1,1 
+α1,2 
+α1,3 
+α1,4 
 q1 
-k4  
+k4 = 
 63
 k1 
 k2 
@@ -945,89 +945,89 @@ k3
 CSE 156 NLP Transformer 
 Parallelize the computation! 
 Attention Scores 
-A AQKT 
-1,1 
-1,2 
-1,3 
-1,4 
+A′ AQKT 
+′1,1 
+α′1,2 
+α′1,3 
+α′1,4 
 q1 
- 1,1 1,2 1,3 1,4 
-2,1 3,1 4,1 
-2,2 3,2 4,2 
-2,3 3,3 4,3 
-2,4 3,4 4,4 
-2,1 2,2 2,3 2,4 q2 
- 
-3,1 3,2 3,3 3,4 q3 4,1 4,2 4,3 4,4 q4 
+α α1,1 α1,2 α1,3 α1,4 
+α′2,1 α′3,1 α′4,1 
+α′2,2 α′3,2 α′4,2 
+α′2,3 α′3,3 α′4,3 
+α′2,4 α′3,4 α′4,4 
+α2,1 α2,2 α2,3 α2,4 q2 
+= 
+α3,1 α3,2 α3,3 α3,4 q3 α4,1 α4,2 α4,3 α4,4 q4 
 64
 k1 k2 k3 k4 
 CSE 156 NLP Transformer 
-1,1 v1 1,2 v2  1,3 v3  1,4 v4  b11,1v1 
- 
-1,2 
+α′1,1 v1 α′1,2 v2 + α′1,3 v3 + α′1,4 v4 + b1α′1,1v1 
+= 
+α′1,2 
 v2 
 v3 
 v4 
-1,3 
-1,4 
+α′1,3 
+α′1,4 
 Parallelize the computation! 
 Weighted Sum of Values with Attention Scores 
 65
 CSE 156 NLP Transformer 
 Parallelize the computation! 
-O V A 
+O V A′ 
 b1 b2 
- 
-1,1 1,2 1,3 1,4 2,1 2,2 2,3 2,4 
+= 
+α′1,1 α′1,2 α′1,3 α′1,4 α′2,1 α′2,2 α′2,3 α′2,4 
 v1 v2 
-3,1 3,2 3,3  b3 3,4 4,1 4,2 4,3 4,4 b4 
+α′3,1 α′3,2 α′3,3 α′ b3 3,4 α′4,1 α′4,2 α′4,3 α′4,4 b4 
 v3 v4 
 Parallelize the computation! 
 Weighted Sum of Values with Attention Scores 
 66
 CSE 156 NLP Transformer 
-Q  I WQ K  I WK V  I WV 
-A  Q KT 
-Q  I WQ K  WK I V  WV I Softmax 
-A  I WQ I WKT  I WQ WTK IT A softmaxA 
-O  AV 
-Q KT A A  
-A  O V 
+Q = I WQ K = I WK V = I WV 
+A = Q KT 
+Q = I WQ K = WK I V = WV I Softmax 
+A = I WQ (I WK)T = I WQ WTK IT A′= softmax(A) 
+O = A′V 
+Q KT A′ A = 
+A =′ O V 
 67
 CSE 156 NLP Transformer 
 The Matrices Form of Self-Attention 
-Q  I WQ K  I WK V  I WV 
-A  Q KT 
-I  a , where 1, . . . , an  nd ai  d WQ, WK, WV  dd 
-Q,K, V  nd 
+Q = I WQ K = I WK V = I WV 
+A = Q KT 
+I = {a , where 1, . . . , an} ∈ ℝn×d ai ∈ ℝd WQ, WK, WV ∈ ℝd×d 
+Q,K, V ∈ ℝn×d 
 ? 
-A, A  nn A  I WQ I WKT  I WQ WTK IT 
+A′, A ∈ ℝn×n A = I WQ (I WK)T = I WQ WTK IT 
 ? 
-A softmaxA 
+A′= softmax(A) 
 Dimensions? 
-O  AV 
-O  nd ? 
+O = A′V 
+O ∈ ℝn×d ? 
 68
 CSE 156 NLP Transformer 
 The Matrices Form of Self-Attention 
-Q  I WQ K  I WK V  I WV 
-A  Q KT 
-I  a , where 1, . . . , an  nd ai  d WQ, WK, WV  dd 
-Q,K, V  nd 
-A, A  nn A  I WQ I WKT  I WQ WTK IT A softmaxA 
+Q = I WQ K = I WK V = I WV 
+A = Q KT 
+I = {a , where 1, . . . , an} ∈ ℝn×d ai ∈ ℝd WQ, WK, WV ∈ ℝd×d 
+Q,K, V ∈ ℝn×d 
+A′, A ∈ ℝn×n A = I WQ (I WK)T = I WQ WTK IT A′= softmax(A) 
 Dimensions? 
-O  AV 
+O = A′V 
 69
-O  nd 
+O ∈ ℝn×d 
 CSE 156 NLP Transformer 
-w1n 
-Let be a sequence of words in vocabulary , like Steve Jobs founded Apple. wi ai  Ewi E  dV 
+w1:n 
+Let be a sequence of words in vocabulary , like Steve Jobs founded Apple. wi ai = Ewi E ∈ ℝd×|V| 
 For each , let , where is an embedding matrix. 
-1. Transform each word embedding with weight matrices WQ, W , each in K, WV dd qi  WQ ai queries ki  WK ai keys vi  WV ai values 
-2. Compute pairwise similarities between keys and queries normalize with softmax i,j ei,j 
-jei,j i,j  kj qi 
+1. Transform each word embedding with weight matrices WQ, W , each in K, WV ℝd×d qi = WQ ai (queries) ki = WK ai (keys) vi = WV ai (values) 
+2. Compute pairwise similarities between keys and queries; normalize with softmax α′i,j =eαi,j 
+∑jeαi,j αi,j = kj qi 
 3. Compute output for each word as weighted sum of values 
-bi  ji,j vj 
+bi = ∑jα′i,j vj 
 70
 CSE 156 NLP Transformer 
 Limitations and Solutions of Self-Attention 
@@ -1039,110 +1039,110 @@ Limitations and Solutions of Self-Attention
 No Sequence Order Position Embedding No Nonlinearities Adding Feed-forward Networks Looking into the Future Masking 
 72
 CSE 156 NLP Transformer 
-No Sequence Order  Position Embedding 
- All tokens in an input sequence are simultaneously fed into self-attention  blocks. Thus, theres no difference between tokens at different positions.  We lose the position info! 
- How do we bring the position info back, just like in RNNs? 
- Representing each sequence index as a vector p , for i  d i  1,...,n 
- How to incorporate the position info into the self-attention blocks?  Just add the to the input  
-pi ai  ai  pi 
- where is the embedding of the word at index . 
+No Sequence Order → Position Embedding 
+• All tokens in an input sequence are simultaneously fed into self-attention  blocks. Thus, there’s no difference between tokens at different positions. • We lose the position info! 
+• How do we bring the position info back, just like in RNNs? 
+• Representing each sequence index as a vector: p , for i ∈ ℝd i ∈ {1,...,n} 
+• How to incorporate the position info into the self-attention blocks? • Just add the to the input:  
+pi âi = ai + pi 
+• where is the embedding of the word at index . 
 ai i 
- In deep self-attention networks, we do this at the first layer.  We can also concatenate and , but more commonly we add them. 
+• In deep self-attention networks, we do this at the first layer. • We can also concatenate and , but more commonly we add them. 
 ai pi 
 73
 qi ki vi 
-pi ai  
+pi ai + 
 CSE 156 NLP Transformer 
 Position Representation Vectors via Sinusoids  
-Sinusoidal Position Representations from the original Transformer paper concatenate sinusoidal functions of varying periods. 
- 
-sin 1000021  cos 1000021  
-sin 100002 2   cos 100002 2   
+Sinusoidal Position Representations (from the original Transformer paper): concatenate sinusoidal functions of varying periods. 
+= 
+sin( /100002∗1/ ) cos( /100002∗1/ ) 
+sin( /100002∗ 2 / ) cos( /100002∗ 2 / ) 
 Dimension 
 Index in the sequence 
-httpstimodenk.combloglinear-relationships-in-the-transformers-positional-encoding 
- Periodicity indicates that maybe absolute position isnt as important  Maybe can extrapolate to longer sequences as periods restart! 
- Not learnable also the extrapolation doesnt really work! 
+https://timodenk.com/blog/linear-relationships-in-the-transformers-positional-encoding/ 
+• Periodicity indicates that maybe “absolute position” isn’t as important • Maybe can extrapolate to longer sequences as periods restart! 
+• Not learnable; also the extrapolation doesn’t really work! 
 74
 CSE 156 NLP Transformer 
 Learnable Position Representation Vectors  pi 
-Learned absolute position representations contains learnable parameters. p  dn pi 
- Learn a matrix , and let each be a column of that matrix 
- Most systems use this method. 
- Flexibility each position gets to be learned to fit the data  Cannot extrapolate to indices outside 1,...,n. 
-Sometimes people try more flexible representations of position 
- Relative linear position attention Shaw et al., 2018 
- Dependency syntax-based position Wang et al., 2019 
+Learned absolute position representations: contains learnable parameters. p ∈ ℝd×n pi 
+• Learn a matrix , and let each be a column of that matrix 
+• Most systems use this method. 
+• Flexibility: each position gets to be learned to fit the data • Cannot extrapolate to indices outside 1,...,n. 
+Sometimes people try more flexible representations of position: 
+• Relative linear position attention [Shaw et al., 2018] 
+• Dependency syntax-based position [Wang et al., 2019] 
 75
 CSE 156 NLP Transformer 
 Limitations and Solutions of Self-Attention 
-  Masking 
+• →→→ Masking 
 No Sequence Order Position Embedding No Nonlinearities Adding Feed-forward Networks Looking into the Future Masking 
 76
 CSE 156 NLP Transformer 
-No Nonlinearities  Add Feed-forward Networks 
-  Masking 
+No Nonlinearities → Add Feed-forward Networks 
+• →→→ Masking 
 c1 
 There are no element-wise nonlinearities in  
-c2 cn  
-self-attention stacking more self-attention  layers just re-averages value vectors. 
-FF FF  FF Self-Attention 
+c2 cn … 
+self-attention; stacking more self-attention  layers just re-averages value vectors. 
+FF FF … FF Self-Attention 
 b1 
- 
+… 
 b2 bn 
-Easy Fix add a feed-forward network  to post-process each output vector. 
+Easy Fix: add a feed-forward network  to post-process each output vector. 
 77
-FF FF  FF Self-Attention 
-a1 a2 an  
+FF FF … FF Self-Attention 
+a1 a2 an … 
 CSE 156 NLP Transformer 
 Limitations and Solutions of Self-Attention 
-  Masking 
+• →→→ Masking 
 No Sequence Order Position Embedding No Nonlinearities Adding Feed-forward Networks Looking into the Future Masking 
 78
 CSE 156 NLP Transformer 
-Looking into the Future  Masking 
- In decoders language modeling,    Masking 
+Looking into the Future → Masking 
+• In decoders (language modeling,  • →→→ Masking 
 producing the next word given  
-i,j  qi kj, j  i 
-We can look at these not  greyed out words 
-previous context, we need to  
-, j  i 
-START 
+αi,j = {qi kj, j ≤ i 
+We can look at these (not  greyed out) words 
+previous context), we need to  
+−∞, j > i 
+[START] 
 The 
 chef 
 who 
-ensure we dont peek at the future. 
- At every time-step, we could  change the set of keys and queries  to include only past words.  
-Inefficient! 
- To enable parallelization, we mask  out attention to future words by  setting attention scores to . 
+ensure we don’t peek at the future. 
+• At every time-step, we could  change the set of keys and queries  to include only past words.  
+(Inefficient!) 
+• To enable parallelization, we mask  out attention to future words by  setting attention scores to −∞. 
 For encoding  these words 
 79
-START The 
+[START] The 
 chef 
 who 
 
 
 CSE 156 NLP Transformer 
 Now We Put Things Together 
- 80 
- Self-attention 
- The basic computation 
+• 80 
+• Self-attention 
+• The basic computation 
 Output 
 Probabilities 
 Softmax 
 Linear 
- Positional Encoding 
+• Positional Encoding 
 Repeat for number  
- Specify the sequence order 
- Nonlinearities 
- Adding a feed-forward network at the  output of the self-attention block 
- Masking 
- Parallelize operations looking at all tokens  while not leaking info from the future 
+• Specify the sequence order 
+• Nonlinearities 
+• Adding a feed-forward network at the  output of the self-attention block 
+• Masking 
+• Parallelize operations (looking at all tokens)  while not leaking info from the future 
 80
 of encoder blocksBlock 
 Feed-Forward 
 Masked Self-Attention 
- 
++ 
 Position Embedding 
 Input Embeddings 
 Inputs 

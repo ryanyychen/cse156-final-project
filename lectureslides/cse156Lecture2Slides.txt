@@ -1,581 +1,581 @@
 
 CSE 156 Natural Language Processing
 Language Modeling and N-Grams 
-Instructor Lianhui Qin 
+Instructor: Lianhui Qin 
 Slides adapted from Yejin Choi 
 1 
 Prerequisites  
- We would expect you to have decent foundations in probability and  statistics CSE 103 or equivalence, and strongly recommend background  with linear algebra, deep learning, and machine learning.  
- You're also expected to develop the ability to program comfortably with  Python and using PyTorch through the course. We will have tutorial  sessions for these. 
- If you're unsure about whether your background prepare you well in the  class, please consult the course staff during the first week of the class. We  are here to help  
-Some great tutorial notebooks available online Stanford CS224N, UW CS447517
+• We would expect you to have decent foundations in probability and  statistics (CSE 103 or equivalence), and strongly recommend background  with linear algebra, deep learning, and machine learning.  
+• You're also expected to develop the ability to program comfortably with  Python and using PyTorch through the course. We will have tutorial  sessions for these. 
+• If you're unsure about whether your background prepare you well in the  class, please consult the course staff during the first week of the class. We  are here to help :) 
+*Some great tutorial notebooks available online: Stanford CS224N, UW CS447/517
 Statistical NLP - CSE 156 2 
 Recap 3
 Important Logistics 
- No podcast and recording  encourage attendance   Slides will be uploaded right before lectures 
- We have strict participation policy 
- No final presentation and exam  only project reportcode Statistical NLP - CSE 156 4
+• No podcast and recording — encourage attendance  • Slides will be uploaded right before lectures 
+• We have strict participation policy 
+• No final presentation and exam — only project report&code Statistical NLP - CSE 156 4
 Assignments - Grades 
- 4 assignments in total 50 of your total grades  Your higher scoring assignments have higher weights. 
-Assignment Weight Your best 20 Your 2nd best 15 Your 3rd best 10 Your 4th best 5 
-Example John Doe scores 70, 90, 80, 95 on the  four assignments, his assignment grade will be 
-95  20  90  15  80  10  70  5  44 out of 50 pts
+• 4 assignments in total (50% of your total grades) • Your higher scoring assignments have higher weights. 
+Assignment Weight Your best 20% Your 2nd best 15% Your 3rd best 10% Your 4th best 5% 
+Example: John Doe scores 70, 90, 80, 95 on the  four assignments, his assignment grade will be: 
+95 * 20% + 90 * 15% + 80 * 10% + 70 * 5% = 44 (out of 50 pts)
 Statistical NLP - CSE 156 5 
 Course Project - Timeline 
- Team formation 1 Jan 23 Week 3 Thursday 
- Teams should consist of 35 members. We will merge smaller teams.  Project Topic and Proposal 5 Feb 2 Week 4 Sunday  1-2 page excluding references 
- Midway report 10 Feb 20 Week 7 Thursday 
- Final report 24 Mar 20 Final Week Thursday 
- 4-6 pages excluding references  
-All reports should use NeurIPS template.  The instructions will be released soon.
+• Team formation (1%): Jan 23 (Week 3 Thursday) 
+• Teams should consist of 3–5 members. We will merge smaller teams. • Project Topic and Proposal (5%): Feb 2 (Week 4 Sunday) • 1-2 page excluding references 
+• Midway report (10%): Feb 20 (Week 7 Thursday) 
+• Final report (24%): Mar 20 (Final Week Thursday) 
+• 4-6 pages excluding references  
+*All reports should use NeurIPS template.  The instructions will be released soon.
 Statistical NLP - CSE 156 6 
 Participation 
- Course participation 10 
- You are encouraged to attend all lectures! 
- Participation will be tracked from the 3rd week for 16 class sessions after the adddrop period  10 points for attending at least 13 lectures you can miss 3 lectures 
- 8 for at least 11 lectures 
- 5 for at least 8 lectures 
- 0 for attending less than 8 lectures 
- We also encourage you to attend discussion sessions and you can earn 3 extra credits on the total  grade by attending 7 or more! 
+• Course participation (10%) 
+• You are encouraged to attend all lectures! 
+• Participation will be tracked from the 3rd week for 16 class sessions after the add/drop period • 10 points for attending at least 13 lectures (you can miss 3 lectures) 
+• 8 for at least 11 lectures 
+• 5 for at least 8 lectures 
+• 0 for attending less than 8 lectures 
+• We also encourage you to attend discussion sessions and you can earn 3% extra credits (on the total  grade) by attending 7 or more! 
 Statistical NLP - CSE 156 7
 The Era of LLMs 8
- Large language models LLMs are large scale neural networks that are pre-trained  on vast amounts of text data. 
- They can potentially perform a wide range  of language tasks such as recognizing,  summarizing, translating, predicting,  classifying, and generating texts. 
- LLMs are built with the Transformer architecture. 
- From several millions to hundreds of  billions of parameters. 
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
+• Large language models (LLMs) are large scale neural networks that are pre-trained  on vast amounts of text data. 
+• They can potentially perform a wide range  of language tasks such as recognizing,  summarizing, translating, predicting,  classifying, and generating texts. 
+• LLMs are built with the Transformer architecture. 
+• From several millions to hundreds of  billions of parameters. 
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
 Bloom of NLP with LLMs 9
 
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
-Text Generation  Automation 
- Conversation 
- Recommendation letter 
- Poetry 
- Essay 
- Translation 
- Scientific paper 
- News article 
- Email 
- Murder mystery story 
- Shopping list 
-  
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
+Text Generation & Automation 
+• Conversation 
+• Recommendation letter 
+• Poetry 
+• Essay 
+• Translation 
+• Scientific paper 
+• News article 
+• Email 
+• Murder mystery story 
+• Shopping list 
+• … 
 10
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
-Code Generation  Debugging 
-Natural Language Processing - CSE 156 11 Lecture 1 Introduction
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
+Code Generation & Debugging 
+Natural Language Processing - CSE 156 11 Lecture 1: Introduction
 LLM-Powered Search Engine 
 
-Natural Language Processing - CSE 156 12 Lecture 1 Introduction
+Natural Language Processing - CSE 156 12 Lecture 1: Introduction
 LLM-Powered Intelligent Agents 
 13
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
 LLMs for Scientific Discovery 
-Natural Language Processing - CSE 156 14 Lecture 1 Introduction
-LLMs for Medical Research  Diagnoses Natural Language Processing - CSE 156 15 Lecture 1 Introduction
-LLMs for Law  Legal Usages 
-Natural Language Processing - CSE 156 16 Lecture 1 Introduction
+Natural Language Processing - CSE 156 14 Lecture 1: Introduction
+LLMs for Medical Research & Diagnoses Natural Language Processing - CSE 156 15 Lecture 1: Introduction
+LLMs for Law & Legal Usages 
+Natural Language Processing - CSE 156 16 Lecture 1: Introduction
 Vision 
 Language  
 Applications 
- Google collage  
-by The Verge 
+—— Google (collage  
+by The Verge) 
 17
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
 Vision-Language Applications 
 More fictional images! 
-An expressive oil painting of a  
+“An expressive oil painting of a  
 basketball player dunking,  
 depicted as an explosion of a  
-nebula.  DALLE 3 
+nebula.” —— DALL·E 3 
 18
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
 Vision-Language Applications 
 Complex fictional scenes that  
 demand a profound grasp of the  
 language context. 
 
- DALLE 3 
+—— DALL·E 3 
 19
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
-OpenAI O1  the strongest reasoning model 
-OpenAI In our tests, the next model  
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
+OpenAI O1 — the strongest reasoning model 
+OpenAI: In our tests, the next model  
 update performs similarly to PhD  
 students on challenging benchmark  
 tasks in physics, chemistry, and biology. 
 For the International Mathematics  
-Olympiad IMO, the reasoning model  
-scored 83. Their coding abilities were  
+Olympiad (IMO), the reasoning model  
+scored 83%. Their coding abilities were  
 evaluated in contests and reached the  
-89 in Codeforces competitions. 
+89% in Codeforces competitions. 
 20
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
 Surprising Failure Modes of LLMs 
 21
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
 Generative AI Paradox 
 
 
-Natural Language Processing - CSE 156 22 Lecture 1 Introduction
+Natural Language Processing - CSE 156 22 Lecture 1: Introduction
 Weird Conversations 
 
-Natural Language Processing - CSE 156 23 Lecture 1 Introduction
+Natural Language Processing - CSE 156 23 Lecture 1: Introduction
 Hallucination 
 
-httpsgithub.comgiuven95chatgpt-failures 
+https://github.com/giuven95/chatgpt-failures 
 24
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
 Privacy and Security Risks 
-Natural Language Processing - CSE 156 25 Lecture 1 Introduction
+Natural Language Processing - CSE 156 25 Lecture 1: Introduction
 Scientific Claims Fabrication 
 
 26
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
-Intellectual Property Infringement Natural Language Processing - CSE 156 27 Lecture 1 Introduction
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
+Intellectual Property Infringement Natural Language Processing - CSE 156 27 Lecture 1: Introduction
 Topics to Cover in This Course 
 Basics of Large Language Models 
-Language Models Transformers, Attention, Pre 
+Language Models: Transformers, Attention, Pre 
 training 
-World Model Video Generation, Game simulator,  
+World Model: Video Generation, Game simulator,  
 Agent 
-Prompting CoT, Role Play, Tool Use, Prompt Search,  
+Prompting: CoT, Role Play, Tool Use, Prompt Search,  
 Structural Prompting 
 28
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
 Topics to Cover in This Course 
 Making Better Language Models 
-Natural Language Generation NLG Formalization,  
+Natural Language Generation: NLG Formalization,  
 Decoding Algorithms, Training NLG, Evaluating NLG  
-Automatic and Human 
-Alignment RL Basics, RLHF for LMs, Instruction  
-Learning, Data Collection for RL, PPODPO,  
-Emergent Capabilities In-context Learning, Scaling  
-Laws, Emergent Capabilities, Reasoning,  
+(Automatic and Human) 
+Alignment: RL Basics, RLHF for LMs, Instruction  
+Learning, Data Collection for RL, PPO/DPO, … 
+Emergent Capabilities: In-context Learning, Scaling  
+Laws, Emergent Capabilities, Reasoning, … 
 29
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
 Topics to Cover in This Course Making Better Language Models 
-Multi-modality Vision-Language Understanding,  
+Multi-modality: Vision-Language Understanding,  
 CLIP, Visual Instruction-Tuning with LLMs, Text to  
-Image Generation, Embodiment, Robotics,  
-Retrieval Retrieval-based LMs Architecture, Training,  
-Applications, Promises and Challenges Retrieval 
-httpai.stanford.edublogretrieval-based-NLP 
-Augmented Generation Parametric and Non Parametric Memories,  
+Image Generation, Embodiment, Robotics, … 
+Retrieval: Retrieval-based LMs Architecture, Training,  
+Applications, Promises and Challenges; Retrieval 
+http://ai.stanford.edu/blog/retrieval-based-NLP/ 
+Augmented Generation; Parametric and Non Parametric Memories, … 
 30
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
 Many forms of LLM Reasoning
-Natural Language Processing - CSE 156 31 Lecture 1 Introduction 
+Natural Language Processing - CSE 156 31 Lecture 1: Introduction 
 LLM Reasoning in Science
-Natural Language Processing - CSE 156 32 Lecture 1 Introduction 
-Learning Goals of the Course  
-Whats youll gain by the end of the class? 
- A decent understanding of basic conceptual and technical details of the building  blocks of frontier LLMs. 
- A close understanding of the promises and limits of the abilities of existing frontier  LLMs. 
- A clearer picture of the cutting-edge NLP research areas, and scientific impact of LLMs. Natural Language Processing - CSE 156 33 Lecture 1 Introduction
+Natural Language Processing - CSE 156 32 Lecture 1: Introduction 
+Learning Goals of the Course / 
+What’s you’ll gain by the end of the class? 
+• A decent understanding of basic conceptual and technical details of the building  blocks of frontier LLMs. 
+• A close understanding of the promises and limits of the abilities of existing frontier  LLMs. 
+• A clearer picture of the cutting-edge NLP research areas, and scientific impact of LLMs. Natural Language Processing - CSE 156 33 Lecture 1: Introduction
 The Language Modeling Task 
 Assigning probability to text! 
 CSE 156 NLP 34 Language Modeling and N-Grams
 The Language Modeling Task 
-Setup Assume a finite vocabulary of words 
-V  the, a, man,telescope, Bechham,two, Madrid,... 
-We can construct an infinite set of strings 
-V  the, a,the a,the fan,the man,the man with the telescope,... 
-Data Given a training set of example sentences  
-s1, s2,...,sn  si 2 V 
-p  V ! R 
-Problem Estimate a probability distribution such that 
+Setup: Assume a (finite) vocabulary of words 
+V = {the, a, man,telescope, Bechham,two, Madrid,...} 
+We can construct an (infinite) set of strings: 
+V† = {the, a,the a,the fan,the man,the man with the telescope,...} 
+Data: Given a training set of example sentences  
+{s1, s2,...,sn | si 2 V†} 
+p : V† ! R 
+Problem: Estimate a probability distribution such that 
   
-X s2V 
-ps  1 8s 2 V, ps  0 
+X s2V† 
+p(s) = 1; 8s 2 V†, p(s)  0 
 CSE 156 NLP 35 Language Modeling and N-Grams
 What are language models useful for? 
- Automatic speech recognition 
- I saw a van and Eyes awe of an may sound identical, but one is  more likely 
- Autocorrect 
- Correcting likely typos 
- Autocomplete  
- Machine translation 
- Code completion 
- Now Chatbots? 
+• Automatic speech recognition 
+• “I saw a van” and “Eyes awe of an” may sound identical, but one is  more likely 
+• Autocorrect: 
+• Correcting likely typos 
+• Autocomplete  
+• Machine translation 
+• Code completion 
+• (Now) Chatbots? 
 CSE 156 NLP 36 Language Modeling and N-Grams
 Learning Language Models 
-ps s 
-Goal Assign useful probabilities to sentences  
- Input many observations of training sentences  
-D  s1, s2,...,sN  
- Output system capable of computing  
-ps 
+p(s) s 
+Goal: Assign useful probabilities to sentences  
+• Input: many observations of training sentences  
+D = {s1, s2,...,sN } 
+• Output: system capable of computing  
+p(s) 
 Probabilities should broadly indicate plausibility 
- 
-PI saw a van  Peyes awe of an 
- Not necessarily same as grammaticality  
-Partichokes intimidate zippers  0 
+• 
+P(I saw a van)  P(eyes awe of an) 
+• Not necessarily same as grammaticality:  
+P(artichokes intimidate zippers) ⇡ 0 
 CSE 156 NLP 37 Language Modeling and N-Grams
 Learning LMs - Empirical Distribution 
-ps 
+p(s) 
 How to estimate ? 
- Empirical distribution over training sentences  
+• Empirical distribution over training sentences  
 D 
-ps  countDs 
-N for sentence s  x1, x2,...,xk with s 2 V, xi 2 V, and N  D  Problem does not generalize at all 
- Need to assign non-zero probability to previously unseen sentences! CSE 156 NLP 38 Language Modeling and N-Grams
-Learning LMs - UnigramBag of Words s STOP 
-Assumption 1 All sentences are finite, and end with a token V0 V  STOP 
-xi qxi 
-Assumption 2 Each word is generated i.i.d. with probability  
-ps  x1, x2, , xn  Yn i1 
-qxi X xi2V0 
-qxi  1 8xi 2 V0, qxi  0 qxi STOP 
-Generative process Keep picking words from until is chosen 0th order MarkovGraphical Model Representation 
-x1 x2  xn1 STOP 
-Also known as bag of words because word order does not matter! 
+p(s) = countD(s) 
+N for sentence s = x1, x2,...,xk (with s 2 V†, xi 2 V, and N = |D|) • Problem: does not generalize (at all) 
+• Need to assign non-zero probability to previously unseen sentences! CSE 156 NLP 38 Language Modeling and N-Grams
+Learning LMs - Unigram/Bag of Words s STOP 
+Assumption 1: All sentences are finite, and end with a token V0= V [ {STOP} 
+xi q(xi) 
+Assumption 2: Each word is generated i.i.d. with probability  
+p(s = x1, x2,··· , xn) = Yn i=1 
+q(xi); X xi2V0 
+q(xi) = 1; 8xi 2 V0, q(xi)  0 q(xi) STOP 
+Generative process: Keep picking words from until is chosen (0th order) Markov/Graphical Model Representation: 
+x1 x2 … xn1 STOP 
+Also known as bag of words because ⚠word order does not matter!⚠ 
 e.g.,  
-pI eat ice cream  peat I ice cream    pcream ice eat i 39
+p(I eat ice cream) = p(eat I ice cream) = ··· = p(cream ice eat i) 39
 CSE 156 NLP Language Modeling and N-Grams 
-UnigramBag of Words - Example 
-For example  
-D  ss 2 lines in Taylor Swift songs 
-V0 Cause, shouldve, her, . . . , river, When, STOP Unigram Model 
-Word Probability q 
-STOP 12.8 you 3.5 I 3.4 the 2.5 to 1.6 a 1.5   Time. 0.02 oceans 0.02 
-We dark last This just life back away, Eyes, like break, It's can't  cover STOP 
-STOP 
-STOP 
-'Til dress door. frustrating touch now love, STOP 
-She you argue, about when And stood out can't STOP You're off heart memorized lights You back saw STOP only why the you my You they back spelling STOP the you say, And so a you STOP 
-leave you I was ey-eyes STOP 
-Give STOP 
+Unigram/Bag of Words - Example 
+For example:  
+D := {s|s 2 lines in Taylor Swift songs} 
+V0= {’Cause, should’ve, her, . . . , river, When, STOP} Unigram Model: 
+Word Probability (q) 
+STOP 12.8% you 3.5% I 3.4% the 2.5% to 1.6% a 1.5% … … Time. 0.02% oceans 0.02% 
+We dark last This just life back away, Eyes, like break, It's can't  cover <STOP> 
+<STOP> 
+<STOP> 
+'Til dress door. frustrating touch now love, <STOP> 
+She you argue, about when And stood out can't <STOP> You're off heart memorized lights You back saw <STOP> only why the you my You they back spelling <STOP> the you say, And so a you <STOP> 
+leave you I was ey-eyes <STOP> 
+Give <STOP> 
 40
 CSE 156 NLP Language Modeling and N-Grams 
 Bigram 
-Assumption Each word depends only on its preceding neighbor 
-ps  x1,...,xn  Yn i1 
-qxi  xi1, and X xi2V0 
-qxi  xi11, with x0  START START 
-Generative process 1 generate the first word conditioning on special token,  qxixi1 STOP 
-2 Keep picking words from until 3 is chosen 1st order MarkovGraphical Model Representation 
-Note 
-START x1 x2  xn1 STOP 
- When we introduce the token, we are making the assumption that the  
+Assumption: Each word depends only on its preceding neighbor 
+p(s = x1,...,xn) = Yn i=1 
+q(xi | xi1), and X xi2V0 
+q(xi | xi1)=1, with x0 := START START 
+Generative process: 1) generate the first word conditioning on special token,  q(xi|xi1) STOP 
+2) Keep picking words from until 3) is chosen (1st order) Markov/Graphical Model Representation: 
+Note: 
+START x1 x2 … xn1 STOP 
+• When we introduce the token, we are making the assumption that the  
 START 
 START 
-sentence starts with the special start word . So, when we talk about  px1,  , xn px1,  , xnx0  START 
+sentence starts with the special start word . So, when we talk about  p(x1, ··· , xn) p(x1, ··· , xn|x0 = START) 
  we are really talking about  
 STOP START 
- While we needed to add to the vocab, we did not add . Why? 
+• While we needed to add to the vocab, we did not add . Why? 
 41
 CSE 156 NLP Language Modeling and N-Grams 
 Bigram - Example 
-Bigram Model 
-pv1, v2 
-Word 1 Word 2 Probability START And 1.5 START I 1.2 START You 0.6 START But 0.5 
-you, STOP 0.4 And I 0.3 in the 0.2 
-   
-you at 0.01 How strange 0.01 
+Bigram Model: 
+p(v1, v2) 
+Word 1 Word 2 Probability START And 1.5% START I 1.2% START You 0.6% START But 0.5% 
+you, STOP 0.4% And I 0.3% in the 0.2% 
+… … … 
+you at 0.01% How strange 0.01% 
 42
-Cause Ive left you for all night goes dark side of fate decides  STOP 
-And I know this Sunday STOP 
-Pierce the only friend STOP 
-Did you trying to let you call anymore STOP 
-And every laugh, STOP 
-in this was all that, STOP 
-No matter what you want you that I'll take a million little dream  STOP 
-In the rain STOP 
-Can't help it to joke about at the woods?! STOP Regretting him all the lights STOP 
+Cause Ive left you for all night goes dark side of fate decides  <STOP> 
+And I know this Sunday <STOP> 
+Pierce the only friend <STOP> 
+Did you trying to let you call anymore <STOP> 
+And every laugh, <STOP> 
+in this was all that, <STOP> 
+No matter what you want you that I'll take a million little dream  <STOP> 
+In the rain <STOP> 
+Can't help it to joke about at the woods?!) <STOP> Regretting him all the lights <STOP> 
 Any better? 
 CSE 156 NLP Language Modeling and N-Grams 
 N-Gram Model 
-Assumption Each word depends only on its N-1 preceding neighbors 
-ps  x1,...,xn  Yn i1 
-qxi  xiN1,  , xi1, and X xi2V0 
-qxi  xiN1,  , xi11 
-with xN1    x0  START 
-Generative process Same as bigram 
-N-1th order MarkovGraphical Model 
-E.g., trigram or 3-gram 
-pthe dog barks STOP qthe  START, START  qdog START, the  qbarks the, dog  qSTOP dog, barks 
+Assumption: Each word depends only on its N-1 preceding neighbors 
+p(s = x1,...,xn) = Yn i=1 
+q(xi | xi(N1), ··· , xi1), and X xi2V0 
+q(xi | xi(N1), ··· , xi1)=1 
+with x(N1) := ··· := x0 := START 
+Generative process: Same as bigram 
+(N-1)th order Markov/Graphical Model 
+E.g., trigram (or 3-gram) 
+p(the dog barks STOP) =q(the | START, START) ⇥ q(dog |START, the) ⇥ q(barks |the, dog) ⇥ q(STOP |dog, barks) 
 CSE 156 NLP 43 Language Modeling and N-Grams
-N-Gram Model - Examples Her down wearYou world first STOP 
-Unigram n1 Bigram n2 Trigram n3 
-you You Maybe STOP 
-This STOP 
-it STOP 
-distracted by surprise me on the woods?! STOP 
-But if time STOP 
-Hold on the dress STOP 
-This is danger STOP 
-South of France STOP 
-Wonderin which version of you STOP 
-Follow procedure, remember? Oh wait you got the keys to me like STOP And I'll never judge you STOP 
- 
+N-Gram Model - Examples Her down wearYou world first <STOP> 
+Unigram (n=1) Bigram (n=2) Trigram (n=3) 
+you You Maybe <STOP> 
+This <STOP> 
+it <STOP> 
+distracted by surprise me on the woods?!) <STOP> 
+But if time <STOP> 
+Hold on the dress <STOP> 
+This is danger <STOP> 
+South of France <STOP> 
+Wonderin which version of you <STOP> 
+Follow procedure, remember? Oh wait you got the keys to me like <STOP> And I'll never judge you <STOP> 
+… 
 6-gram 
 What do you notice about the fluency as N gets larger? 
-Mandolin STOP 
-And you were just gone and gone, gone and gone STOP 
-And swords and weapons that you use against me STOP 
-Wasn't it you that told me? STOP 
+Mandolin <STOP> 
+And you were just gone and gone, gone and gone <STOP> 
+And swords and weapons that you use against me <STOP> 
+Wasn't it you that told me? <STOP> 
 44
 CSE 156 NLP Language Modeling and N-Grams 
-N-Gram Model - Examples Her down wearYou world first STOP 
-Unigram n1 
-you You Maybe STOP This STOP 
-it STOP 
+N-Gram Model - Examples Her down wearYou world first <STOP> 
+Unigram (n=1) 
+you You Maybe <STOP> This <STOP> 
+it <STOP> 
 Longest Exact Match in Corpus 
-Bigram n2 Trigram n3 
-distracted by surprise me on the woods?! STOP 
-But if time STOP 
-Hold on the dress STOP 
-This is danger STOP 
-South of France STOP 
-Wonderin which version of you STOP 
-Follow procedure, remember? Oh wait you got the keys to me like STOP And I'll never judge you STOP 
- 
+Bigram (n=2) Trigram (n=3) 
+distracted by surprise me on the woods?!) <STOP> 
+But if time <STOP> 
+Hold on the dress <STOP> 
+This is danger <STOP> 
+South of France <STOP> 
+Wonderin which version of you <STOP> 
+Follow procedure, remember? Oh wait you got the keys to me like <STOP> And I'll never judge you <STOP> 
+… 
 6-gram 
 What else happens as N gets larger? 
-Mandolin STOP 
-And you were just gone and gone, gone and gone STOP And swords and weapons that you use against me STOP Wasn't it you that told me? STOP 
+Mandolin <STOP> 
+And you were just gone and gone, gone and gone <STOP> And swords and weapons that you use against me <STOP> Wasn't it you that told me? <STOP> 
 45
 CSE 156 NLP Language Modeling and N-Grams 
 N-Gram Model - Parameter Estimation 
-Maximum Likelihood Estimation MLE 
-For u, v, w 2 V0 
-qu  countDu 
-x2V0 countDx qv  u  countDu, v 
+Maximum Likelihood Estimation (MLE): 
+For u, v, w 2 V0: 
+qˆ(u) = countD(u) 
+x2V0 countD(x); ˆq(v | u) = countD(u, v) 
 P 
-x2V0 countDu, x qw  u, v  countDu, v, w P 
+x2V0 countD(u, x); ˆq(w | u, v) = countD(u, v, w) P 
 P 
-x2V0 countDu, v, x  
+x2V0 countD(u, v, x); ··· 
 How does the number of parameters needed to fit grow with N? 
-OV0N  
- - exponential w.r.t. N! 
+O(|V0|N ) 
+• - exponential w.r.t. N! 
 Other notes 
- For N1, text is not very fluent 
- As N gets larger, the text becomes more fluent but more overfit on the  training corpus 
+• For N=1, text is not very fluent 
+• As N gets larger, the text becomes more fluent but more overfit on the  training corpus 
 CSE 156 NLP 46 Language Modeling and N-Grams
 Model quality 
-The goal isnt to pound out fake sentences! 
- Sentences get better as we increase the model order, BUT  Using ML estimators, higher order is always better fit on train, but not  necessarily on test 
-What we really want to know is 
- Will our model prefer good sentences to bad ones? 
- Bad  ungrammatical! 
- Bad  unlikely 
+The goal isn’t to pound out fake sentences! 
+• Sentences get “better” as we increase the model order, BUT • Using ML estimators, higher order is always better fit on train, but not  necessarily on test 
+What we really want to know is: 
+• Will our model prefer “good” sentences to “bad” ones? 
+• Bad ≠ ungrammatical! 
+• Bad ≈ unlikely 
 CSE 156 NLP 47 Language Modeling and N-Grams
 Model quality 
-The Shannon Game 
- How well can we predict the next word?  When I eat pizza, I wipe off the  
- Many children are allergic to  
- I saw a  
- Unigrams are terrible at this game. Why? How good are we doing? 
-grease 0.5 sauce 0.4 dust 0.05  
-mice 0.001  
+The Shannon Game: 
+• How well can we predict the next word?  When I eat pizza, I wipe off the ___ 
+ Many children are allergic to ___ 
+ I saw a ___ 
+• Unigrams are terrible at this game. (Why?) How good are we doing? 
+grease 0.5 sauce 0.4 dust 0.05 … 
+mice 0.001 … 
 the 1E-100 
 Claude Shannon 
- Want to assign high probability to observed words 
+• Want to assign high probability to observed words 
 48
 CSE 156 NLP Language Modeling and N-Grams 
 Language Model Evaluation 
-Would like to understand how the LM performs on unseen text General Approach 
- Take a training set and a test set  
+Would like to understand how the LM performs on unseen text General Approach: 
+• Take a training set and a test set  
 D D0 
- Fit a model e.g., n-gram on training set  
+• Fit a model (e.g., n-gram) on training set  
 M D 
- Evaluate the model on unseen test set  
+• Evaluate the model on unseen test set  
 D0 
 M D0 
- We care about performance of on not because it is special in any way, but  D0 
-because serves as a sample of the distribution of unseen text  Measure the likelihood of the samples in under the model  
+• We care about performance of on not because it is special in any way, but  D0 
+because serves as a “sample” of the distribution of unseen text • Measure the likelihood of the “samples” in under the model  
 D0 M 
   
-pMD0 
+pM(D0) 
 CSE 156 NLP 49 Language Modeling and N-Grams
 Measures of fit 
- Likelihood probability of the data under the model  
-pMD0 
- Log Likelihood log of the probability of the data w.r.t model  logpMD0 
- Negative log likelihood  
-logpMD0 
- Perplexity inverse probability of the data, normalized by the number  
-of words or tokens  
-P PMD0  pMD0 1N 
-Want to find model that maximizes likelihood on training set 
-M arg max M 
-pMD 
+• Likelihood: probability of the data under the model  
+pM(D0) 
+• Log Likelihood: log of the probability of the data w.r.t model  log(pM(D0)) 
+• Negative log likelihood:  
+log(pM(D0)) 
+• Perplexity: inverse probability of the data, normalized by the number  
+of words (or tokens)  
+P PM(D0) := pM(D0) 1N 
+Want to find model that maximizes likelihood on training set: 
+Mˆ= arg max M 
+pM(D) 
 CSE 156 NLP 50 Language Modeling and N-Grams
 Measures of fit - Properties 
- Likelihood  
-pMD0 
- Easy to interpret - probability of the data under the model  Gets smaller as N decreases. Why? 
- Negative Log Likelihood  
-logpMD0 
- More numerically stable because can deal in sums instead of products  Negative because minimization is notationally used more in ML than  maximization 
- Perplexity  
-P PMD0  pMD0 1N 
- Amount of surprisal in the data 
- Does not get smaller as N grows 
+• Likelihood  
+pM(D0) 
+• Easy to interpret - probability of the data under the model • Gets smaller as N decreases. Why? 
+• (Negative) Log Likelihood  
+log(pM(D0)) 
+• More numerically stable because can deal in sums instead of products • “Negative” because minimization is notationally used more in ML than  maximization 
+• Perplexity  
+P PM(D0) := pM(D0) 1N 
+• Amount of “surprisal” in the data 
+• Does not get smaller as N grows 
 CSE 156 NLP 51 Language Modeling and N-Grams
 Numerical Stability 
-Why is negative log likelihood more numerically stable than likelihood?  Summation instead of product! 
-pMD  Y s2D 
-pMs  Y s2D 
+Why is negative log likelihood more numerically stable than likelihood? • Summation instead of product! 
+pM(D) = Y s2D 
+pM(s) = Y s2D 
 Y 
 xi2s 
-pMxi  x0,...,xi1 
- log pMD   log Y 
+pM(xi | x0,...,xi1) 
+ log pM(D) =  log Y 
 Y 
-pMxi  x0,...,xi1 
- X 
+pM(xi | x0,...,xi1) 
+= X 
 s2D 
 xi2s 
 s2D 
 X xi2s 
-log pMxi  x0,...,xi1 
+log pM(xi | x0,...,xi1) 
 CSE 156 NLP 52 Language Modeling and N-Grams
 Equivalence of optimization problem 
-Claim Maximizing likelihood, minimizing negative log-likelihood, and  minimizing perplexity are all equivalent. 
-Proof 
-M arg max M 
- arg min 
+Claim: Maximizing likelihood, minimizing negative log-likelihood, and  minimizing perplexity are all equivalent. 
+Proof: 
+Mˆ= arg max M 
+= arg min 
 M 
-pMD  arg max M 
- log pMD 
-log pMD because log is monotonic increasing 
- maximizing likelihood is equivalent to minimizing negative log likelihood.  
-M arg max M 
-pMD  arg min M 
-pMD1  arg min M 
-NppMD1 monotonic increasing 
- arg min M 
-pMD 1N  arg min M 
-P PMD 
- maximizing likelihood is equivalent to minimizing perplexity  
+pM(D) = arg max M 
+ log pM(D) 
+log pM(D) (because log is monotonic increasing) 
+) maximizing likelihood is equivalent to minimizing negative log likelihood. ⌅ 
+Mˆ= arg max M 
+pM(D) = arg min M 
+pM(D)1 = arg min M 
+NppM(D)1 (monotonic increasing) 
+= arg min M 
+pM(D) 1N = arg min M 
+P PM(D) 
+) maximizing likelihood is equivalent to minimizing perplexity ⌅ 
 CSE 156 NLP 53 Language Modeling and N-Grams
-Alternative Formulation Cross Entropy 
-Recall from information theory 
+Alternative Formulation: Cross Entropy 
+Recall from information theory: 
 P Q X H 
 For probability distributions and with same support , define cross entropy between  P Q 
- and  
-HP, Q  Eplog q   X x2X 
-px log qx 
+ and : 
+H(P, Q) := Ep[log q] =  X x2X 
+p(x) log q(x) 
 L 
-For our problem, assume that natural language follows a distribution , and we want to fit  PM HL, PM 
+For our problem, assume that natural language follows a distribution , and we want to fit  PM H(L, PM) 
  to minimize cross entropy  
 L 
 Unfortunately, we do not have the true distribution of natural language . However,  D L 
-assuming our training set is drawn from , we can do a Monte Carlo estimate  
-HL, PM  HD, PM  XN i1 
-N log pMxi  x0,...,xi1 substituting lxi 1N for Monte Carlo 1 
+assuming our training set is drawn from , we can do a Monte Carlo estimate:  
+H(L, PM) ⇡ H(D, PM) = XN i=1 
+N log pM(xi | x0,...,xi1) (substituting l(xi) ⇡1N for Monte Carlo) 1 
 N 
-Note that this is the same as the negative log likelihood normalized over words   minimizing cross entropy is equivalent to minimizing negative log likelihood 
-Sometimes called cross entropy loss 
+Note that this is the same as the negative log likelihood normalized over words  ) minimizing cross entropy is equivalent to minimizing negative log likelihood 
+(Sometimes called “cross entropy loss”) 
 CSE 156 NLP 54 Language Modeling and N-Grams
-Perplexity - Relationship to Cross Entropy Taking our Monte Carlo estimate of cross entropy 
-HD, PM  XN i1 
-N log pMxi  x0,...,xi1   1NXN 
+Perplexity - Relationship to Cross Entropy Taking our Monte Carlo estimate of cross entropy: 
+H(D, PM) = XN i=1 
+N log pM(xi | x0,...,xi1) =  1NXN 
 1 
-i1 
-log pMxi  x0,...,xi1 
+i=1 
+log pM(xi | x0,...,xi1) 
 Exponentiating both sides, 
-eHD,PM  e 1NPNi1 log pMxix0,...,xi1  YN i1 
-e 1N log pMxix0,...,xi1 "YN 
- 1N 
- YN i1 
-elog pMxix0,...,xi1 1N  YN i1 
-pMxi  x0,...,xi1 1N  i1 
-pMxi  x0,...,xi1 
- pMD 1N  P PMD 
- eHD,PM  P PMD 
+eH(D,PM) = e 1NPNi=1 log pM(xi|x0,...,xi1) = YN i=1 
+e 1N log pM(xi|x0,...,xi1) "YN 
+# 1N 
+= YN i=1 
+(elog pM(xi|x0,...,xi1)) 1N = YN i=1 
+pM(xi | x0,...,xi1) 1N = i=1 
+pM(xi | x0,...,xi1) 
+= pM(D) 1N = P PM(D) 
+=) eH(D,PM) = P PM(D) 
 Perplexity is just the exponentiated cross entropy! 
 CSE 156 NLP 55 Language Modeling and N-Grams
 Perplexity - Intuition 
- How hard is the task of recognizing digits 0,1,2,..,9 uniformly at random? d  Uniform0, 9 
-PPd1,...,dN   pd1,...,dN  1N   Perplexity 10 
- 1 10 
-N  1N 
-1101 10 
- Using entropy replacing the estimated distribution with the known true dist. 
-HD, D   X 
-pd log pd  X9 
-pi log pi  X9 
+• How “hard” is the task of recognizing digits ‘0,1,2,..,9’ uniformly at random? d ⇠ Uniform(0, 9) 
+PP(d1,...,dN ) = p(d1,...,dN ) 1N = • Perplexity: 10 
+✓ 1 10 
+N ◆ 1N 
+=1101= 10 
+• Using entropy (replacing the estimated distribution with the known true dist.): 
+H(D, D) =  X 
+p(d) log p(d) = X9 
+p(i) log p(i) = X9 
 1 
 10 log 
- 1 10 
- 
-  log 
- 1 10 
- 
+✓ 1 10 
+◆ 
+=  log 
+✓ 1 10 
+◆ 
 d2D 
-i0 
- 1 
-i0 
-P PD  eHD,D  e log 110   elog 110 1 10 
+i=0 
+✓ 1 
+i=0 
+P P(D) = eH(D,D) = e log( 110 ) = (elog( 110 ))1= 10 
 Same result! 
-1 
- 10 
+◆1 
+= 10 
 CSE 156 NLP 56 Language Modeling and N-Grams
 Perplexity - Intuition 
- How hard is the task of recognizing digits 0,1,2,..,9 uniformly at random?  Perplexity 10 
- How hard is the task of recognizing 30,000 names uniformly at random?  Perplexity 30,000 
- If a system has to recognize 
- Operator 1 in 4, Sales 1 in 4, Technical Support 1 in 4, 30,000 names 1 in  
-120,000 each 
-P PX  expHX  exp  Perplexity 53 
-  
- 
-3 14 log 14 30, 000 1 120, 000 log 
- 1 
+• How “hard” is the task of recognizing digits ‘0,1,2,..,9’ uniformly at random? • Perplexity: 10 
+• How “hard” is the task of recognizing 30,000 names uniformly at random? • Perplexity: 30,000 
+• If a system has to recognize: 
+• Operator (1 in 4), Sales (1 in 4), Technical Support (1 in 4), 30,000 names (1 in  
+120,000 each) 
+P P(X) = exp(H(X)) = exp • Perplexity: ~53 
+✓  
+✓ 
+3 ⇤14 log ✓14◆+ 30, 000 ⇤1 120, 000 log 
+✓ 1 
 120, 000 
- 
- 53 
- Perplexity is weighted equivalent branching factor eg., fair coin toss - branching perplexity is 2 
+◆◆◆ 
+⇡ 53 
+• Perplexity is weighted equivalent branching factor (eg., fair coin toss - branching/ perplexity is 2) 
 CSE 156 NLP 57 Language Modeling and N-Grams
 Perplexity as a branching factor 
- Language with higher perplexity means the number of words branching  from a previous word is larger on average 
- The difference between the perplexity of a language model and the true  perplexity of the language is an indication of the quality of the model 
-Perplexity  37 
-Less branching 
-httpsplatform.openai.complayground? modecompletemodeldavinci 
- 
+• Language with higher perplexity means the number of words branching  from a previous word is larger on average 
+• The difference between the perplexity of a language model and the true  perplexity of the language is an indication of the quality of the model 
+Perplexity ≈ 37 
+(Less branching) 
+https://platform.openai.com/playground? mode=complete&model=davinci 
+< 
 58
-Perplexity  475 More branching 
+Perplexity ≈ 475 (More branching) 
 CSE 156 NLP Language Modeling and N-Grams 
-Lower perplexity  better models! 
- N-gram models on Wall Street Journal corpus Train 38M words, Test  1.5M words 
+Lower perplexity = better models! 
+• N-gram models on Wall Street Journal corpus (Train: 38M words, Test:  1.5M words) 
 N-gram order Unigram Bigram Trigram 
 Perplexity 962 170 109 
 59
 CSE 156 NLP Language Modeling and N-Grams 
 Intrinsic vs. Extrinsic Evaluation 
- Intrinsic evaluation e.g., perplexity 
- Easier to use, but does not necessarily correlate with the model  performance in a downstream application 
- Extrinsic evaluation e.g., speech recognition, machine translation, etc.  Harder to use, but shows the true quality of the model in the context of a  specific downstream application 
- Better perplexity might not necessarily lead to better performance. For  example, there is plenty of toxicity on the internet, but toxicity having  lower perplexity leads to models being less safe 
- Possible extrinsic evaluations growing as use cases do code generation,  chatbots, information retrieval, etc. 
+• Intrinsic evaluation: e.g., perplexity 
+• Easier to use, but does not necessarily correlate with the model  performance in a downstream application 
+• Extrinsic evaluation: e.g., speech recognition, machine translation, etc. • Harder to use, but shows the true quality of the model in the context of a  specific downstream application 
+• Better perplexity might not necessarily lead to better performance. For  example, there is plenty of toxicity on the internet, but toxicity having  lower perplexity leads to models being less safe 
+• Possible extrinsic evaluations growing as use cases do: code generation,  chatbots, information retrieval, etc. 
 CSE 156 NLP 60 Language Modeling and N-Grams
-Back to N-grams 
-Maximum Likelihood Estimation MLE For u, v, w 2 V0 
-qu  countDu 
-Training set 
- denied the allegations  denied the reports  denied the claims  denied the request 
-x2V0 countDx qv  u  countDu, v P 
+Back to N-grams… 
+Maximum Likelihood Estimation (MLE): For u, v, w 2 V0: 
+qˆ(u) = countD(u) 
+Training set: 
+… denied the allegations … denied the reports … denied the claims … denied the request 
+x2V0 countD(x); ˆq(v | u) = countD(u, v) P 
 P 
-x2V0 countDu, x  
-Test set 
+x2V0 countD(u, x); ··· 
+Test set: 
 Assume we have fit an MLE k-gram model on our  training data, and we evaluate a sentence with an  n-gram not present in the training set. 
- denied the offer  denied the loan 
-What happens to the likelihood and perplexity?  Likelihood is 0, cannot compute perplexity!  Ideas for how to fix? 
+… denied the offer … denied the loan 
+What happens to the likelihood and perplexity? • Likelihood is 0, cannot compute perplexity! • Ideas for how to fix? 
 61
-poerdenied the  0 
+p(“o↵er”|“denied the”) = 0 
 CSE 156 NLP Language Modeling and N-Grams 
-Smoothing regularization 
-General procedure 
- Take your empirical counts 
- Modify them in various ways to improve estimates 
-General method mathematically 
- Often can give estimators a formal statistical interpretation but not  always 
- Approaches that are mathematically obvious arent always what works CSE 156 NLP 62 Language Modeling and N-Grams
-Smoothing regularization pxdenied the 
- Often want to make estimates from  Probability 
+Smoothing (regularization) 
+General procedure: 
+• Take your empirical counts 
+• Modify them in various ways to improve estimates 
+General method (mathematically): 
+• Often can give estimators a formal statistical interpretation… but not  always 
+• Approaches that are mathematically obvious aren’t always what works CSE 156 NLP 62 Language Modeling and N-Grams
+Smoothing (regularization) p(x|“denied the”) 
+• Often want to make estimates from  Probability 
 sparse statistics 
- Smoothing flattens spiky  
+• Smoothing flattens spiky  
 distributions so they generalize  
 50 
 37.5 
@@ -587,10 +587,10 @@ reports
 request 
 ... 
 better 
- Regularization is very important in  NLP and ML generally, but easy  
+• Regularization is very important in  NLP (and ML generally), but easy  
 Probability 
 to do badly! 
- Question what are potential ways  
+• Question: what are potential ways  
 claims 
 30 
 22.5 
@@ -612,179 +612,179 @@ benefits
 motion 
 CSE 156 NLP Language Modeling and N-Grams 
 Add-one estimation 
- Also called Laplace smoothing 
- Pretend that we saw each word one more time than we did  Just add one to all the counts! 
-qMLExi  xiN1,...,xi1  countDxi  xiN1,...,xi1 
+• Also called Laplace smoothing 
+• Pretend that we saw each word one more time than we did • Just add one to all the counts! 
+qˆMLE(xi | xi(N1),...,xi1) = countD(xi | xi(N1),...,xi1) 
 P 
-xi2V0 countDxi  xiN1,...,xi1 
-qADD-1xi  xiN1,...,xi1  countDxi  xiN1,...,xi11 
-P 
-xi2V0 countDxi  xiN1,...,xi1 V0 
+xi2V0 countD(xi | xi(N1),...,xi1) 
+qˆADD-1(xi | xi(N1),...,xi1) = countD(xi | xi(N1),...,xi1)+1 
+⇥P 
+xi2V0 countD(xi | xi(N1),...,xi1)⇤+ |V0| 
 CSE 156 NLP 64 Language Modeling and N-Grams
 Add-k 
-k  0, k 2 R 
- In general, can add do add-k for  
- Pretend that we saw each word k more times than we did qADD-kxi  xiN1,...,xi1  countDxi  xiN1,...,xi1  k 
-P 
-xi2V0 countDxi  xiN1,...,xi1 kV0 qMLE 
- Side note 1 Equivalent to a convex combination between the and the  qUNI  UniformV0 
-uniform distribution  
-qADD-k  qMLE  1  qUNI  countDxi  xiN1,...,xi1 
-P 
-xi2V0 countDxi  xiN1,...,xi1 kV0 
- Side note 2 Equivalent to a maximum a posteriori MAP estimate of the  
+k > 0, k 2 R 
+• In general, can add do add-k (for ) 
+• Pretend that we saw each word k more times than we did qˆADD-k(xi | xi(N1),...,xi1) = countD(xi | xi(N1),...,xi1) + k 
+⇥P 
+xi2V0 countD(xi | xi(N1),...,xi1)⇤+ k|V0| qˆMLE 
+• Side note 1: Equivalent to a convex combination between the and the  qUNI = Uniform(V0) 
+uniform distribution : 
+qˆADD-k = qˆMLE + (1  )qUNI;  =countD(xi | xi(N1),...,xi1) 
+⇥P 
+xi2V0 countD(xi | xi(N1),...,xi1)⇤+ k|V0| 
+• Side note 2: Equivalent to a maximum a posteriori (MAP) estimate of the  
 distribution given a Bayesian prior of  
-qx  Dirichletk 
- Convex combinations of multiple distributions are effective in general! CSE 156 NLP 65 Language Modeling and N-Grams
+q(x) ⇠ Dirichlet(k) 
+• Convex combinations of multiple distributions are effective in general! CSE 156 NLP 65 Language Modeling and N-Grams
 Convex Combinations 
-Claim If p1, p2,...,pn are probability distributions with the same support, then for any 1, 2,..., n 
-s.t. XN i1 
-Proof 
-i  1 and i  0, then pcomb  Xn i1 
+Claim: If p1, p2,...,pn are probability distributions with the same support, then for any 1, 2,..., n 
+s.t. XN i=1 
+Proof: 
+i = 1 and i  0, then pcomb = Xn i=1 
 ipi is a valid probability distribution. 
-1. Non-negativity 8x, ipix  0 since i  0 and pix  0. 
-Hence, pcombx  Xn i1 
-ipix  0. 
-2. Normalization X x 
-pcombx  X x 
-Xn i1 
-ipix  Xn 
+1. Non-negativity: 8x, ipi(x)  0 since i  0 and pi(x)  0. 
+Hence, pcomb(x) = Xn i=1 
+ipi(x)  0. 
+2. Normalization: X x 
+pcomb(x) = X x 
+Xn i=1 
+ipi(x) = Xn 
 i 
-i1 
+i=1 
 X x 
-pix 
- Xn i1 
-i  1  XN i1 
-i  1. 
+pi(x) 
+= Xn i=1 
+i · 1 = XN i=1 
+i = 1. 
 CSE 156 NLP 66 Language Modeling and N-Grams
 Convex Combinations 
- Problem is supported by few counts 
-qw  u, v 
- Classical solution mixtures of denser, related histories 
-qmixw  u, v  3qw  u, v  2qw  v  1qw s.t. 1  2  3  1 and 1, 2, 3  0  Often works better than Add-K for several reasons 
- Can flexibly include multiple back-off contexts 
- Good ways of learning the mixture weights with EM later 
- Not entirely clear why it works so much better 
- All the details you could ever want Chen and Goodman, 98 CSE 156 NLP 67 Language Modeling and N-Grams
+• Problem: is supported by few counts 
+qˆ(w | u, v) 
+• Classical solution: mixtures of denser, related histories 
+qˆmix(w | u, v) = 3qˆ(w | u, v) + 2qˆ(w | v) + 1qˆ(w) s.t. 1 + 2 + 3 = 1 and 1, 2, 3  0 • Often works better than Add-K for several reasons: 
+• Can flexibly include multiple back-off contexts 
+• Good ways of learning the mixture weights with EM (later) 
+• Not entirely clear why it works so much better 
+• All the details you could ever want: Chen and Goodman, 98 CSE 156 NLP 67 Language Modeling and N-Grams
 Experimental Design 
-Important tool for optimizing model generalization 
+Important tool for optimizing model generalization: 
 Training Data Validation 
 Data 
 Test Data 
- Training data used to estimate base n-gram or other models without  regularizationsmoothing 
- Validation or development data used to estimate generalization to out-of distribution OOD data. Pick hyperparameters that control the degree of  regularization to maximize OOD generalization. 
- Can use any optimization technique line search or EM often easiest  Test data important not to touch until you have finalized a model and  hyperparameters for scientific validity 
+• Training data: used to estimate base n-gram (or other) models without  regularization/smoothing 
+• Validation (or “development”) data: used to estimate generalization to out-of distribution (OOD) data. Pick “hyperparameters” that control the degree of  regularization to maximize OOD generalization. 
+• Can use any optimization technique (line search or EM often easiest) • Test data: important not to touch until you have finalized a model and  hyperparameters for scientific validity 
 68
 CSE 156 NLP Language Modeling and N-Grams 
 Unknown words 
- If we know all of the words in advance is fixed, closed vocabulary task 
+• If we know all of the words in advance: is fixed, closed vocabulary task 
 V 
- Often we dont know this 
- Out of vocabulary  OOV words 
- Open vocabulary task 
- Create an unknown work token  
-UNK 
- Training of probs 
- Create a fixed lexicon  
+• Often we don’t know this: 
+• Out of vocabulary = OOV words 
+• Open vocabulary task 
+• Create an unknown work token  
+<UNK> 
+• Training of probs: 
+• Create a fixed lexicon  
 V 
-V UNK 
-UNK 
- At text normalization phase, any training word not in changed to   Train its probabilities like a normal word 
- At decoding time 
-UNK 
- Use probabilities for any word not in training 
+V <UNK> 
+<UNK> 
+• At text normalization phase, any training word not in changed to  • Train its probabilities like a normal word 
+• At decoding time: 
+<UNK> 
+• Use probabilities for any word not in training 
 CSE 156 NLP 69 Language Modeling and N-Grams
 Implementation Details 
- Do everything in log space! 
- Avoid underflow 
- Adding is faster than multiplying 
- Although log can be slower than multiplication logp1  p2  p3  p4  logp1  logp2  logp3  logp4 
+• Do everything in log space! 
+• Avoid underflow 
+• (Adding is faster than multiplying) 
+• (Although log can be slower than multiplication) log(p1 ⇤ p2 ⇤ p3 ⇤ p4) = log(p1) + log(p2) + log(p3) + log(p4) 
 log
- Yn i1 
+ Yn i=1 
 ! 
 pi 
- Xn i1 
+= Xn i=1 
 70
-logpi 
+log(pi) 
 CSE 156 NLP Language Modeling and N-Grams 
-InputsOutputs 
- Input sequences of words or tokens 
- Output probability distribution over the next word token pxSTARTpxSTART Ipx went pxto pxthe px park pxSTART I went to the park.
-The 3 When 2.5 
-think 11 was 5 
-to 35 back 8 
-the 29 a 9 
+Inputs/Outputs 
+• Input: sequences of words (or tokens) 
+• Output: probability distribution over the next word (token) p(x|START)p(x|START I)p(x|··· went) p(x|···to) p(x|···the) p(x|··· park) p(x|START I went to the park.)
+The 3 When 2.5% 
+think 11% was 5% 
+to 35% back 8% 
+the 29% a 9% 
 bathroo m 
-3 
-and 14 
-I 21 
-They 2   
-I 1 
-  
-Banana 0.1 
-went 2 am 1 will 1 like 0.5 
-  
-into 5 through 4 out 3 on 2   
-see 5 my 3 bed 2 
-school 1   
-doctor 2 hospita  
-2 
+3% 
+and 14% 
+I 21% 
+They 2% … … 
+I 1% 
+… … 
+Banana 0.1% 
+went 2% am 1% will 1% like 0.5% 
+… … 
+into 5% through 4% out 3% on 2% … …% 
+see 5% my 3% bed 2% 
+school 1% … … 
+doctor 2% hospita % 
+2% 
 l 
-store 1.5   
-park 0.5   
-with 9 , 8 to 7   . 6   
+store 1.5% … … 
+park 0.5% … … 
+with 9 , 8% to 7% … … . 6% … … 
 It 6 
-The 3 There 3   STOP 1   
+The 3% There 3% … … STOP 1% … … 
 Neural Network 
 START I went to the park . STOP 
-Large Model Reasoning - CSE 291 71 Lecture 2 Basic of Language Model 
+Large Model Reasoning - CSE 291 71 Lecture 2: Basic of Language Model 
 What is a Language Model? 
-Definition A language model is a machine learning model that predicts  the likelihood of a sequence of words. 
-Primary Task Given some input text, the model predicts the next word in the sequence. 
-Simple Example "The cat sat on the ." 
-Large Model Reasoning - CSE 291 72 Lecture 2 Basic of Language Model
+•Definition: A language model is a machine learning model that predicts  the likelihood of a sequence of words. 
+•Primary Task: Given some input text, the model predicts the next word in the sequence. 
+•Simple Example: "The cat sat on the _____." 
+Large Model Reasoning - CSE 291 72 Lecture 2: Basic of Language Model
 How Language Models Work 
- Input A sequence of words or tokens. 
- Output A probability distribution over the possible next words.  Example "The cat sat on the mat, chair, floor" with probabilities. 
-Large Model Reasoning - CSE 291 73 Lecture 2 Basic of Language Model
+• Input: A sequence of words or tokens. 
+• Output: A probability distribution over the possible next words. • Example: "The cat sat on the [mat, chair, floor]" with probabilities. 
+Large Model Reasoning - CSE 291 73 Lecture 2: Basic of Language Model
 What are language models useful for? 
- Automatic speech recognition 
- I saw a van and Eyes awe of an may sound identical, but one is  more likely 
- Autocorrect 
- Correcting likely typos 
- Autocomplete  
- Machine translation 
- Code completion 
- Now Chatbots? 
-Large Model Reasoning - CSE 291 74 Lecture 2 Basic of Language Model
+• Automatic speech recognition 
+• “I saw a van” and “Eyes awe of an” may sound identical, but one is  more likely 
+• Autocorrect: 
+• Correcting likely typos 
+• Autocomplete  
+• Machine translation 
+• Code completion 
+• (Now) Chatbots? 
+Large Model Reasoning - CSE 291 74 Lecture 2: Basic of Language Model
 Training a Language Model 
- Data Large text corpora are used to train models. 
- Objective Minimize the difference between predicted and actual words.  Loss Function Cross-entropy loss measures prediction accuracy.  Example "The cat sat on the mat, chair, floor" with probabilities. 
-Large Model Reasoning - CSE 291 75 Lecture 2 Basic of Language Model
+• Data: Large text corpora are used to train models. 
+• Objective: Minimize the difference between predicted and actual words. • Loss Function: Cross-entropy loss measures prediction accuracy. • Example: "The cat sat on the [mat, chair, floor]" with probabilities. 
+Large Model Reasoning - CSE 291 75 Lecture 2: Basic of Language Model
 Basic of Language Model 
 How do machines process language?
-Large Model Reasoning - CSE 291 76 Lecture 2 Basic of Language Model 
+Large Model Reasoning - CSE 291 76 Lecture 2: Basic of Language Model 
 Tokenization 
 Tokenization is the process of splitting a large chunk of text into  smaller, manageable pieces called tokens.
 
-Large Model Reasoning - CSE 291 77 Lecture 2 Basic of Language Model 
+Large Model Reasoning - CSE 291 77 Lecture 2: Basic of Language Model 
 Tokenization 
-Word-level Splits text at the word boundary. Simple but can lead  to issues like out-of-vocabulary OOV words. 
-Subword-level Breaks down words into smaller parts, used in  Byte-Pair Encoding BPE and SentencePiece to manage OOV  problems. 
-Character-level Splits text into individual characters. Less  common but useful in specific cases.
-Large Model Reasoning - CSE 291 78 Lecture 2 Basic of Language Model 
+•Word-level: Splits text at the word boundary. Simple but can lead  to issues like out-of-vocabulary (OOV) words. 
+•Subword-level: Breaks down words into smaller parts, used in  Byte-Pair Encoding (BPE) and SentencePiece to manage OOV  problems. 
+•Character-level: Splits text into individual characters. Less  common but useful in specific cases.
+Large Model Reasoning - CSE 291 78 Lecture 2: Basic of Language Model 
 Vocabulary - Word-Level 
 0.1 
 V 
- Vocabulary is comprised of all of the words in a language  Some problems with this 
+• Vocabulary is comprised of all of the words in a language • Some problems with this: 
 0.01 
-V 
- can be quite large - 470,000 words Websters English  Dictionary 3rd edition 
+|V| 
+• can be quite large - ~470,000 words Webster’s English  Dictionary (3rd edition) 
 0.001 
- Language is changing all of the time - 690 words were  added to Merriam Webster's in September 2023 rizz,  goated, mid 
+• Language is changing all of the time - 690 words were  added to Merriam Webster's in September 2023 (“rizz”,  “goated”, “mid”) 
 0.0001 
- Long tail of infrequent words. Zipfs law word frequency  is inversely proportional to word rank 
- Some words may not appear in a training set of  
+• Long tail of infrequent words. Zipf’s law: word frequency  is inversely proportional to word rank 
+• Some words may not appear in a training set of  
 documents 
 German - Simplicissimus 
 Russian - Roadside Picnic 
@@ -792,21 +792,21 @@ French - Terre a la Lune
 Italian - Promessi Sposi 
 M.English - Towneley Plays 
 1 10 100 1000 10000 
-Zipfs Law Word Rank vs. Word Frequency for Several Languages 
- No modeled relationship between words - e.g., run,  ran, runs, runner are all separate entries despite being  linked in meaning 
+Zipf’s Law: Word Rank vs. Word Frequency for Several Languages 
+• No modeled relationship between words - e.g., “run”,  “ran”, “runs”, “runner” are all separate entries despite being  linked in meaning 
 79
-word frequency 1 word rank 
-httpsen.wikipedia.orgwikiZipf'slaw 
-Large Model Reasoning - CSE 291 Lecture 2 Basic of Language Model 
+word frequency /1 word rank 
+https://en.wikipedia.org/wiki/Zipf's_law 
+Large Model Reasoning - CSE 291 Lecture 2: Basic of Language Model 
 Character-level? 
 What about representing text with characters? 
-V  a, b, c, . . . , z 
- 
- Maybe add capital letters, punctuation, spaces,  
- Pros 
- Small vocabulary size  for English 
-V   26 
- Complete coverage unseen words are represented by letters  Cons 
- Encoding becomes very long -  chars instead of  words 
- Poor inductive bias for learning 
-Large Model Reasoning - CSE 291 80 Lecture 2 Basic of Language Model
+V = {a, b, c, . . . , z} 
+• 
+• (Maybe add capital letters, punctuation, spaces, …) 
+• Pros: 
+• Small vocabulary size ( for English) 
+|V | = 26 
+• Complete coverage (unseen words are represented by letters) • Cons: 
+• Encoding becomes very long - # chars instead of # words 
+• Poor inductive bias for learning 
+Large Model Reasoning - CSE 291 80 Lecture 2: Basic of Language Model

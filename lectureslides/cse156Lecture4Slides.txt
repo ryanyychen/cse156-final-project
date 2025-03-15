@@ -1,544 +1,544 @@
 
 CSE 156 Natural Language Processing
 4 - Basic of Language Model 
-Instructor Lianhui Qin 
+Instructor: Lianhui Qin 
 Slides adapted from Yejin Choi 
 1 
 Recap 2
- We will start tracking participation beginning next week. 
- How is everything so far, e.g. Course difficulty? Office hours, Discussion,  Piazza? 
- Expectation on tutorials next week? 
+• We will start tracking participation beginning next week. 
+• How is everything so far, e.g. Course difficulty? Office hours, Discussion,  Piazza? 
+• Expectation on tutorials next week? 
 CSE 156 NLP 3 Basic of LM
 Tokenization 
-Word-level Splits text at the word boundary. Simple but can lead  to issues like out-of-vocabulary OOV words. 
-Subword-level Breaks down words into smaller parts, used in  Byte-Pair Encoding BPE and SentencePiece to manage OOV  problems. 
-Character-level Splits text into individual characters. Less  common but useful in specific cases.
-Large Model Reasoning - CSE 291 4 Lecture 2 Basic of Language Model 
+•Word-level: Splits text at the word boundary. Simple but can lead  to issues like out-of-vocabulary (OOV) words. 
+•Subword-level: Breaks down words into smaller parts, used in  Byte-Pair Encoding (BPE) and SentencePiece to manage OOV  problems. 
+•Character-level: Splits text into individual characters. Less  common but useful in specific cases.
+Large Model Reasoning - CSE 291 4 Lecture 2: Basic of Language Model 
 Word Character Subword tokenization! 
 How can we combine the high coverage of character-level  
 representation with the efficiency of word-level representation? 
-Subword tokenization! e.g., Byte-Pair Encoding 
- Start with character-level representations 
- Build up representations from there 
-Original BPE Paper Sennrich et al., 2016 
-httpsarxiv.orgabs1508.07909 
+Subword tokenization! (e.g., Byte-Pair Encoding) 
+• Start with character-level representations 
+• Build up representations from there 
+Original BPE Paper (Sennrich et al., 2016) 
+https://arxiv.org/abs/1508.07909 
 CSE 156 NLP 5 Basic of LM
 Byte-pair encoding - Example 
-Required 
+Required: 
 D 
-D  i hug pugs, hugging pugs is fun, i make puns 
- Documents  
+D = {“i hug pugs”, “hugging pugs is fun”, “i make puns”} 
+• Documents  
 N D 
-N  20 
- Desired vocabulary size greater than chars in  Algorithm 
+N = 20 
+• Desired vocabulary size (greater than chars in ) Algorithm: 
 D 
- Pre-tokenize by splitting into words split before  whitespacepunctuation 
+• Pre-tokenize by splitting into words (split before  whitespace/punctuation) 
 V D 
- Initialize as the set of characters in  
+• Initialize as the set of characters in  
 D 
- Convert into a list of tokens characters V N 
- While   
-D  i,  hug,  pugs, hugging,  pugs,  is,  fun, i,  make,  puns 
-V   , a, e, f, g, h, i, k, m, n, p, s, u, V  13 
- Let  
-n  V  1 
- Get counts of all bigrams in  
+• Convert into a list of tokens (characters) |V| N 
+• While < : 
+D = {“i”, “ hug”, “ pugs”, “hugging”, “ pugs”, “ is”, “ fun”, “i”, “ make”, “ puns”} 
+V = {‘ ’, ‘a’, ‘e’, ‘f’, ‘g’, ‘h’, ‘i’, ‘k’, ‘m’, ‘n’, ‘p’, ‘s’, ‘u’}, |V| = 13 
+• Let  
+n := |V| + 1 
+• Get counts of all bigrams in  
 Dvi, vj 
-D   i ,  , h, u, g ,  , p, u, g, s , 
- For the most frequent bigram breaking  ties arbitrarily 
-h, u, g, g, i, n, g ,  , p, u, g, s , 
- Let  
-vn  concatvi, vj  
+D = { [‘i’] , [‘ ’, ‘h’, ‘u’, ‘g’] , [‘ ’, ‘p’, ‘u’, ‘g’, ‘s’] , 
+• For the most frequent bigram (breaking  ties arbitrarily) 
+[‘h’, ‘u’, ‘g’, ‘g’, ‘i’, ‘n’, ‘g’] , [‘ ’, ‘p’, ‘u’, ‘g’, ‘s’] , 
+• Let  
+vn := concat(vi, vj ) 
 D vi, vj vn 
- , i, s ,  , f, u, n , i , 
- Change all instances in of to  vn V 
+[‘ ’, ‘i’, ‘s’] , [‘ ’, ‘f’, ‘u’, ‘n’] , [‘i’] , 
+• Change all instances in of to  vn V 
 and add to  
- , m, a, k, e ,  , p, u, n, s 
-Example inspired by httpshuggingface.codocstransformerstokenizersummary 
+[‘ ’, ‘m’, ‘a’, ‘k’, ‘e’] , [‘ ’, ‘p’, ‘u’, ‘n’, ‘s’]} 
+Example inspired by: https://huggingface.co/docs/transformers/tokenizer_summary 
 CSE 156 NLP 6 Basic of LM
 Byte-pair encoding - Example 
-Required 
+Required: 
 D 
-D   i ,  , h, u, g ,  , p, u, g, s , 
- Documents  
+D = { [‘i’] , [‘ ’, ‘h’, ‘u’, ‘g’] , [‘ ’, ‘p’, ‘u’, ‘g’, ‘s’] , 
+• Documents  
 N D 
-h, u, g, g, i, n, g ,  , p, u, g, s , 
- Desired vocabulary size greater than chars in  Algorithm 
+[‘h’, ‘u’, ‘g’, ‘g’, ‘i’, ‘n’, ‘g’] , [‘ ’, ‘p’, ‘u’, ‘g’, ‘s’] , 
+• Desired vocabulary size (greater than chars in ) Algorithm: 
 D 
- Pre-tokenize by splitting into words split before  whitespacepunctuation 
+• Pre-tokenize by splitting into words (split before  whitespace/punctuation) 
 V D 
- Initialize as the set of characters in  
+• Initialize as the set of characters in  
 D 
- Convert into a list of tokens characters V N 
- While   
- , i, s ,  , f, u, n , i ,  , m, a, k, e ,  , p, u, n, s 
+• Convert into a list of tokens (characters) |V| N 
+• While < : 
+[‘ ’, ‘i’, ‘s’] , [‘ ’, ‘f’, ‘u’, ‘n’] , [‘i’] , [‘ ’, ‘m’, ‘a’, ‘k’, ‘e’] , [‘ ’, ‘p’, ‘u’, ‘n’, ‘s’]} 
 Bigram Count 
-u,g 4 
-p, u 3 
- Let  
-n  V  1 
- , p 3 
- Get counts of all bigrams in  
+‘u’,’g’ 4 
+‘p’, ‘u’ 3 
+• Let  
+n := |V| + 1 
+‘ ‘, ‘p’ 3 
+• Get counts of all bigrams in  
 Dvi, vj 
-h, u 2 
- For the most frequent bigram breaking  ties arbitrarily 
-  
- Let  
-vn  concatvi, vj  
+‘h’, ‘u’ 2 
+• For the most frequent bigram (breaking  ties arbitrarily) 
+… … 
+• Let  
+vn := concat(vi, vj ) 
 D vi, vj vn 
-vn Vv14  concatu, g  ug 
- Change all instances in of to  
+vn Vv14 := concat(‘u’, ‘g’) = ‘ug’ 
+• Change all instances in of to  
 and add to  
 7
 CSE 156 NLP Basic of LM 
 Byte-pair encoding - Example 
-Required 
+Required: 
 D 
-D   i ,  , h, u, g ,  , p, u, g, s , h, u, g, g, i, n, g ,  , p, u, g, s , 
- Documents  
+D = { [‘i’] , [‘ ’, ‘h’, ‘u’, ‘g’] , [‘ ’, ‘p’, ‘u’, ‘g’, ‘s’] , [‘h’, ‘u’, ‘g’, ‘g’, ‘i’, ‘n’, ‘g’] , [‘ ’, ‘p’, ‘u’, ‘g’, ‘s’] , 
+• Documents  
 N D 
- Desired vocabulary size greater than chars in  Algorithm 
+• Desired vocabulary size (greater than chars in ) Algorithm: 
 D 
- Pre-tokenize by splitting into words split before  whitespacepunctuation 
+• Pre-tokenize by splitting into words (split before  whitespace/punctuation) 
 V D 
- Initialize as the set of characters in  
+• Initialize as the set of characters in  
 D 
- Convert into a list of tokens characters V N 
- While   
- , i, s ,  , f, u, n , i , 
- , m, a, k, e ,  , p, u, n, s v14  concatu, g  ug 
-D   i ,  , h, ug ,  , p, ug, s , h, ug, g, i, n, g ,  , p, ug, s , 
- Let  
-n  V  1 
- Get counts of all bigrams in  
+• Convert into a list of tokens (characters) |V| N 
+• While < : 
+[‘ ’, ‘i’, ‘s’] , [‘ ’, ‘f’, ‘u’, ‘n’] , [‘i’] , 
+[‘ ’, ‘m’, ‘a’, ‘k’, ‘e’] , [‘ ’, ‘p’, ‘u’, ‘n’, ‘s’]} v14 := concat(‘u’, ‘g’) = ‘ug’ 
+D = { [‘i’] , [‘ ’, ‘h’, ‘ug’] , [‘ ’, ‘p’, ‘ug’, ‘s’] , [‘h’, ‘ug’, ‘g’, ‘i’, ‘n’, ‘g’] , [‘ ’, ‘p’, ‘ug’, ‘s’] , 
+• Let  
+n := |V| + 1 
+• Get counts of all bigrams in  
 Dvi, vj 
- , i, s ,  , f, u, n , i , 
- For the most frequent bigram breaking  ties arbitrarily 
- , m, a, k, e ,  , p, u, n, s 
- Let  
-vn  concatvi, vj  
+[‘ ’, ‘i’, ‘s’] , [‘ ’, ‘f’, ‘u’, ‘n’] , [‘i’] , 
+• For the most frequent bigram (breaking  ties arbitrarily) 
+[‘ ’, ‘m’, ‘a’, ‘k’, ‘e’] , [‘ ’, ‘p’, ‘u’, ‘n’, ‘s’]} 
+• Let  
+vn := concat(vi, vj ) 
 D vi, vj vn 
-V   , a, e, f, g, h, i, k, m, 
- Change all instances in of to  
+V = {‘ ’, ‘a’, ‘e’, ‘f’, ‘g’, ‘h’, ‘i’, ‘k’, ‘m’, 
+• Change all instances in of to  
 vn V 
 and add to  
 8
-n, p, s, u, ug, V  14 
+‘n’, ‘p’, ‘s’, ‘u’, ‘ug’}, |V| = 14 
 CSE 156 NLP Basic of LM 
 Byte-pair encoding - Example 
-Required 
+Required: 
 D 
-D   i ,  , h, ug ,  , p, ug, s , h, ug, g, i, n, g ,  , p, ug, s , 
- Documents  
+D = { [‘i’] , [‘ ’, ‘h’, ‘ug’] , [‘ ’, ‘p’, ‘ug’, ‘s’] , [‘h’, ‘ug’, ‘g’, ‘i’, ‘n’, ‘g’] , [‘ ’, ‘p’, ‘ug’, ‘s’] , 
+• Documents  
 N D 
- Desired vocabulary size greater than chars in  Algorithm 
+• Desired vocabulary size (greater than chars in ) Algorithm: 
 D 
- Pre-tokenize by splitting into words split before  whitespacepunctuation 
+• Pre-tokenize by splitting into words (split before  whitespace/punctuation) 
 V D 
- Initialize as the set of characters in  
+• Initialize as the set of characters in  
 D 
- Convert into a list of tokens characters V N 
- While   
- , i, s ,  , f, u, n , i ,  , m, a, k, e ,  , p, u, n, s 
+• Convert into a list of tokens (characters) |V| N 
+• While < : 
+[‘ ’, ‘i’, ‘s’] , [‘ ’, ‘f’, ‘u’, ‘n’] , [‘i’] , [‘ ’, ‘m’, ‘a’, ‘k’, ‘e’] , [‘ ’, ‘p’, ‘u’, ‘n’, ‘s’]} 
 Bigram Count 
- , p 3 
-p, ug 2 
-ug, s' 2 
- Let  
-n  V  1 
- Get counts of all bigrams in  
+‘ ‘, ‘p’ 3 
+‘p’, ‘ug’ 2 
+‘ug’, ’s' 2 
+• Let  
+n := |V| + 1 
+• Get counts of all bigrams in  
 Dvi, vj 
-u, n' 2 
- For the most frequent bigram breaking  ties arbitrarily 
-  
-v15  concat , p   p 
- Let  
-vn  concatvi, vj  
+‘u’, ’n' 2 
+• For the most frequent bigram (breaking  ties arbitrarily) 
+… … 
+v15 := concat(‘ ’, ‘p’) = ‘ p’ 
+• Let  
+vn := concat(vi, vj ) 
 D vi, vj vn 
- Change all instances in of to  
+• Change all instances in of to  
 vn V 
 and add to  
 CSE 156 NLP 9 Basic of LM
 Byte-pair encoding - Example 
-Required 
+Required: 
 D 
-D   i ,  , h, ug ,  , p, ug, s , h, ug, g, i, n, g ,  , p, ug, s , 
- Documents  
+D = { [‘i’] , [‘ ’, ‘h’, ‘ug’] , [‘ ’, ‘p’, ‘ug’, ‘s’] , [‘h’, ‘ug’, ‘g’, ‘i’, ‘n’, ‘g’] , [‘ ’, ‘p’, ‘ug’, ‘s’] , 
+• Documents  
 N D 
- Desired vocabulary size greater than chars in  Algorithm 
+• Desired vocabulary size (greater than chars in ) Algorithm: 
 D 
- Pre-tokenize by splitting into words split before  whitespacepunctuation 
+• Pre-tokenize by splitting into words (split before  whitespace/punctuation) 
 V D 
- Initialize as the set of characters in  
+• Initialize as the set of characters in  
 D 
- Convert into a list of tokens characters V N 
- While   
- , i, s ,  , f, u, n , i , 
- , m, a, k, e ,  , p, u, n, s 
-v15  concat , p   p 
-D   i ,  , h, ug ,  p, ug, s , h, ug, g, i, n, g ,  p, ug, s , 
- Let  
-n  V  1 
- Get counts of all bigrams in  
+• Convert into a list of tokens (characters) |V| N 
+• While < : 
+[‘ ’, ‘i’, ‘s’] , [‘ ’, ‘f’, ‘u’, ‘n’] , [‘i’] , 
+[‘ ’, ‘m’, ‘a’, ‘k’, ‘e’] , [‘ ’, ‘p’, ‘u’, ‘n’, ‘s’]} 
+v15 := concat(‘ ’, ‘p’) = ‘ p’ 
+D = { [‘i’] , [‘ ’, ‘h’, ‘ug’] , [‘ p’, ‘ug’, ‘s’] , [‘h’, ‘ug’, ‘g’, ‘i’, ‘n’, ‘g’] , [‘ p’, ‘ug’, ‘s’] , 
+• Let  
+n := |V| + 1 
+• Get counts of all bigrams in  
 Dvi, vj 
- , i, s ,  , f, u, n , i , 
- For the most frequent bigram breaking  ties arbitrarily 
- , m, a, k, e ,  p, u, n, s 
- Let  
-vn  concatvi, vj  
+[‘ ’, ‘i’, ‘s’] , [‘ ’, ‘f’, ‘u’, ‘n’] , [‘i’] , 
+• For the most frequent bigram (breaking  ties arbitrarily) 
+[‘ ’, ‘m’, ‘a’, ‘k’, ‘e’] , [‘ p’, ‘u’, ‘n’, ‘s’]} 
+• Let  
+vn := concat(vi, vj ) 
 D vi, vj vn 
-V   , a, e, f, g, h, i, k, m, 
- Change all instances in of to  vn V 
+V = {‘ ’, ‘a’, ‘e’, ‘f’, ‘g’, ‘h’, ‘i’, ‘k’, ‘m’, 
+• Change all instances in of to  vn V 
 and add to  
-n, p, s, u, ug,  p, V  15 10
+‘n’, ‘p’, ‘s’, ‘u’, ‘ug’, ‘ p}, |V| = 15 10
 CSE 156 NLP Basic of LM 
 Byte-pair encoding - Example 
-Required 
+Required: 
 D 
-Repeat until V  N 
- Documents  
+Repeat until |V| = N… 
+• Documents  
 N D 
-D   i ,  hug ,  pugs , 
- Desired vocabulary size greater than chars in  Algorithm 
+D = { [‘i’] , [‘ hug’] , [‘ pugs’] , 
+• Desired vocabulary size (greater than chars in ) Algorithm: 
 D 
- Pre-tokenize by splitting into words split before  whitespacepunctuation 
+• Pre-tokenize by splitting into words (split before  whitespace/punctuation) 
 V D 
- Initialize as the set of characters in  
+• Initialize as the set of characters in  
 D 
- Convert into a list of tokens characters V N 
- While   
-hug, g, i, n, g ,  pugs ,  , i, s ,  , f, un , i ,  , m, a, k, e ,  p, un, s 
- Let  
-n  V  1 
-V   , a, e, f, g, h, i, k, m,n, p, s, u, 
- Get counts of all bigrams in  
+• Convert into a list of tokens (characters) |V| N 
+• While < : 
+[‘hug’, ‘g’, ‘i’, ‘n’, ‘g’] , [‘ pugs’] , [‘ ’, ‘i’, ‘s’] , [‘ ’, ‘f’, ‘un’] , [‘i’] , [‘ ’, ‘m’, ‘a’, ‘k’, ‘e’] , [‘ p’, ‘un’, ‘s’]} 
+• Let  
+n := |V| + 1 
+V = {‘ ’, ‘a’, ‘e’, ‘f’, ‘g’, ‘h’, ‘i’, ‘k’, ‘m’,‘n’, ‘p’, ‘s’, ‘u’, 
+• Get counts of all bigrams in  
 Dvi, vj 
-ug,  p, hug,  pug,  pugs, un,  hug, 
- For the most frequent bigram breaking  ties arbitrarily 
-V  20 
- Let  
-vn  concatvi, vj  
+‘ug’, ‘ p’, ‘hug’, ‘ pug’, ‘ pugs’, ‘un’, ‘ hug’}, 
+• For the most frequent bigram (breaking  ties arbitrarily) 
+|V| = 20 
+• Let  
+vn := concat(vi, vj ) 
 D vi, vj vn 
- Change all instances in of to  
+• Change all instances in of to  
 vn V 
 and add to  
 11
 CHANGES FROM START 
 CSE 156 NLP Basic of LM 
-Byte-pair encoding - TokenizationEncoding V  1, 2  a, 3  e, 4  f, 5  g, 6  h, 7  i, 
-8  k, 9  m, 10  n, 11  p, 12  s, 13  u, 
-14  ug, 15   p, 16  hug, 17   pug, 18   pugs, 
-19  un, 20   hug 
- Sometimes, there may be more than one way to represent a word with the  vocabulary 
- E.g.,  hugs  20, 12  1, 16, 12  1, 6, 14, 12  1, 6, 13, 5, 13  Which is the best representation? Why? 
+Byte-pair encoding - Tokenization/Encoding V = {1:‘’, 2 : ‘a’, 3 : ‘e’, 4 : ‘f’, 5 : ‘g’, 6 : ‘h’, 7 : ‘i’, 
+8 : ‘k’, 9 : ‘m’, 10 : ‘n’, 11 : ‘p’, 12 : ‘s’, 13 : ‘u’, 
+14 : ‘ug’, 15 : ‘ p’, 16 : ‘hug’, 17 : ‘ pug’, 18 : ‘ pugs’, 
+19 : ‘un’, 20 : ‘ hug’} 
+• Sometimes, there may be more than one way to represent a word with the  vocabulary… 
+• E.g., “ hugs” = [20, 12] = [1, 16, 12] = [1, 6, 14, 12] = [1, 6, 13, 5, 13] • Which is the best representation? Why? 
 CSE 156 NLP 12 Basic of LM
-Byte-pair encoding - TokenizationEncoding V  1, 2  a, 3  e, 4  f, 5  g, 6  h, 7  i, 
-8  k, 9  m, 10  n, 11  p, 12  s, 13  u, 
-14  ug, 15   p, 16  hug, 17   pug, 18   pugs, 
-19  un, 20   hug 
+Byte-pair encoding - Tokenization/Encoding V = {1:‘’, 2 : ‘a’, 3 : ‘e’, 4 : ‘f’, 5 : ‘g’, 6 : ‘h’, 7 : ‘i’, 
+8 : ‘k’, 9 : ‘m’, 10 : ‘n’, 11 : ‘p’, 12 : ‘s’, 13 : ‘u’, 
+14 : ‘ug’, 15 : ‘ p’, 16 : ‘hug’, 17 : ‘ pug’, 18 : ‘ pugs’, 
+19 : ‘un’, 20 : ‘ hug’} 
 Encoding Algorithm 
 s V 
-Given string and ordered vocab ,  Pretokenize in same way as  
+Given string and (ordered) vocab , • Pretokenize in same way as  
 D 
 before 
- Tokenize into characters 
+• Tokenize into characters 
 D 
- Perform merge rules in same order  as in training until no more merges  may be done 
-Encode hugs  20, 12 
-Encodemisshapenness  9, 7, 12, 12, 6, 2, 11, 3, 10, 10, 3, 12, 12 
+• Perform merge rules in same order  as in training until no more merges  may be done 
+Encode(“ hugs”) = [20, 12] 
+Encode(“misshapenness”) = [9, 7, 12, 12, 6, 2, 11, 3, 10, 10, 3, 12, 12] 
 13
 CSE 156 NLP Basic of LM 
-Byte-pair encoding - Decoding V  1, 2  a, 3  e, 4  f, 5  g, 6  h, 7  i, 
-8  k, 9  m, 10  n, 11  p, 12  s, 13  u, 
-14  ug, 15   p, 16  hug, 17   pug, 18   pugs, 
-19  un, 20   hug 
+Byte-pair encoding - Decoding V = {1:‘’, 2 : ‘a’, 3 : ‘e’, 4 : ‘f’, 5 : ‘g’, 6 : ‘h’, 7 : ‘i’, 
+8 : ‘k’, 9 : ‘m’, 10 : ‘n’, 11 : ‘p’, 12 : ‘s’, 13 : ‘u’, 
+14 : ‘ug’, 15 : ‘ p’, 16 : ‘hug’, 17 : ‘ pug’, 18 : ‘ pugs’, 
+19 : ‘un’, 20 : ‘ hug’} 
 Decoding Algorithm T 
-Given list of tokens  
-Encode hugs  20, 12 
-Encodemisshapenness  9, 7, 12, 12, 6, 2, 
- Initialize string  
-s   
-11, 3, 10, 10, 3, 12, 12 
- Keep popping off tokens from the  Ts 
+Given list of tokens : 
+Encode(“ hugs”) = [20, 12] 
+Encode(“misshapenness”) = [9, 7, 12, 12, 6, 2, 
+• Initialize string  
+s := “” 
+11, 3, 10, 10, 3, 12, 12] 
+• Keep popping off tokens from the  Ts 
 front of and appending the  corresponding string to  
-Decode20, 12   hugs 
-Decode9, 7, 12, 12, 6, 2, 11, 3, 10, 10, 3, 12, 12  misshapenness 
+Decode([20, 12]) = “ hugs” 
+Decode([9, 7, 12, 12, 6, 2, 11, 3, 10, 10, 3, 12, 12]) = “misshapenness” 
 14
 CSE 156 NLP Basic of LM 
 Weird properties of tokenizers 
- Token ! word 
- Spaces are part of token 
- run is a different token than  run 
- Not invariant to case changes 
- Run is a different token than run 
+• Token != word 
+• Spaces are part of token 
+• “run” is a different token than “ run” 
+• Not invariant to case changes 
+• “Run” is a different token than “run” 
 CSE 156 NLP 15 Basic of LM
 Other Tokenization Variants 
 CSE 156 NLP 16 Basic of LM
-Variants - No spaces in tokens  The way we presented BPE, we included whitespace with the following word. E.g.,  pug 
- This is most common in modern LMs 
+Variants - No spaces in tokens • The way we presented BPE, we included whitespace with the following word. (E.g., “ pug”) 
+• This is most common in modern LMs 
 space 
- However, in another BPE variant, you instead strip whitespace e.g., pug and add spaces  
+• However, in another BPE variant, you instead strip whitespace (e.g., “pug”) and add spaces  
 between words at decoding time 
- This was the original BPE papers implementation!   Example 
- I, hug, pugs - I hug pugs wout whitespace  I,  hug,  pugs - I hug pugs w whitespace 
+• This was the original BPE paper’s implementation!  • Example: 
+• [“I”, “hug”, “pugs”] -> “I hug pugs” (w/out whitespace) • [“I”, “ hug”, “ pugs”] -> “I hug pugs” (w/ whitespace) 
 no space 
-Original w whitespace 
-Required 
+Original (w/ whitespace) 
+Required: 
 D 
- Documents  
+• Documents  
 N D 
- Desired vocabulary size greater than chars in  Algorithm 
+• Desired vocabulary size (greater than chars in ) Algorithm: 
 D 
-- Pre-tokenize by splitting into words split  before whitespacepunctuation 
+- Pre-tokenize by splitting into words (split  before whitespace/punctuation) 
 V D 
- Initialize as the set of characters in  
+• Initialize as the set of characters in  
 17
-Updated wout whitespace 
-Required 
+Updated (w/out whitespace) 
+Required: 
 D 
- Documents  
+• Documents  
 N D 
- Desired vocabulary size greater than chars in  Algorithm 
+• Desired vocabulary size (greater than chars in ) Algorithm: 
 D 
- Pre-tokenize by splitting into words  removing whitespace 
++ Pre-tokenize by splitting into words  (removing whitespace) 
 V D 
- Initialize as the set of characters in  
+• Initialize as the set of characters in  
 CSE 156 NLP Basic of LM 
 Variants - No spaces in tokens 
- For sub-word tokens, need to add continue word special character  E.g., for the word Tokenization, if the subword tokens are Token  and ization, 
- Wout special character Token, ization - Token ization  W special character  Token, ization - Tokenization  When decoding, if does not have special character add a space  Example 
- I, li, ke, to, hug, pug, s - I like to hug pugs 
+• For sub-word tokens, need to add “continue word” special character • E.g., for the word “Tokenization”, if the subword tokens are “Token”  and “ization”, 
+• W/out special character: [“Token”, “ization”] -> “Token ization” • W/ special character #: [“Token”, “#ization”] -> Tokenization” • When decoding, if does not have special character add a space • Example: 
+• [“I”, “li”, “#ke”, “to”, “hug”, “pug”, “#s”] -> “I like to hug pugs” 
 CSE 156 NLP 18 Basic of LM
 Variants - No spaces in tokens 
- Loses some whitespace information lossy compression! 
- E.g., TokenizeI eat cake.  Tokenize I eat cake . 
- Especially problematic for code e.g., Python - why? 
-Example using  
-GPTs tokenizer,  
+• Loses some whitespace information (lossy compression!) 
+• E.g., Tokenize(“I eat cake.”) == Tokenize(“ I eat cake .”) 
+• Especially problematic for code (e.g., Python) - why? 
+(Example using  
+GPT’s tokenizer,  
 which does not  
 include spaces in  
-the token 
+the token) 
 19
 CSE 156 NLP Basic of LM 
 Variants - No Pre-tokenization 
- In the variant we proposed, we start by splitting into words 
- This guarantees that each token will be no longer than one word  However, this does not work so well for character-based languages.  Why? 
+• In the variant we proposed, we start by splitting into words 
+• This guarantees that each token will be no longer than one word • However, this does not work so well for character-based languages.  Why? 
 CSE 156 NLP 20 Basic of LM
-Variants - No Pre-tokenization  Instead, we could not pre-tokenize, and treat the entire document or  sentence as a single list of tokens 
- Allows for tokens to span multiple wordscharacters  Sometimes called SentencePiece tokenization Kudo, 2018 
- not to be confused with the  
+Variants - No Pre-tokenization • Instead, we could not pre-tokenize, and treat the entire document or  sentence as a single list of tokens 
+• Allows for tokens to span multiple words/characters • Sometimes called SentencePiece tokenization* (Kudo, 2018) 
+* (not to be confused with the  
 SentencePiece library, which  
 is an implementation of many 
-kinds of tokenization 
-Original w pre-tokenization 
-Required 
+kinds of tokenization) 
+Original (w/ pre-tokenization) 
+Required: 
 D 
- Documents  
+• Documents  
 N D 
- Desired vocabulary size greater than chars in  Algorithm 
+• Desired vocabulary size (greater than chars in ) Algorithm: 
 D 
-Paper httpsarxiv.orgabs1808.06226 
-Library httpsgithub.comgooglesentencepiece 
-Updated wout pre-tokenization 
-Required 
+Paper: https://arxiv.org/abs/1808.06226 
+Library: https://github.com/google/sentencepiece 
+Updated (w/out pre-tokenization) 
+Required: 
 D 
- Documents  
+• Documents  
 N D 
- Desired vocabulary size greater than chars in  Algorithm 
+• Desired vocabulary size (greater than chars in ) Algorithm: 
 - Pre-tokenize by splitting into words  
- Do not pre-tokenize 
++ Do not pre-tokenize 
 D 
-split before whitespacepunctuation 
+(split before whitespace/punctuation) 
 V D 
- Initialize as the set of characters in  
+• Initialize as the set of characters in  
 21
 D 
 V D 
- Initialize as the set of characters in  D 
- Convert into a list of tokens characters 
-CSE 156 NLP Basic of LM  Convert into a list of tokens characters 
+• Initialize as the set of characters in  D 
+• Convert into a list of tokens (characters) 
+CSE 156 NLP Basic of LM • Convert into a list of tokens characters 
 Variants - No Pre-tokenization 
- Allows sequences of wordscharacters to become tokens 
-SentencePiece paper example in Japanese 
-httpsarxiv.orgpdf1808.06226.pdf 
+• Allows sequences of words/characters to become tokens 
+SentencePiece paper example in Japanese: 
+https://arxiv.org/pdf/1808.06226.pdf 
 
-Jurassic-1 model example in English 
-httpsuploads-ssl.webflow.com60fd4503684b466578c0d30761138924626a6981ee09caf6jurassictechpaper.pdf 
+Jurassic-1 model example in English: 
+https://uploads-ssl.webflow.com/60fd4503684b466578c0d307/61138924626a6981ee09caf6_jurassic_tech_paper.pdf 
 22
 CSE 156 NLP Basic of LM 
 Variants - Byte-based 
- Originally, we presented BPE as dealing with characters as the smallest unit  However, there are many characters - especially if you want to support  character-based languages e.g., Chinese has 100k characters!  non-alphanumeric characters like emojis Unicode 15 has 150k  
-characters! 
- Instead, can initialize tokens as set of bytes! e.g., with UTF-8 
-Only 256 bytes!  Each Unicode  
-Original w characters 
-Required 
+• Originally, we presented BPE as dealing with characters as the smallest unit • However, there are many characters - especially if you want to support: • character-based languages (e.g., Chinese has >100k characters!) • non-alphanumeric characters like emojis (Unicode 15 has ~150k  
+characters!) 
+• Instead, can initialize tokens as set of bytes! (e.g., with UTF-8*) 
+*Only 256 bytes!  Each Unicode  
+Original (w/ characters) 
+Required: 
 D 
- Documents  
-Modified w bytes 
-Required 
+• Documents  
+Modified (w/ bytes) 
+Required: 
 D 
- Documents  
+• Documents  
 char is 1-4 bytes 
 N D 
- Desired vocabulary size greater than chars in  Algorithm 
+• Desired vocabulary size (greater than chars in ) Algorithm: 
 D 
- Pre-tokenize by splitting into words split before  whitespacepunctuation 
+• Pre-tokenize by splitting into words (split before  whitespace/punctuation) 
 V D 
 - Initialize as the set of characters in  D 
-- Convert into a list of tokens characters V N 
+- Convert into a list of tokens (characters) |V| N 
 23
 N D 
- Desired vocabulary size greater than chars in  Algorithm 
+• Desired vocabulary size (greater than chars in ) Algorithm: 
 D 
- Pre-tokenize by splitting into words split before  whitespacepunctuation 
+• Pre-tokenize by splitting into words (split before  whitespace/punctuation) 
 V D 
- Initialize as the set of bytes in  D 
- Convert into a list of tokens bytes V N 
++ Initialize as the set of bytes in  D 
++ Convert into a list of tokens (bytes) |V| N 
 CSE 156 NLP Basic of LM 
- While   
- While   
+• While < : 
+• While < : 
 Variants - Byte-based 
-Instead, can initialize tokens as set of bytes! e.g., with UTF-8 
+Instead, can initialize tokens as set of bytes! (e.g., with UTF-8) 
 
 UTF-8 Byte Encoding in Python 
 24
 CSE 156 NLP Basic of LM 
 Variants - Byte-based 
-While character-based GPT tokenizer  fails on emojis and Japanese 
+While character-based GPT tokenizer  fails on emojis and Japanese… 
 The Byte-based GPT-2 tokenizer  succeeds! 
 
 25
 CSE 156 NLP Basic of LM 
 Variants - WordPiece Objective 
- To merge, we selected the bigram with highest  frequency 
-pvi, vj  
- This is the same as bigram with highest probability!  Instead, we could choose the bigram which would  
-Modified Word Piece 
-maximize the likelihood of the data after the  merge is made also called WordPiece! 
-Original BPE 
-  
-  
- For the bigram that would  maximize likelihood of the training  
+• To merge, we selected the bigram with highest  frequency 
+p(vi, vj ) 
+• This is the same as bigram with highest probability! • Instead, we could choose the bigram which would  
+Modified (Word Piece) 
+maximize the likelihood of the data after the  merge is made (also called WordPiece!) 
+Original (BPE) 
+ … 
+ … 
++ For the bigram that would  maximize likelihood of the training  
 - For the most frequent bigram  
-data once the change is made  breaking ties arbitrarily 
+data once the change is made  (breaking ties arbitrarily) 
 vi, vj 
 vi, vj 
- breaking ties arbitrarily 
- Same as bigram which maximizes 
- Same as bigram which  
-pvi, vj  
-maximizes -  
+ (breaking ties arbitrarily) 
+ (Same as bigram which maximizes 
+ (Same as bigram which  
+p(vi, vj ) 
+maximizes - ) 
 26
-pvi, vj  pvipvj  
-  
+p(vi, vj ) p(vi)p(vj ) 
+ ) 
 CSE 156 NLP Basic of LM 
-Variants - WordPiece Objective  BPE the bigram with highest frequencyhighest probability  WordPiece bigram which maximizes the likelihood of the data  after the merge is made 
- Maximizes the probability of the bigram, normalized by the  probability of the unigrams 
-pvi, vj  
- What does it mean if is close to 1? 
-pvipvj  
-pvi, vj  pvi, vj  pvipvj  
- Whenever the individual tokens appear, the bigram almost always  appears 
-pvi, vj  
-pvi, vj  
- What does it mean if is high but is low? 
-pvipvj  
- The tokens appear many other times not in the bigram in the corpus 
+Variants - WordPiece Objective • BPE: the bigram with highest frequency/highest probability • WordPiece: bigram which maximizes the likelihood of the data  after the merge is made 
+• Maximizes the probability of the bigram, normalized by the  probability of the unigrams 
+p(vi, vj ) 
+• What does it mean if is close to 1? 
+p(vi)p(vj ) 
+p(vi, vj ) p(vi, vj ) p(vi)p(vj ) 
+• Whenever the individual tokens appear, the bigram almost always  appears 
+p(vi, vj ) 
+p(vi, vj ) 
+• What does it mean if is high but is low? 
+p(vi)p(vj ) 
+• The tokens appear many other times (not in the bigram) in the corpus 
 27
 CSE 156 NLP Basic of LM 
-Variants - WordPiece Encoding 
-At inference time, instead of applying the merge rules in order, tokens are  selected left-to-right greedily 
+Variants - WordPiece: Encoding 
+At inference time, instead of applying the merge rules in order, tokens are  selected left-to-right greedily: 
 Encoding Algorithm 
 s V 
-Given string and unordered vocab , 
- Initialize list of tokens  lens  0 
-T   
- While  
+Given string and (unordered) vocab , 
+• Initialize list of tokens  len(s) > 0 
+T := [] 
+• While : 
 ti s 
- Find longest token that matches the beginning of  
- Let  
-T  T  ti 
+• Find longest token that matches the beginning of  
+• Let  
+T := T + [ti] 
 vi s 
- Pop corresponding vocab off of front of  
- Return  
+• Pop corresponding vocab off of front of  
+• Return  
 T 
 CSE 156 NLP 28 Basic of LM
 Variants - Unigram Objective 
- BPE starts with a small vocabulary characters and builds up until the  N 
+• BPE starts with a small vocabulary (characters) and builds up until the  N 
 desired vocabulary size  
- The Unigram tokenization algorithm starts with a large vocabulary all  N 
-sub-word substrings and throws away tokens until we reach size  CSE 156 NLP 29 Basic of LM
-Variants - Unigram Objective High-level Algorithm 
+• The Unigram tokenization algorithm starts with a large vocabulary (all  N 
+sub-word substrings) and throws away tokens until we reach size  CSE 156 NLP 29 Basic of LM
+Variants - Unigram Objective (High-level Algorithm) 
 V D 
- Initialize vocabulary with all sub-word substrings of  
+• Initialize vocabulary with all sub-word substrings of  
 N 
- Repeat until vocabulary is of size  
+• Repeat until vocabulary is of size  
 vi 
- For each token , 
-Vvi V vi 
-1. Estimate a Unigram model based on vocab vocab with removed. D 
-2. Calculate the probability of each word in based on the best possible tokenization  tokenization with highest probability under unigram model 
- Can calculate this efficiently with Viterbi algorithmDynamic Programming 
+• For each token , 
+V\{vi} V vi 
+1. Estimate a Unigram model based on vocab (vocab with removed). D 
+2. Calculate the probability of each word in based on the best possible tokenization  (tokenization with highest probability under unigram model) 
+• Can calculate this efficiently with Viterbi algorithm/Dynamic Programming 
 D 
-3. Calculate the likelihood of under the unigram model. Likelihood after removing the  vi 
-token  
-p p 
- Remove where is hyper parameter of the tokens for which the likelihood of the  data is highest after removal e.g., the tokens which least impact loss 
-For more details and a worked example, see 
-httpshuggingface.colearnnlp-coursechapter67?fwpt 
+3. Calculate the likelihood of under the unigram model. (Likelihood after removing the  vi 
+token ) 
+p% p 
+• Remove (where is hyper parameter) of the tokens for which the likelihood of the  data is highest after removal (e.g., the tokens which least impact loss) 
+For more details and a worked example, see: 
+https://huggingface.co/learn/nlp-course/chapter6/7?fw=pt 
 CSE 156 NLP 30 Basic of LM
 Examples of Models and their Tokenizers 
-SentencePiece treat whitespace like charBPE wspaces ModelTokenizer Objective Spaces part of token? Pre-tokenization Smallest unit 
+SentencePiece (treat whitespace like char)BPE (w/spaces) Model/Tokenizer Objective Spaces part of token? Pre-tokenization Smallest unit 
 GPT BPE No Yes Character-level 
-GPT-234, ChatGPT,  
-Llama2, Falcon,  BPE Yes Yes Byte-level No. SentencePiece -  
+GPT-2/3/4, ChatGPT,  
+Llama(2), Falcon, … BPE Yes Yes Byte-level No. “SentencePiece” -  
 Jurassic BPE Yes Bert, DistilBert,  
 treat whitespace like  char 
 Byte-level 
 Electra WordPiece No Yes Character-level 
 T5, ALBERT, XLNet,  
 Marian Unigram Yes 
-No. SentencePiece -  treat whitespace like  char 
+No. “SentencePiece” -  treat whitespace like  char* 
 Character-level 
-For non-English languages 
+*For non-English languages 
 31
 CSE 156 NLP Basic of LM 
 Tokens to features
-Large Model Reasoning - CSE 291 32 Lecture 2 Basic of Language Model 
-InputsOutputs 
- Input sequences of words or tokens 
- Output probability distribution over the next word token pxSTARTpxSTART Ipx went pxto pxthe px park pxSTART I went to the park.
-The 3 When 2.5 
-think 11 was 5 
-to 35 back 8 
-the 29 a 9 
+Large Model Reasoning - CSE 291 32 Lecture 2: Basic of Language Model 
+Inputs/Outputs 
+• Input: sequences of words (or tokens) 
+• Output: probability distribution over the next word (token) p(x|START)p(x|START I)p(x|··· went) p(x|···to) p(x|···the) p(x|··· park) p(x|START I went to the park.)
+The 3 When 2.5% 
+think 11% was 5% 
+to 35% back 8% 
+the 29% a 9% 
 bathroo m 
-3 
-and 14 
-I 21 
-They 2   
-I 1 
-  
-Banana 0.1 
-went 2 am 1 will 1 like 0.5 
-  
-into 5 through 4 out 3 on 2   
-see 5 my 3 bed 2 
-school 1   
-doctor 2 hospita  
-2 
+3% 
+and 14% 
+I 21% 
+They 2% … … 
+I 1% 
+… … 
+Banana 0.1% 
+went 2% am 1% will 1% like 0.5% 
+… … 
+into 5% through 4% out 3% on 2% … …% 
+see 5% my 3% bed 2% 
+school 1% … … 
+doctor 2% hospita % 
+2% 
 l 
-store 1.5   
-park 0.5   
-with 9 , 8 to 7   . 6   
+store 1.5% … … 
+park 0.5% … … 
+with 9 , 8% to 7% … … . 6% … … 
 It 6 
-The 3 There 3   STOP 1   
+The 3% There 3% … … STOP 1% … … 
 Neural Network 
 START I went to the park . STOP 
-Large Model Reasoning - CSE 291 33 Lecture 2 Basic of Language Model 
+Large Model Reasoning - CSE 291 33 Lecture 2: Basic of Language Model 
 One-hot encoding 
- In order to feed in the tokens to a machine learning algorithm, we  
+• In order to feed in the tokens to a machine learning algorithm, we  
 need to input them as standard features 
 2 
 3 
@@ -549,117 +549,117 @@ need to input them as standard features
 666664100... 
 666664010... 
 666664000... 
- One approach One-hot encoding 
-777775 If V  n 
- Recall from linear algebra  One-hot encoding 
-Standard basis of Rn  e1  0 
-777775, e2  
+• One approach: One-hot encoding 
+777775 If |V| = n: 
+• Recall from linear algebra: • One-hot encoding: 
+Standard basis of Rn : e1 = 0 
+777775, e2 = 
 0 
-777775,...,en  1 
-featuresvi  ei 2 Rn
- Sparse vector representation 
-Large Model Reasoning - CSE 291 34 Lecture 2 Basic of Language Model 
+777775,...,en = 1 
+features(vi) = ei 2 Rn
+• Sparse vector representation 
+Large Model Reasoning - CSE 291 34 Lecture 2: Basic of Language Model 
 Tokens to features
-Large Model Reasoning - CSE 291 35 Lecture 2 Basic of Language Model 
+Large Model Reasoning - CSE 291 35 Lecture 2: Basic of Language Model 
 One-hot encoding  
-Pros 
- Sparse representation 
- No learning necessary 
-Cons 
- Feature space must be same size as vocabulary  No way to encode shared representations of words
-Large Model Reasoning - CSE 291 36 Lecture 2 Basic of Language Model 
+Pros: 
+• Sparse representation 
+• No learning necessary 
+Cons: 
+• Feature space must be same size as vocabulary • No way to encode shared representations of words
+Large Model Reasoning - CSE 291 36 Lecture 2: Basic of Language Model 
 Embeddings 
-Alternatively - we could learn the feature space a.k.a., representation  learning! 
-n  V k 
- Let be the size of the vocabulary, and choose as the feature  k  n 
-space size usually  
-W 2 Rkn 
- Learn text embedding matrix such that  
-featuresvi  W ei 2 Rk  ith column of W
- Could also be thought of as a lookup table 
-Large Model Reasoning - CSE 291 37 Lecture 2 Basic of Language Model 
+Alternatively - we could learn the feature space (a.k.a., representation  learning!) 
+n = |V| k 
+• Let be the size of the vocabulary, and choose as the feature  k << n 
+space size (usually ) 
+W 2 Rk⇥n 
+• Learn text embedding matrix such that  
+features(vi) = W ei 2 Rk = ith column of W
+• Could also be thought of as a lookup table 
+Large Model Reasoning - CSE 291 37 Lecture 2: Basic of Language Model 
 Embeddings
-Requires Some model and loss function built on top of the embeddings  to learn the weights. 
-Side note this is equivalent to one fully-connected neural network layer  on top of the one-hot encodings. 
-Large Model Reasoning - CSE 291 38 Lecture 2 Basic of Language Model 
+Requires: Some model and loss function built on top of the embeddings  to learn the weights. 
+Side note: this is equivalent to one fully-connected neural network layer  on top of the one-hot encodings. 
+Large Model Reasoning - CSE 291 38 Lecture 2: Basic of Language Model 
 Embeddings
- Word2Vec Mikolov, 2013, GloVe Pennington, 2014 trained  embeddings on word-level tokens 
- Nearest neighbors embeddings are semantically similar 
-httpsnlp.stanford.eduprojectsglove 
-Large Model Reasoning - CSE 291 39 Lecture 2 Basic of Language Model 
+• Word2Vec (Mikolov, 2013), GloVe (Pennington, 2014) trained  embeddings on word-level tokens 
+• Nearest neighbors embeddings are semantically similar 
+https://nlp.stanford.edu/projects/glove/ 
+Large Model Reasoning - CSE 291 39 Lecture 2: Basic of Language Model 
 Embeddings 
 Some dimensions are semantically meaningful 
 Male - Female City - Zip Code 
-2-d projections of embedding space
-httpsnlp.stanford.eduprojectsglove 
-Large Model Reasoning - CSE 291 40 Lecture 2 Basic of Language Model 
+(2-d projections of embedding space)
+https://nlp.stanford.edu/projects/glove/ 
+Large Model Reasoning - CSE 291 40 Lecture 2: Basic of Language Model 
 Embeddings 
- Semantically meaningful dimensions allow for some analogous  reasoning Mikolov, 2013 
- vectorKing - vectorMan  vectorWoman is closest to the  vector for Queen 
- Paris - France  Italy   Rome 
- Windows - Microsoft  Google  Android
-Large Model Reasoning - CSE 291 41 Lecture 2 Basic of Language Model 
-InputsOutputs 
- Input sequences of words or tokens 
- Output probability distribution over the next word token pxSTARTpxSTART Ipx went pxto pxthe px park pxSTART I went to the park. 
-The 3 When 2.5 
-think 11 was 5 
-to 35 back 8 
-the 29 a 9 
+• Semantically meaningful dimensions allow for some analogous  reasoning (Mikolov, 2013) 
+• vector(“King”) - vector(“Man”) + vector(“Woman”) is closest to the  vector for “Queen” 
+• “Paris” - “France” + “Italy”  ≈ “Rome” 
+• “Windows” - “Microsoft” + “Google” ≈ “Android”
+Large Model Reasoning - CSE 291 41 Lecture 2: Basic of Language Model 
+Inputs/Outputs 
+• Input: sequences of words (or tokens) 
+• Output: probability distribution over the next word (token) p(x|START)p(x|START I)p(x|··· went) p(x|···to) p(x|···the) p(x|··· park) p(x|START I went to the park.) 
+The 3 When 2.5% 
+think 11% was 5% 
+to 35% back 8% 
+the 29% a 9% 
 bathroo m 
-3 
-and 14 
-I 21 
-They 2   
-I 1 
-  
-Banana 0.1 
-went 2 am 1 will 1 like 0.5 
-  
-into 5 through 4 out 3 on 2   
-see 5 my 3 bed 2 
-school 1   
-doctor 2 hospita  
-2 
+3% 
+and 14% 
+I 21% 
+They 2% … … 
+I 1% 
+… … 
+Banana 0.1% 
+went 2% am 1% will 1% like 0.5% 
+… … 
+into 5% through 4% out 3% on 2% … …% 
+see 5% my 3% bed 2% 
+school 1% … … 
+doctor 2% hospita % 
+2% 
 l 
-store 1.5   
-park 0.5   
-with 9 , 8 to 7   . 6   
+store 1.5% … … 
+park 0.5% … … 
+with 9 , 8% to 7% … … . 6% … … 
 It 6 
-The 3 There 3   STOP 1   
-Neural Network Neural Language Model 
+The 3% There 3% … … STOP 1% … … 
+Neural Network (Neural Language Model) 
 START I went to the park . STOP 
 42
 CSE 156 NLP Basic of LM 
-InputsOutputs 
- Input sequences of words or tokens 
- Output probability distribution over the next word token pxSTARTpxSTART Ipx went pxto pxthe px park pxSTART I went to the park. 
-The 3 When 2.5 
-think 11 was 5 
-to 35 back 8 
-the 29 a 9 
+Inputs/Outputs 
+• Input: sequences of words (or tokens) 
+• Output: probability distribution over the next word (token) p(x|START)p(x|START I)p(x|··· went) p(x|···to) p(x|···the) p(x|··· park) p(x|START I went to the park.) 
+The 3 When 2.5% 
+think 11% was 5% 
+to 35% back 8% 
+the 29% a 9% 
 bathroo m 
-3 
-and 14 
-I 21 
-They 2   
-I 1 
-  
-Banana 0.1 
-went 2 am 1 will 1 like 0.5 
-  
-into 5 through 4 out 3 on 2   
-see 5 my 3 bed 2 
-school 1   
-doctor 2 hospita  
-2 
+3% 
+and 14% 
+I 21% 
+They 2% … … 
+I 1% 
+… … 
+Banana 0.1% 
+went 2% am 1% will 1% like 0.5% 
+… … 
+into 5% through 4% out 3% on 2% … …% 
+see 5% my 3% bed 2% 
+school 1% … … 
+doctor 2% hospita % 
+2% 
 l 
-store 1.5   
-park 0.5   
-with 9 , 8 to 7   . 6   
+store 1.5% … … 
+park 0.5% … … 
+with 9 , 8% to 7% … … . 6% … … 
 It 6 
-The 3 There 3   STOP 1   
-Neural Network Neural Language Model 
+The 3% There 3% … … STOP 1% … … 
+Neural Network (Neural Language Model) 
 START I went to the park . STOP 
 43
 CSE 156 NLP Basic of LM 
@@ -674,143 +674,143 @@ CSE 156 NLP Basic of LM
 Deep Learning Review 
 CSE 156 NLP 46 Basic of LM
 Neural Networks 
-Goal Approximate some function  Essential elements 
- Input Vector , Output  
-f  Rk ! Rd 
+Goal: Approximate some function  Essential elements: 
+• Input: Vector , Output:  
+f : Rk ! Rd 
 x 2 Rk y 2 Rd 
- Hidden representation layers  
+• Hidden representation layers  
 hi 2 Rdi 
- Non-linear, differentiable almost everywhere  activation function applied element-wise 
-  R ! R 
-W 2 Rdi1di 
- Weights connecting layers and bias  
+• Non-linear, differentiable (almost everywhere)  activation function (applied element-wise) 
+ : R ! R 
+W 2 Rdi+1⇥di 
+• Weights connecting layers: and bias  
 term  
-b 2 Rdi1 
-y W2W1x  b1  b2 
- Set of all parameters is often referred to as   
-where x 2 R3, y2 R2, W1 2 R43, W2 2 R24, b1 2 R4, and b2 2 R2 
-httpsen.wikipedia.orgwikiArtificialneuralnetwork 
+b 2 Rdi+1 
+yˆ= W2(W1x + b1) + b2 
+• Set of all parameters is often referred to as  ✓ 
+where x 2 R3, yˆ2 R2, W1 2 R4⇥3, W2 2 R2⇥4, b1 2 R4, and b2 2 R2 
+https://en.wikipedia.org/wiki/Artificial_neural_network 
 47
 CSE 156 NLP Basic of LM 
 Neural Networks - Special Cases 
- A neural network with no hidden layers is the same as 
- Linear regression regression 
- Logistic regression classification 
- Also referred to as a perceptron 
- Incapable of learning many functions e.g., XOR 
- A neural network without a non-linear activation is just a linear model  Why? What happens to y W2W1x  b1  b2 if x  ax ? 
-y W2W1x  b1  b2 
- W2aW1x  b1  b2 
- W2aW1x  W2ab1  b2 
- W0x  b0, where W0 W2aW1 and b0 W2ab1  b2 
+• A neural network with no hidden layers is the same as: 
+• Linear regression (regression) 
+• Logistic regression (classification) 
+• Also referred to as a perceptron 
+• Incapable of learning many functions (e.g., XOR) 
+• A neural network without a non-linear activation is just a linear model • Why? What happens to yˆ= W2(W1x + b1) + b2 if (x) = ax ? 
+yˆ= W2(W1x + b1) + b2 
+= W2a(W1x + b1) + b2 
+= (W2aW1)x + (W2ab1 + b2) 
+= W0x + b0, where W0= W2aW1 and b0= W2ab1 + b2 
 48
 CSE 156 NLP Basic of LM 
 Common activation functions 
 1 
-1  ex 
+1 + ex 
 Sigmoid Tanh 
 ReLU GeLU 
-max0, x 
-ex  ex ex  ex 
- xp2 
+max(0, x) 
+ex  ex ex + ex 
+✓ xp2◆◆ 
 1 
 2x 
 49
- 
-1  erf 
+✓ 
+1 + erf 
 CSE 156 NLP Basic of LM 
 Learning 
-Required training data, the model architecture, and a loss function. 
- Training data  
-D  x1, y1,...,xn, yn 
- Model family some specified function e.g.,  
-y W2W1x  b1  b2 
- Numbersize of hidden layers, activation function, etc. are FIXED  here 
- Differentiable Loss function  Learning Problem 
-Ly, y  Rd  Rd ! R 
-  arg min  
+Required: training data, the model architecture, and a loss function. 
+• Training data  
+D = {(x(1), y(1)),...,(x(n), y(n))} 
+• Model family: some specified function (e.g., ) 
+yˆ= W2(W1x + b1) + b2 
+• Number/size of hidden layers, activation function, etc. are FIXED  here 
+• (Differentiable) Loss function  Learning Problem: 
+L(y, yˆ) : Rd ⇥ Rd ! R 
+ˆ✓ = arg min ✓ 
 1 
 N 
-XN i1 
-Lyi, yi  fxi 
+XN i=1 
+L(y(i), yˆ(i) = f✓(x(i))) 
 CSE 156 NLP 50 Basic of LM
 Common loss functions 
- Regression problems 
- Euclidean DistanceMean Squared ErrorL2 loss  
-L2y, y  y  y22 12Xk i1 
-yi  yi2 
-L1y, y  y  y1  Xk 
- Mean Absolute ErrorL1 loss   2-way classification 
-yi  yi 
-i1 
- Binary Cross Entropy Loss 
-LBCEy, y  y logy  1  y log1  y 
- Multi-class classification for example, words 
- Cross Entropy Loss Very related to perplexity! 
-LCEy, y  XC i1 
-yi logyi 
+• Regression problems: 
+• Euclidean Distance/Mean Squared Error/L2 loss:  
+L2(y, yˆ) = ||y  yˆ||22 =12Xk i=1 
+(yi  yˆi)2 
+L1(y, yˆ) = ||y  yˆ||1 = Xk 
+• Mean Absolute Error/L1 loss:  • 2-way classification: 
+|yi  yˆi| 
+i=1 
+• Binary Cross Entropy Loss: 
+LBCE(y, yˆ) = [y log(ˆy) + (1  y) log(1  yˆ)] 
+• Multi-class classification: (for example, words…) 
+• Cross Entropy Loss: (Very related to perplexity!) 
+LCE(y, yˆ) = XC i=1 
+yi log(ˆyi) 
 CSE 156 NLP 51 Basic of LM
 Gradient Descent 
-Loss landscape - loss w.r.t  
- 
-Learning Problem  
-httpswww.cs.umd.edutomgprojectslandscapes 
-  arg min  
+“Loss landscape” - loss w.r.t  
+✓ 
+Learning Problem:  
+https://www.cs.umd.edu/~tomg/projects/landscapes/ 
+ˆ✓ = arg min ✓ 
 1 
 N 
-XN i1 
-Lyi, yi  fxi 
- Gradient is  
- However, finding the global minimum is often impossible  in practice need to search over all of ! 
-Rdim 
- Instead, get a local minimum with gradient descent 
- the vector of partial  derivatives of the  
+XN i=1 
+L(y(i), yˆ(i) = f✓(x(i))) 
+ Gradient is:  
+• However, finding the global minimum is often impossible  in practice (need to search over all of !) 
+Rdim(✓) 
+• Instead, get a local minimum with gradient descent 
+• the vector of partial  derivatives of the  
 parameters with respect to  the loss function 
- A linear approximation of  the loss function at i 
+• A linear approximation of  the loss function at ✓(i) 
 Gradient Descent 
 2 
 3 
-L 
- Learning rate often quite small e.g., 3e-4 
-i 
- 2 R,   0 
+@L 
+• Learning rate (often quite small e.g., 3e-4) 
+@✓(i) 
+↵ 2 R, ↵ > 0 
 666664 
 777775 
-1 L 
-L 
-i 
- Randomly initialize  
-0 
+1 @L 
+@L 
+@✓(i) 
+• Randomly initialize  
+✓(0) 
 Next estimate 
-Learning rate step size 
- i  
+Learning rate (step size) 
+@✓ (✓(i)) = 
 2... 
- Iteratively get better estimate with  
-i1  i   L  i 
+• Iteratively get better estimate with:  
+✓(i+1) = ✓(i)  ↵ ⇤@L @✓ (✓(i)) 
 Previous Estimate 
-L 
-i n 
+@L 
+@✓(i) n 
 52
 CSE 156 NLP Basic of LM 
-Stochastic Gradient Descent SGD 
-Gradient Descent  
-i1  i   L 
- i 
- Problem calculating the true gradient can be very expensive requires running model  on entire dataset! 
- Solution Stochastic Gradient Descent 
- Sample a subset of the data of fixed size batch size 
- Take the gradient with respect to that subset 
- Take a step in that direction repeat 
- Not only is it more computationally efficient, but it often finds better minima than  vanilla gradient descent 
- Why? Possibly because it does a better job skipping past plateaus in loss landscape CSE 156 NLP 53 Basic of LM
+Stochastic Gradient Descent (SGD) 
+Gradient Descent:  
+✓(i+1) = ✓(i)  ↵ ⇤@L 
+@✓ (✓(i)) 
+• Problem: calculating the true gradient can be very expensive (requires running model  on entire dataset!) 
+• Solution: Stochastic Gradient Descent 
+• Sample a subset of the data of fixed size (batch size) 
+• Take the gradient with respect to that subset 
+• Take a step in that direction; repeat 
+• Not only is it more computationally efficient, but it often finds better minima than  vanilla gradient descent 
+• Why? Possibly because it does a better job skipping past plateaus in loss landscape CSE 156 NLP 53 Basic of LM
 Backpropagation 
-One efficient way to calculate the gradient is with backpropagation. dxdydudu 
-Leverages the Chain Rule  
+One efficient way to calculate the gradient is with backpropagation. dx=dydudu 
+Leverages the Chain Rule:  
 dy 
 dx 
-1. Forward Pass h1  W1x  b2 h2  h1 
-y W2h2  b2 
-2. Calculate Loss Ly, y 
+1. Forward Pass h1 = W1x + b2 h2 = (h1) 
+yˆ= W2h2 + b2 
+2. Calculate Loss L(y, yˆ) 
 54
 3. Backwards Pass 
 Calculate the gradient  of the loss w.r.t. each 
@@ -818,77 +818,77 @@ parameter using the chain rule and intermediate outputs
 CSE 156 NLP Basic of LM 
 Backpropagation 
 1. Forward Pass 
-h1  W1x  b2 
-h2  h1 
-dxdydudu 
+h1 = W1x + b2 
+h2 = (h1) 
+dx=dydudu 
 dy 
 dx 
-Long, messy exact derivation below 3. Backwards Pass 
-y L 
-y 
-W2L 
-y W2h2  b2 
-L 
-y  y 
-W2L 
-y W2h2  b2 
-W2 y  hT2 
-b2L 
-L 
+(Long, messy exact derivation below) 3. Backwards Pass 
+yˆ :=@L 
+@yˆ 
+@W2=@L 
+yˆ= W2h2 + b2 
+@L 
+@yˆ · @yˆ 
+@W2=@L 
+@yˆ ·@(W2h2 + b2) 
+@W2= yˆ · hT2 
+@b2=@L 
+@L 
 2. Calculate Loss 
-y  y 
-b2L 
-y W2h2  b2 
-b2 y 
-Ly, y 
-h2 L 
-h2L 
-y  y 
-h2L 
-y W2h2  b2 
-h2 y  W2 
-h1 L 
-h1L 
-h2h2 
-h1 h2 h1 
-h1 
-W1L 
-L 
-h1 h1 
-W1 h1 W1x  b 
-W1 h1  xT 
-b1L 
-L 
+@yˆ · @yˆ 
+@b2=@L 
+@yˆ ·@(W2h2 + b2) 
+@b2= yˆ 
+L(y, yˆ) 
+h2 :=@L 
+@h2=@L 
+@yˆ · @yˆ 
+@h2=@L 
+@yˆ ·@(W2h2 + b2) 
+@h2= yˆ · W2 
+h1 :=@L 
+@h1=@L 
+@h2·@h2 
+@h1= h2 ·@(h1) 
+@h1 
+@W1=@L 
+@L 
+@h1· @h1 
+@W1= h1 ·@(W1x + b) 
+@W1= h1 · xT 
+@b1=@L 
+@L 
 55
-h1h1 
-b1 h1 W1x  b 
-b1 h1 
+@h1·@h1 
+@b1= h1 ·@(W1x + b) 
+@b1= h1 
 CSE 156 NLP Basic of LM 
 Classification with Deep Learning 
- For classification problems like next word-prediction we want to  predict a probability distribution over the label space 
- However, neural networks output is not guaranteed or likely to  
+• For classification problems (like next word-prediction…) we want to  predict a probability distribution over the label space 
+• However, neural networks’ output is not guaranteed (or likely) to  
 y 2 Rd 
 be a probability distribution 
- To force the output to be a probability distribution, we apply the  softmax function  
-softmaxyi expyi 
+• To force the output to be a probability distribution, we apply the  softmax function  
+softmax(y)i =exp(yi) 
 Pd 
-j1 expyj  
+j=1 exp(yj ) 
 y 
- The values before applying the softmax are often called logits CSE 156 NLP 56 Basic of LM
-Softmax outputs a valid probability distribution softmaxyi expyi 
+• The values before applying the softmax are often called “logits” CSE 156 NLP 56 Basic of LM
+Softmax outputs a valid probability distribution softmax(y)i =exp(yi) 
 Pd 
-j1 expyj  
-Proof that softmax is a valid probability distribution 1.Non-negativity 8i, softmaxyi expyi 
-j1 expyj  0 since expyi  0 for all i. 
+j=1 exp(yj ) 
+Proof that softmax is a valid probability distribution: 1.Non-negativity: 8i, softmax(y)i =exp(yi) 
+j=1 exp(yj ) 0 since exp(yi)  0 for all i. 
 Pd 
-2.Normalization Xd i1 
-softmaxyi  Xd i1 
-expyi 
-j1 expyj  Pd 
+2.Normalization: Xd i=1 
+softmax(y)i = Xd i=1 
+exp(yi) 
+j=1 exp(yj )= Pd 
 57
 Pd 
-i1 expyi 
-j1 expyj  1. Pd 
+i=1 exp(yi) 
+j=1 exp(yj )= 1. Pd 
 CSE 156 NLP Basic of LM 
 Outline 
 Deep Learning Review RNN 
@@ -896,124 +896,124 @@ LSTM
 Transformer 
 58
 CSE 156 NLP Basic of LM 
-InputsOutputs 
- Input sequences of words or tokens 
- Output probability distribution over the next word token pxSTARTpxSTART Ipx went pxto pxthe px park pxSTART I went to the park. 
-The 3 When 2.5 
-think 11 was 5 
-to 35 back 8 
-the 29 a 9 
+Inputs/Outputs 
+• Input: sequences of words (or tokens) 
+• Output: probability distribution over the next word (token) p(x|START)p(x|START I)p(x|··· went) p(x|···to) p(x|···the) p(x|··· park) p(x|START I went to the park.) 
+The 3 When 2.5% 
+think 11% was 5% 
+to 35% back 8% 
+the 29% a 9% 
 bathroo m 
-3 
-and 14 
-I 21 
-They 2   
-I 1 
-  
-Banana 0.1 
-went 2 am 1 will 1 like 0.5 
-  
-into 5 through 4 out 3 on 2   
-see 5 my 3 bed 2 
-school 1   
-doctor 2 hospita  
-2 
+3% 
+and 14% 
+I 21% 
+They 2% … … 
+I 1% 
+… … 
+Banana 0.1% 
+went 2% am 1% will 1% like 0.5% 
+… … 
+into 5% through 4% out 3% on 2% … …% 
+see 5% my 3% bed 2% 
+school 1% … … 
+doctor 2% hospita % 
+2% 
 l 
-store 1.5   
-park 0.5   
-with 9 , 8 to 7   . 6   
+store 1.5% … … 
+park 0.5% … … 
+with 9 , 8% to 7% … … . 6% … … 
 It 6 
-The 3 There 3   STOP 1   
+The 3% There 3% … … STOP 1% … … 
 Neural Network 
 START I went to the park . STOP 
 59
 CSE 156 NLP Basic of LM 
 Neural language models 
-But neural networks take in real-valued vectors, not words  Use one-hot or learned embeddings to map from words to vectors!  Learned embeddings become part of parameters  
- 
-Neural networks output vectors, not probability distributions  Apply the softmax to the outputs! 
- What should the size of our output distribution be? 
- Same size as our vocabulary  
-V 
-Dont neural networks need a fixed-size vector as input? And isnt text  variable length? 
- Ideas? 
+But neural networks take in real-valued vectors, not words… • Use one-hot or learned embeddings to map from words to vectors! • Learned embeddings become part of parameters  
+✓ 
+Neural networks output vectors, not probability distributions… • Apply the softmax to the outputs! 
+• What should the size of our output distribution be? 
+• Same size as our vocabulary  
+|V| 
+Don’t neural networks need a fixed-size vector as input? And isn’t text  variable length? 
+• Ideas? 
 CSE 156 NLP 60 Basic of LM
 Sliding window 
-Dont neural networks need a fixed-size vector as input? And isnt text  variable length? 
-Idea 1 Sliding window of size N 
- Cannot look more than N words back 
- Basically, neural approximation of an N-gram model Neural Network 
-pxthe park. 
- 
-pxSTART I went 
-pxI went to Neural Network 
+Don’t neural networks need a fixed-size vector as input? And isn’t text  variable length? 
+Idea 1: Sliding window of size N 
+• Cannot look more than N words back 
+• Basically, neural approximation of an N-gram model Neural Network 
+p(x|the park.) 
+… 
+p(x|START I went) 
+p(x|I went to) Neural Network 
 Neural Network 
 START I went to the park . STOP 
 61
 CSE 156 NLP Basic of LM 
 Recurrent Neural Networks 
-Idea 2 Recurrent Neural Networks RNNs 
-Essential components 
- One network is applied recursively to the sequence 
- Inputs previous hidden state , observation  
+Idea 2: Recurrent Neural Networks (RNNs) 
+Essential components: 
+• One network is applied recursively to the sequence 
+• Inputs: previous hidden state , observation  
 ht1 xt 
 ht yt 
- Outputs next hidden state , optionally output  
- Memory about history is passed through hidden states 
-pxSTART pxSTART I    pxSTART I went to the park. h0 RNN h1 RNN h2 RNN h3 RNN h4 RNN h5 RNN h7 RNN h8 RNN 
+• Outputs: next hidden state , (optionally) output  
+• Memory about history is passed through hidden states 
+p(x|START) p(x|START I) ··· ··· ··· p(x|START I went to the park.) h0 RNN h1 RNN h2 RNN h3 RNN h4 RNN h5 RNN h7 RNN h8 RNN 
 START I went to the park . STOP CSE 156 NLP 62 Basic of LM
 Example RNN 
-pxSTART I 
-Variables 
+p(x|START I) 
+Variables: 
 pt 
 xt 
- input embedding vector 
+: input (embedding) vector 
 yt 
 Softmax 
 yt pt 
- output vector logits  probability over tokens 
+: output vector (logits) : probability over tokens 
 RNN 
 y 
 ht1 
- previous hidden vector 
-Wyht  by 
+: previous hidden vector 
+Wyht + by 
 ht 
- next hidden vector 
-pxSTART 
- activation function for  h 
+: next hidden vector 
+p(x|START) 
+: activation function for  h 
 h0 RNN 
 ht1 
-Whxt  Uhht1  bh 
+Whxt + Uhht1 + bh 
 ht 
 hidden state 
 h 
 ht 
- output activation function y 
+: output activation function y 
 START 
 xt 
 Embedding 
 I 
 63
-Equations 
-ht  hWhxt  Uhht1  bh yt  yWyht  by 
-ptiexpyti  
+Equations: 
+ht := h(Whxt + Uhht1 + bh) yt := y(Wyht + by) 
+pti=exp(yti ) 
 Pd 
-ij expytj  
+i=j exp(ytj ) 
 CSE 156 NLP Basic of LM 
 Recurrent Neural Networks 
- How can information from time an earlier state e.g., time 0 pass to a  later state time t? 
- Through the hidden states! 
- Even though they are continuous vectors, can represent very rich  information up to the entire history from the beginning 
- Parameters are shared across all RNN units unlike in feedforward layers 
-pxSTART pxSTART I    pxSTART I went to the park. h0 RNN h1 RNN h2 RNN h3 RNN h4 RNN h5 RNN h7 RNN h8 RNN 
+• How can information from time an earlier state (e.g., time 0) pass to a  later state (time t?) 
+• Through the hidden states! 
+• Even though they are continuous vectors, can represent very rich  information (up to the entire history from the beginning) 
+• Parameters are shared across all RNN units (unlike in feedforward layers) 
+p(x|START) p(x|START I) ··· ··· ··· p(x|START I went to the park.) h0 RNN h1 RNN h2 RNN h3 RNN h4 RNN h5 RNN h7 RNN h8 RNN 
 START I went to the park . STOP 
 64
 CSE 156 NLP Basic of LM 
 Training procedure 
-E.g., if you wanted to train on STARTI went to the park.STOP 
-1. InputOutput Pairs 
+E.g., if you wanted to train on “<START>I went to the park.<STOP>”… 
+1. Input/Output Pairs 
 D 
-x input y output 
+x (input) y (output) 
 START I 
 START I went 
 START I went to 
@@ -1023,9 +1023,9 @@ START I went to the park .
 START I went to the park. STOP 
 65
 CSE 156 NLP Basic of LM 
-Training procedure 1. InputOutput Pairs 
+Training procedure 1. Input/Output Pairs 
 D 
-x input y output 
+x (input) y (output) 
 START I 
 START I went 
 START I went to 
@@ -1034,12 +1034,12 @@ START I went to the park
 START I went to the park . 
 START I went to the park. STOP 
 x 
-2. Run model on batch of s from  D 
+2. Run model on (batch of) ’s from  D 
 data to get probability  
-y 
-distributions running softmax at  end to ensure valid probability  distribution 
-y1 y2 y7 pxSTART pxSTART I pxSTART I went to the park. 
-   
+yˆ 
+distributions (running softmax at  end to ensure valid probability  distribution) 
+yˆ1 yˆ2 yˆ7 p(x|START) p(x|START I) p(x|START I went to the park.) 
+··· ··· ··· 
 h0 RNN h1 RNN h2 RNN h3 RNN h4 RNN h5 RNN h7 RNN h8 RNN START I went to the park . STOP 
 66
 CSE 156 NLP Basic of LM 
@@ -1048,13 +1048,13 @@ x
 2 
 3 
 2 
-2. Run model on batch of s from  
+2. Run model on (batch of) ’s from  
 2 
 3 
 2 
 3 
 3 
-pSTOPSTART pTheSTART 
+p(STOP|START) p(The|START) 
 66666664.01 .03 
 77777775 
 666666640010... 
@@ -1065,43 +1065,43 @@ data to get probability
 77777775 
 666666641000... 
 77777775 
-pISTART 
+p(I|START) 
 .1 
 distributions  
-y 
-y7  
+yˆ 
+yˆ7 = 
 .12 
-y7  
-y1  
+y7 = 
+yˆ1 = 
 .001 
-y1  
+y1 = 
 .01 
 3. Calculate loss compared to true  
-pappleSTART 
+p(apple|START) 
 ... 
 .002 
 0 
 y 
-s Cross Entropy Loss 
+’s (Cross Entropy Loss) 
 ... 
 .001 
 0 
 LCE 
-LCEy, y  XC i1 
-yi logyi 
-y1 y7 pxSTART    pxSTART I went to the park. 
+LCE(y, yˆ) = XC i=1 
+yi log(ˆyi) 
+yˆ1 yˆ7 p(x|START) ··· ··· ··· p(x|START I went to the park.) 
 h0 RNN h1 RNN h2 RNN h3 RNN h4 RNN h5 RNN h7 RNN h8 RNN START I went to the park . STOP 
 67
 CSE 156 NLP Basic of LM 
 Training procedure 2 
-LCEy, y  XC i1 
-yi logyi 
+LCE(y, yˆ) = XC i=1 
+yi log(ˆyi) 
 2 
 3 
 3 
 66666664.01 
 66666664.01 
-pSTOPSTART 
+p(STOP|START) 
 2 
 2 
 666666640010... 
@@ -1109,11 +1109,11 @@ pSTOPSTART
 3 
 3 
 3. Calculate loss compared to true  
-pTheSTART Actual observed word 77777775 
-pISTART 
-y1  
-y1  
-pappleSTART pappleSTART 
+p(The|START) (Actual observed word) 77777775 
+p(I|START) 
+yˆ1 = 
+yˆ1 = 
+p(apple|START) p(apple|START) 
 .03 
 .03 
 .1 
@@ -1123,50 +1123,50 @@ pappleSTART pappleSTART
 ... 
 .002 .002 
 77777775 
-y1  
-y1  
+y1 = 
+y1 = 
 0 
 0 
 77777775 
 77777775 
-ys Cross Entropy Loss 
+y’s (Cross Entropy Loss) 
 LCE 
-y1 
-LCEy1, y1  0  log.01  0  log.03  1   log.1    0  log.002   log.1   logpISTART 
-pxSTART    
+yˆ1 
+LCE(y1, yˆ1) = 0 ⇤ log(.01)  0 ⇤ log(.03)  1 ⇤  log(.1)  ···  0 ⇤ log(.002) =  log(.1) =  log(p(I|START)) 
+p(x|START) ··· ··· ··· 
 h0 RNN h1 RNN h2 RNN h3 RNN h4 RNN h5 RNN h7 RNN h8 RNN START I went to the park . STOP 
 68
 CSE 156 NLP Basic of LM 
 Training procedure - Gradient Descent Step 1. Get training x-y pairs from batch 
-y 
+yˆ 
 2. Run model to get probability distributions over  
 y 
 3. Calculate loss compared to true  
 4. Backpropagate to get the gradient 5. Take a step of gradient descent 
-y1 
-i1  i   L  i 
-pxSTART    
+yˆ1 
+✓(i+1) = ✓(i)  ↵ ⇤@L @✓ (✓(i)) 
+p(x|START) ··· ··· ··· 
 h0 RNN h1 RNN h2 RNN h3 RNN h4 RNN h5 RNN h7 RNN h8 RNN START I went to the park . STOP 
 69
 CSE 156 NLP Basic of LM 
 RNNs - Vanishing Gradient Problem What word is likely to come next for this sequence? 
-Anne said, Hi! My name is 
+Anne said, “Hi! My name is 
 CSE 156 NLP 70 Basic of LM
 RNNs - Vanishing Gradient Problem What word is likely to come next for this sequence? 
-Anne said, Hi! My name is 
-pxSTART Anne said, Hi! My name is 
+Anne said, “Hi! My name is 
+p(x|START Anne said, “Hi! My name is) 
 h0 RNN h1 START 
 RNN h2 Anne 
 RNN h3 said, 
-RNN h4 Hi! 
+RNN h4 “Hi! 
 RNN h5 My 
 RNN h7 name 
 RNN is 
- Need relevant information to flow across many time steps  When we backpropagate, we want to allow the relevant information to  flow  
+• Need relevant information to flow across many time steps • When we backpropagate, we want to allow the relevant information to  flow  
 71
 CSE 156 NLP Basic of LM 
-RNNs - Vanishing Gradient Problem pxSTART Anne said, Hi! My name is 
-y L 
+RNNs - Vanishing Gradient Problem p(x|START Anne said, “Hi! My name is) 
+yˆ =@L 
 h0 RNN h1 
 RNN h2 
 RNN h3 
@@ -1174,169 +1174,169 @@ RNN h4
 RNN h5 
 RNN h7 
 RNN 
-y 
+@yˆ 
 START Backprop steps 
 Anne 
 said, 
-Hi! 
- 
+“Hi! 
+… 
 My 
 name 
 is 
-h8 yWTy  0yWyh8  by 
-h7 h8UTh  0h h Whx8  Uhh7  bh t ht1UTh  0hWhxt1  Uhht  bh 
+h8= yˆWTy  0y(Wyh8 + by) 
+h7= h8UTh  0h h (Whx8 + Uhh7 + bh) t= ht+1UTh  0h(Whxt+1 + Uhht + bh) 
 However, when we backprop, it  
-involves multiplying a chain of  computations from time t7 to time t1 
+involves multiplying a chain of  computations from time t7 to time t1… 
 72
-If any of the terms are close to zero,  the whole gradient goes to zero  vanishes! 
+If any of the terms are close to zero,  the whole gradient goes to zero  (vanishes!) 
 The vanishing gradient problem 
 CSE 156 NLP Basic of LM 
 LSTMs 
-Idea 3 Long short-term  
+Idea 3: Long short-term  
 memory network 
-Essential components 
- It is a recurrent neural  
-network RNN 
- Has modules to learn when  to rememberforget  
+Essential components: 
+• It is a recurrent neural  
+network (RNN) 
+• Has modules to learn when  to “remember”/“forget”  
 information 
- Allows gradients to flow  more easily 
-httpsen.wikipedia.orgwikiLongshort-termmemory 
-ft  gWfxt  Ufht1  bf  
-it  gWixt  Uiht1  bi 
-ot  gWoxt  Uoht1  bo 
-ct  cWcxt  Ucht1  bc 
-ct  ft  ct1  it  ct 
-ht  ot  hct 
-xt 2 Rd input vector to the LSTM unit 
-ft 2 0, 1h forget gates activation vector 
-it 2 0, 1h inputupdate gates activation vector ot 2 0, 1h output gates activation vector 
-ht 2 1, 1h hidden state vector also known as output vector of the LSTM unit 
-ct 2 1, 1h cell input activation vector 
-ct 2 Rh cell state vector 
+• Allows gradients to flow  more easily 
+https://en.wikipedia.org/wiki/Long_short-term_memory# 
+ft = g(Wfxt + Ufht1 + bf ) 
+it = g(Wixt + Uiht1 + bi) 
+ot = g(Woxt + Uoht1 + bo) 
+c˜t = c(Wcxt + Ucht1 + bc) 
+ct = ft  ct1 + it  c˜t 
+ht = ot  h(ct) 
+xt 2 Rd: input vector to the LSTM unit 
+ft 2 (0, 1)h: forget gate’s activation vector 
+it 2 (0, 1)h: input/update gate’s activation vector ot 2 (0, 1)h: output gate’s activation vector 
+ht 2 (1, 1)h: hidden state vector also known as output vector of the LSTM unit 
+c˜t 2 (1, 1)h: cell input activation vector 
+ct 2 Rh: cell state vector 
 73
 CSE 156 NLP Basic of LM 
 LSTM Architecture 
-httpscolah.github.ioposts2015-08-Understanding-LSTMs 
+https://colah.github.io/posts/2015-08-Understanding-LSTMs/ 
 74
 CSE 156 NLP Basic of LM 
 LSTM Architecture 
-Cell state long term  
-memory allows information  
+Cell state (long term  
+memory): allows information  
 to flow with only small, linear  
-interactions good for  
-gradients! 
- Gates optionally let  
+interactions (good for  
+gradients!) 
+• “Gates” optionally let  
 information through 
- 1 - retain information  
-remember 
- 0 - forget information  
-forget 
-httpscolah.github.ioposts2015-08-Understanding-LSTMs 
-ft  gWfxt  Ufht1  bf  
-it  gWixt  Uiht1  bi 
-ot  gWoxt  Uoht1  bo 
-ct  cWcxt  Ucht1  bc 
-ct  ft  ct1  it  ct 
-ht  ot  hct 
-xt 2 Rd input vector to the LSTM uni 
-ft 2 0, 1h forget gates activation vec
-it 2 0, 1h inputupdate gates activa
-ot 2 0, 1h output gates activation ve
-ht 2 1, 1h hidden state vector also 
+• 1 - retain information  
+(“remember”) 
+• 0 - forget information  
+(“forget”) 
+https://colah.github.io/posts/2015-08-Understanding-LSTMs/ 
+ft = g(Wfxt + Ufht1 + bf ) 
+it = g(Wixt + Uiht1 + bi) 
+ot = g(Woxt + Uoht1 + bo) 
+c˜t = c(Wcxt + Ucht1 + bc) 
+ct = ft  ct1 + it  c˜t 
+ht = ot  h(ct) 
+xt 2 Rd: input vector to the LSTM uni 
+ft 2 (0, 1)h: forget gate’s activation vec
+it 2 (0, 1)h: input/update gate’s activa
+ot 2 (0, 1)h: output gate’s activation ve
+ht 2 (1, 1)h: hidden state vector also 
 vector of the LSTM unit 
-ct 2 1, 1h cell input activation vect
-ct 2 Rh cell state vector 
+c˜t 2 (1, 1)h: cell input activation vect
+ct 2 Rh: cell state vector 
 75
 CSE 156 NLP Basic of LM 
 LSTM Architecture 
-Input Gate Layer Decide  
+Input Gate Layer: Decide  
 what information to  
-forget 
-httpscolah.github.ioposts2015-08-Understanding-LSTMs 
-ft  gWfxt  Ufht1  bf  
-it  gWixt  Uiht1  bi 
-ot  gWoxt  Uoht1  bo 
-ct  cWcxt  Ucht1  bc 
-ct  ft  ct1  it  ct 
-ht  ot  hct 
-xt 2 Rd input vector to the LSTM unit 
-ft 2 0, 1h forget gates activation vector 
-it 2 0, 1h inputupdate gates activation vector 
-ot 2 0, 1h output gates activation vector 
-ht 2 1, 1h hidden state vector also known as output vector of the LSTM unit 
-ct 2 1, 1h cell input activation vector 
-ct 2 Rh cell state vector 
+“forget” 
+https://colah.github.io/posts/2015-08-Understanding-LSTMs/ 
+ft = g(Wfxt + Ufht1 + bf ) 
+it = g(Wixt + Uiht1 + bi) 
+ot = g(Woxt + Uoht1 + bo) 
+c˜t = c(Wcxt + Ucht1 + bc) 
+ct = ft  ct1 + it  c˜t 
+ht = ot  h(ct) 
+xt 2 Rd: input vector to the LSTM unit 
+ft 2 (0, 1)h: forget gate’s activation vector 
+it 2 (0, 1)h: input/update gate’s activation vector 
+ot 2 (0, 1)h: output gate’s activation vector 
+ht 2 (1, 1)h: hidden state vector also known as output vector of the LSTM unit 
+c˜t 2 (1, 1)h: cell input activation vector 
+ct 2 Rh: cell state vector 
 76
 CSE 156 NLP Basic of LM 
 LSTM Architecture 
-Candidate state values  
+Candidate state values:  
 Extract candidate  
 information to put into the  
 cell vector 
-httpscolah.github.ioposts2015-08-Understanding-LSTMs 
-ft  gWfxt  Ufht1  bf  
-it  gWixt  Uiht1  bi 
-ot  gWoxt  Uoht1  bo 
-ct  cWcxt  Ucht1  bc 
-ct  ft  ct1  it  ct 
-ht  ot  hct 
-xt 2 Rd input vector to the LSTM unit 
-ft 2 0, 1h forget gates activation vector it 2 0, 1h inputupdate gates activation vector ot 2 0, 1h output gates activation vector ht 2 1, 1h hidden state vector also known as output vector of the LSTM unit 
-ct 2 1, 1h cell input activation vector 
-ct 2 Rh cell state vector 
+https://colah.github.io/posts/2015-08-Understanding-LSTMs/ 
+ft = g(Wfxt + Ufht1 + bf ) 
+it = g(Wixt + Uiht1 + bi) 
+ot = g(Woxt + Uoht1 + bo) 
+c˜t = c(Wcxt + Ucht1 + bc) 
+ct = ft  ct1 + it  c˜t 
+ht = ot  h(ct) 
+xt 2 Rd: input vector to the LSTM unit 
+ft 2 (0, 1)h: forget gate’s activation vector it 2 (0, 1)h: input/update gate’s activation vector ot 2 (0, 1)h: output gate’s activation vector ht 2 (1, 1)h: hidden state vector also known as output vector of the LSTM unit 
+c˜t 2 (1, 1)h: cell input activation vector 
+ct 2 Rh: cell state vector 
 CSE 156 NLP 77 Basic of LM
 LSTM Architecture 
-ft  gWfxt  Ufht1  bf  
-it  gWixt  Uiht1  bi 
+ft = g(Wfxt + Ufht1 + bf ) 
+it = g(Wixt + Uiht1 + bi) 
 ft If is 
-Update cell Forget the  information we decided to  forget and update with  new candidate information 
+Update cell: “Forget” the  information we decided to  forget and update with  new candidate information 
 If is 
- High we  
-remember  
+• High: we  
+“remember”  
 more previous  info 
- Low we forget  
-ot  gWoxt  Uoht1  bo ct  cWcxt  Ucht1  bc ct  ft  ct1  it  ct ht  ot  hct 
+• Low: we “forget”  
+ot = g(Woxt + Uoht1 + bo) c˜t = c(Wcxt + Ucht1 + bc) ct = ft  ct1 + it  c˜t ht = ot  h(ct) 
 it 
- High we  add more  
+• High: we  add more  
 new info 
- Low we add 
+• Low: we add 
 more info 
-xt 2 Rd input vector to the LSTM unit 
+xt 2 Rd: input vector to the LSTM unit 
 less new info 
-ft 2 0, 1h forget gates activation vector 
-it 2 0, 1h inputupdate gates activation vector 
-ot 2 0, 1h output gates activation vector 
-ht 2 1, 1h hidden state vector also known as output 
+ft 2 (0, 1)h: forget gate’s activation vector 
+it 2 (0, 1)h: input/update gate’s activation vector 
+ot 2 (0, 1)h: output gate’s activation vector 
+ht 2 (1, 1)h: hidden state vector also known as output 
 vector of the LSTM unit 
-ct 2 1, 1h cell input activation vector 
-ct 2 Rh cell state vector 
-httpscolah.github.ioposts2015-08-Understanding-LSTMs 
+c˜t 2 (1, 1)h: cell input activation vector 
+ct 2 Rh: cell state vector 
+https://colah.github.io/posts/2015-08-Understanding-LSTMs/ 
 78
 CSE 156 NLP Basic of LM 
 LSTM Architecture 
-OutputShort-term Memory 
-as in RNN 
+Output/Short-term Memory 
+(as in RNN): 
 Pass on  
-ft  gWfxt  Ufht1  bf  it  gWixt  Uiht1  bi ot  gWoxt  Uoht1  bo ct  cWcxt  Ucht1  bc 
-Pass information onto the next  statefor use in output e.g.,  probabilities 
+ft = g(Wfxt + Ufht1 + bf ) it = g(Wixt + Uiht1 + bi) ot = g(Woxt + Uoht1 + bo) c˜t = c(Wcxt + Ucht1 + bc) 
+Pass information onto the next  state/for use in output (e.g.,  probabilities) 
 different  
 information  than in the  
 long-term  
 memory vector 
-ct  ft  ct1  it  ct 
-ht  ot  hct 
-xt 2 Rd input vector to the LSTM unit 
-ft 2 0, 1h forget gates activation vector it 2 0, 1h inputupdate gates activation vector ot 2 0, 1h output gates activation vector ht 2 1, 1h hidden state vector also known as output vector of the LSTM unit 
-ct 2 1, 1h cell input activation vector 
-ct 2 Rh cell state vector 
-httpscolah.github.ioposts2015-08-Understanding-LSTMs 79
+ct = ft  ct1 + it  c˜t 
+ht = ot  h(ct) 
+xt 2 Rd: input vector to the LSTM unit 
+ft 2 (0, 1)h: forget gate’s activation vector it 2 (0, 1)h: input/update gate’s activation vector ot 2 (0, 1)h: output gate’s activation vector ht 2 (1, 1)h: hidden state vector also known as output vector of the LSTM unit 
+c˜t 2 (1, 1)h: cell input activation vector 
+ct 2 Rh: cell state vector 
+https://colah.github.io/posts/2015-08-Understanding-LSTMs/ 79
 CSE 156 NLP Basic of LM 
-LSTMs summary 
-Pros 
- Works for arbitrary sequence lengths as RNNs 
- Address the vanishing gradient problems via long- and short-term  memory units with gates 
-Cons 
- Calculations are sequential - computation at time t depends entirely  on the calculations done at time t-1 
- As a result, hard to parallelize and train 
-Enter transformers 
+LSTMs (summary) 
+Pros: 
+• Works for arbitrary sequence lengths (as RNNs) 
+• Address the vanishing gradient problems via long- and short-term  memory units with gates 
+Cons: 
+• Calculations are sequential - computation at time t depends entirely  on the calculations done at time t-1 
+• As a result, hard to parallelize and train 
+Enter transformers… 
 CSE 156 NLP 80 Basic of LM

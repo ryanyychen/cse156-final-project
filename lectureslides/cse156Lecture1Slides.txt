@@ -1,352 +1,352 @@
 
 CSE 156 Natural Language Processing 
 1 - Course Introduction 
-Instructor Lianhui Qin 
+Instructor: Lianhui Qin 
 Slides adapted from Yejin Choi 
 1
 
 CSE 156 Natural Language Processing 
 1 - Course Introduction 
-Instructor Lianhui Qin 
+Instructor: Lianhui Qin 
 Slides adapted from Yejin Choi 
 2
-Whats NLP? 
+What’s NLP? 
 
- Fundamental goal deep understand of broad language 
- Not just string processing or keyword matching 
- End systems that we want to build 
- Simple spelling correction, text categorization 
- Complex speech recognition, machine translation, information extraction, sentiment analysis,  question answering 
- Unknown human-level comprehension is this just NLP? 
+• Fundamental goal: deep understand of broad language 
+• Not just string processing or keyword matching 
+• End systems that we want to build: 
+• Simple: spelling correction, text categorization… 
+• Complex: speech recognition, machine translation, information extraction, sentiment analysis,  question answering… 
+• Unknown: human-level comprehension (is this just NLP?) 
 3
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
 In Classical NLP Course 
- Text classification 
- Statistical language models 
- Representational learning 
- Word embeddings word2vec 
- Machine Translation 
- Seq2seq 
- Sequence Labeling 
- Conditional Random Field CRF 
+• Text classification 
+• Statistical language models 
+• Representational learning 
+• Word embeddings (word2vec) 
+• Machine Translation 
+• Seq2seq 
+• Sequence Labeling 
+• Conditional Random Field (CRF) 
 4
- Morphology  Syntax 
- Semantics  Pragmatics  Parsing 
- Tagging 
- CNNs, LSTMs   
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
+• Morphology • Syntax 
+• Semantics • Pragmatics • Parsing 
+• Tagging 
+• CNNs, LSTMs • … 
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
 This Course
- Text classification 
- Statistical language models 
- Representational learning 
- Word embeddings word2vec 
- Machine Translation 
- Seq2seq 
- Sequence Labeling 
- Conditional Random Field CRF 5 
- Morphology  Syntax 
- Semantics  Pragmatics  Parsing 
- Tagging 
- CNNs, LSTMs  Transformer   
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
+• Text classification 
+• Statistical language models 
+• Representational learning 
+• Word embeddings (word2vec) 
+• Machine Translation 
+• Seq2seq 
+• Sequence Labeling 
+• Conditional Random Field (CRF) 5 
+• Morphology • Syntax 
+• Semantics • Pragmatics • Parsing 
+• Tagging 
+• CNNs, LSTMs • Transformer • … 
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
 This Course 
-What Youll Learn 
- The evolution of NLP from simple models to cutting-edge LLMs. 
- Core techniques tokenization, embeddings, transformers, and beyond. 
- Applications and challenges in real-world NLP. 
-How Well Learn 
- Lectures, hands-on coding, and thought-provoking discussions. 
- Guest lectures from leading researchers in the field. 
- A mix of theory, implementation, and insights into current trends. 
-Natural Language Processing - CSE 156 6 Lecture 1 Introduction
+What You’ll Learn: 
+• The evolution of NLP: from simple models to cutting-edge LLMs. 
+• Core techniques: tokenization, embeddings, transformers, and beyond. 
+• Applications and challenges in real-world NLP. 
+How We’ll Learn: 
+• Lectures, hands-on coding, and thought-provoking discussions. 
+• Guest lectures from leading researchers in the field. 
+• A mix of theory, implementation, and insights into current trends. 
+Natural Language Processing - CSE 156 6 Lecture 1: Introduction
 What this  
-class will look  like  
-warning  
- the schedule is  tentative and  
-subject to change 
-Natural Language Processing - CSE 156 7 Lecture 1 Introduction 
+class will look  like … 
+warning:  
+� the schedule is  tentative and  
+subject to change �
+Natural Language Processing - CSE 156 7 Lecture 1: Introduction 
 Large Language Model 
- How they are built 
- How LLMs reason 
- How to align with human 
- What limitations 
+• How they are built 
+• How LLMs reason 
+• How to align with human 
+• What limitations 
 8
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
-Large Language Model How they are built 
- How LLMs reason 
- How to align with human  What limitations 
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
+Large Language Model• How they are built 
+• How LLMs reason 
+• How to align with human • What limitations 
 
-Natural Language Processing - CSE 156 9 Lecture 1 Introduction 
+Natural Language Processing - CSE 156 9 Lecture 1: Introduction 
 Large Language Model
- How they are built 
- How LLMs reason  How to align with human 
- What limitations 
-Natural Language Processing - CSE 156 10 Lecture 1 Introduction 
-Large Language Model How they are built 
- How LLMs reason 
- How to align with human  What limitations 
+• How they are built 
+• How LLMs reason • How to align with human 
+• What limitations 
+Natural Language Processing - CSE 156 10 Lecture 1: Introduction 
+Large Language Model• How they are built 
+• How LLMs reason 
+• How to align with human • What limitations 
 Safety? Privacy? Trustworthy? 11 
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
 Agenda 
- Instructor and TAs 
- Course Logistic  QA 
- Course Introduction  QA 
-Natural Language Processing - CSE 156 12 Lecture 1 Introduction
+• Instructor and TAs 
+• Course Logistic & QA 
+• Course Introduction & QA 
+Natural Language Processing - CSE 156 12 Lecture 1: Introduction
 Office Hours 
-Most up-to-date TA office hour schedules and locations can  be found on the course website httpslianhui.ucsd.edu cse156.html 
+Most up-to-date TA office hour schedules and locations can  be found on the course website: https://lianhui.ucsd.edu/ cse156.html 
 13
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
 Course Logistics 
- Lecture TuTh 1230pm-150pm Center Hall 214  Discussion Friday 1200pm - 1250pm Center Hall 216  Office hours Please check details on the course website  Course Website httpslianhui.ucsd.educse156.html  Communication, QA via Piazza 
- All write-ups should be submitted via Gradescope Statistical NLP - CSE 156 14
+• Lecture: TuTh 12:30pm-1:50pm @�Center Hall 214 • Discussion: Friday 12:00pm - 12:50pm @�Center Hall 216 • Office hours: Please check details on the course website • Course Website: https://lianhui.ucsd.edu/cse156.html • Communication, Q&A via Piazza 
+• All write-ups should be submitted via Gradescope Statistical NLP - CSE 156 14
 Grading 
- 50 Assignments 
- 40 Course Project 
- 10 Participation 
- 10 Course Participation  Attendance 
- 3 Extra Credit Discussion Section Attendance Statistical NLP - CSE 156 15
+• (50%) Assignments 
+• (40%) Course Project 
+• (10%) Participation 
+• (10%) Course Participation / Attendance 
+• (3% Extra Credit) Discussion Section Attendance Statistical NLP - CSE 156 15
 Assignments 
- 4 assignments in total 50 of your total grades 
- First assignment will be released on Tuesday of week 2 tentative.  You have roughly 2 weeks to complete each assignment. 
- 2 penalty-free late days at most 1 per assignment, then -10 per day.   Submitted on Gradescope instructions will be released with A1 
+• 4 assignments in total (50% of your total grades) 
+• First assignment will be released on Tuesday of week 2 (tentative). • You have roughly 2 weeks to complete each assignment. 
+• 2 penalty-free late days (at most 1 per assignment), then -10% per day.  • Submitted on Gradescope (instructions will be released with A1) 
 Statistical NLP - CSE 156 16
 Assignments - Grades 
- 4 assignments in total 50 of your total grades  Your higher scoring assignments have higher weights. 
-Assignment Weight Your best 20 Your 2nd best 15 Your 3rd best 10 Your 4th best 5 
-Example John Doe scores 70, 90, 80, 95 on the  four assignments, his assignment grade will be 
-95  20  90  15  80  10  70  5  44 out of 50 pts
+• 4 assignments in total (50% of your total grades) • Your higher scoring assignments have higher weights. 
+Assignment Weight Your best 20% Your 2nd best 15% Your 3rd best 10% Your 4th best 5% 
+Example: John Doe scores 70, 90, 80, 95 on the  four assignments, his assignment grade will be: 
+95 * 20% + 90 * 15% + 80 * 10% + 70 * 5% = 44 (out of 50 pts)
 Statistical NLP - CSE 156 17 
 Assignments - Format 
- Each assignment has both written and programming components  Written Questions 
- Must be typed. LaTex templates will be provided, but feel free to use alternatives  e.g., Word as long as your reports are clear and easy to read. 
+• Each assignment has both written and programming components • Written Questions 
+• Must be typed. LaTex templates will be provided, but feel free to use alternatives  (e.g., Word) as long as your reports are clear and easy to read. 
 We expect your responses to have  roughly the same formatting as the  provided instructions. 
 Statistical NLP - CSE 156 18 
 Assignments - Format 
- Each assignment has both written and programming components  Programming Questions 
- Implementing algorithms in Python on Google Colab  We'll provide starter code, but familiarity with Python is required. 
- We'll try to autograde programming assignments. Statistical NLP - CSE 156 19
+• Each assignment has both written and programming components • Programming Questions 
+• Implementing algorithms in Python on Google Colab • We'll provide starter code, but familiarity with Python is required. 
+• We'll try to autograde programming assignments. Statistical NLP - CSE 156 19
 
 Collaboration Policy 
- Each student is expected to submit their individual assignment. 
- You are encouraged to work in groups for your assignments, but you're expected to  acknowledge the names of collaborators along with a short description of the types  of collaborations being done, at the beginning of each assignment submission. 
- Once the discussion is done, you're expected to write up your assignment by  yourself. It's NOT allowed to complete the write-up of your assignment while  discussing with people note-taking is ok. 
- Copying or paraphrasing someone's work code included or permitting your own  work to be copied or paraphrased, even if only in part, is forbidden and will result in a  zero grade for the entire assignment in which the copying or paraphrasing was done. 
+• Each student is expected to submit their individual assignment. 
+• You are encouraged to work in groups for your assignments, but you're expected to  acknowledge the names of collaborators along with a short description of the types  of collaborations being done, at the beginning of each assignment submission. 
+• Once the discussion is done, you're expected to write up your assignment by  yourself. It's NOT allowed to complete the write-up of your assignment while  discussing with people (note-taking is ok). 
+• Copying or paraphrasing someone's work (code included) or permitting your own  work to be copied or paraphrased, even if only in part, is forbidden and will result in a  zero grade for the entire assignment in which the copying or paraphrasing was done. 
 Statistical NLP - CSE 156 20
 Discussion Session 
- Know WHAT it is, and WHY it is we will cover details, fundamental problems, possible alternatives, and mathematical  intuitions behind the established conventions, which unfortunately may not be covered in lectures due to time  constraints. Will be helpful for NLP industry job interviews. 
- Coding Tutorials we plan to have toyish demos or simulators for the concepts covered in lectures e.g. beam-search,  normalizations, as well as how to produce these learning aids with GPT  Claude  DeepSeeks v3  LLama etc.. 
- Assignment Problems we might provide guidance on the current assignment problems andor cover the hard  common  questions discovered during the past assignments. 
- Historical Context of NLP review the major milestones and evolutionary process of core NLP methodologies, as well as  LMs capabilities  industrial focus. 
- Industry News and Insight What industries like OpenAI, Meta, Nvidia, Microsoft, Apple, ByteDance, Baidu, Alibaba are  investigating and deploying. Particularly helpful for jobs seekers, investors, and startup entrepreneurs for NLP-related  directions. 
- Recent State-of-the-Arts NLP literatures extremely fast, and the SOTAs covered in lecture might be outdated next year.  Thus, we might also discuss the most recent research works. 
+• Know WHAT it is, and WHY it is: we will cover details, fundamental problems, possible alternatives, and mathematical  intuitions behind the “established conventions”, which unfortunately may not be covered in lectures due to time  constraints. Will be helpful for NLP industry job interviews. 
+• Coding Tutorials: we plan to have toyish demos or simulators for the concepts covered in lectures (e.g. beam-search,  normalizations…), as well as how to produce these learning aids with GPT / Claude / DeepSeeks v3 / LLama etc.. 
+• Assignment Problems: we might provide guidance on the current assignment problems and/or cover the hard / common  questions discovered during the past assignments. 
+• Historical Context of NLP: review the major milestones and evolutionary process of core NLP methodologies, as well as  LM’s capabilities & industrial focus. 
+• Industry News and Insight: What industries like OpenAI, Meta, Nvidia, Microsoft, Apple, ByteDance, Baidu, Alibaba are  investigating and deploying. Particularly helpful for jobs seekers, investors, and startup entrepreneurs for NLP-related  directions. 
+• Recent State-of-the-Arts: NLP literatures extremely fast, and the SOTAs covered in lecture might be outdated next year.  Thus, we might also discuss the most recent research works. 
 Statistical NLP - CSE 156 21
 Course Project 
- Three options for the course project 
- Option 1 Core NLP 
- Reproduce an existing paper or algorithm, or 
- Propose a new algorithm or model 
- Examples word embedding, tokenization, RAG, hallucination,  multimodal models, foundation models, model distillation... 
+• Three options for the course project: 
+• Option 1: Core NLP 
+• Reproduce an existing paper or algorithm, or 
+• Propose a new algorithm or model 
+• Examples: word embedding, tokenization, RAG, hallucination,  multimodal models, foundation models, model distillation... 
 Statistical NLP - CSE 156 22
 Course Project 
- Three options for the course project 
- Option 2 Applied NLP  Interdisciplinary Project  
- Apply core NLP techniques to solve specific NLP downstream tasks, or  assists research problems from other disciplines. 
- Examples social computing, NLP for social media, digital humanity, story generation, narrative analysis, NLP for politics... 
+• Three options for the course project: 
+• Option 2: Applied NLP / Interdisciplinary Project  
+• Apply core NLP techniques to solve specific NLP downstream tasks, or  assists research problems from other disciplines. 
+• Examples: social computing, NLP for social media, digital humanity, story generation, narrative analysis, NLP for politics... 
 Statistical NLP - CSE 156 23
 Course Project 
- Three options for the course project 
- Option 3 Product  Startup 
- Build something cool, useful, so that it is useful for people, and try your best  to have people buy it.  
- Examples AI Waifu, LLM game engine, real-time translator, customer  service, multi-participant meeting note-taker, product hunter, intelligent  second brain better obsidian... 
- Come to discussion! We might discuss cool ideas there.  
+• Three options for the course project: 
+• Option 3: Product / Startup 
+• Build something cool, useful, so that it is useful for people, and try your best  to have people buy it.  
+• Examples: AI Waifu, LLM game engine, real-time translator, customer  service, multi-participant meeting note-taker, product hunter, intelligent  second brain (better obsidian)... 
+• Come to discussion! We might discuss cool ideas there.  
 Statistical NLP - CSE 156 24
 Course Project - Timeline 
- Team formation 1 Jan 23 Week 3 Thursday 
- Teams should consist of 35 members. We will merge smaller teams.  Project Topic and Proposal 5 Feb 2 Week 4 Sunday  1-2 page excluding references 
- Midway report 10 Feb 20 Week 7 Thursday 
- Final report 24 Mar 20 Final Week Thursday 
- 4-6 pages excluding references  
-All reports should use NeurIPS template.  The instructions will be released soon.
+• Team formation (1%): Jan 23 (Week 3 Thursday) 
+• Teams should consist of 3–5 members. We will merge smaller teams. • Project Topic and Proposal (5%): Feb 2 (Week 4 Sunday) • 1-2 page excluding references 
+• Midway report (10%): Feb 20 (Week 7 Thursday) 
+• Final report (24%): Mar 20 (Final Week Thursday) 
+• 4-6 pages excluding references  
+*All reports should use NeurIPS template.  The instructions will be released soon.
 Statistical NLP - CSE 156 25 
 Participation 
- Course participation 10 
- You are encouraged to attend all lectures! 
- Participation will be tracked from the 3rd week for 16 class sessions after the adddrop period  10 points for attending at least 13 lectures you can miss 3 lectures 
- 8 for at least 11 lectures 
- 5 for at least 8 lectures 
- 0 for attending less than 8 lectures 
- We also encourage you to attend discussion sessions and you can earn 3 extra credits on the total  grade by attending 7 or more! 
+• Course participation (10%) 
+• You are encouraged to attend all lectures! 
+• Participation will be tracked from the 3rd week for 16 class sessions after the add/drop period • 10 points for attending at least 13 lectures (you can miss 3 lectures) 
+• 8 for at least 11 lectures 
+• 5 for at least 8 lectures 
+• 0 for attending less than 8 lectures 
+• We also encourage you to attend discussion sessions and you can earn 3% extra credits (on the total  grade) by attending 7 or more! 
 Statistical NLP - CSE 156 26
 Prerequisites  
- We would expect you to have decent foundations in probability and  statistics CSE 103 or equivalence, and strongly recommend background  with linear algebra, deep learning, andor machine learning.  
- You're also expected to develop the ability to program comfortably with  Python and using PyTorch through the course. We will have tutorial  sessions for these. 
- If you're unsure about whether your background prepare you well in the  class, please consult the course staff during the first week of the class. We  are here to help  
-Some great tutorial notebooks available online Stanford CS224N, UW CS447517
+• We would expect you to have decent foundations in probability and  statistics (CSE 103 or equivalence), and strongly recommend background  with linear algebra, deep learning, and/or machine learning.  
+• You're also expected to develop the ability to program comfortably with  Python and using PyTorch through the course. We will have tutorial  sessions for these. 
+• If you're unsure about whether your background prepare you well in the  class, please consult the course staff during the first week of the class. We  are here to help :) 
+*Some great tutorial notebooks available online: Stanford CS224N, UW CS447/517
 Statistical NLP - CSE 156 27 
 Academic Integrity 
- Students should follow their responsibilities listed in the CSE Academic  Integrity Agreement 
- Students are expected to not consulting online solutions or  
+• Students should follow their responsibilities listed in the CSE Academic  Integrity Agreement 
+• Students are expected to not consulting online solutions or  
 implementations, or engaging in unauthorized collaboration with peers on  the course project.  
- We may use automated systems to detect overly similar submissions, and  any suspected violations of academic integrity will be addressed in line  with UCSD's academic integrity policies. 
+• We may use automated systems to detect overly similar submissions, and  any suspected violations of academic integrity will be addressed in line  with UCSD's academic integrity policies. 
 Statistical NLP - CSE 156 28
 Generative AI Policy 
- You may use generative AI tools such as ChatGPT in the same manner as  you would consult a human collaborator. This means you are not allowed  to directly request answers or copy solutions from these tools.  
- You must also acknowledge the use of generative AI by specifying it as a  collaborator and providing a brief explanation of its use.  
- Any substantial use of generative AI tools, such as directly copying its  generated content, is strictly prohibited and will be considered as a  violation of academic integrity. 
+• You may use generative AI tools such as ChatGPT in the same manner as  you would consult a human collaborator. This means you are not allowed  to directly request answers or copy solutions from these tools.  
+• You must also acknowledge the use of generative AI by specifying it as a  collaborator and providing a brief explanation of its use.  
+• Any substantial use of generative AI tools, such as directly copying its  generated content, is strictly prohibited and will be considered as a  violation of academic integrity. 
 Statistical NLP - CSE 156 29
 Accommodations and Inclusion 
- Accommodations 
- If you have a disability and have received an accommodations letter from the Office for  Students with Disabilities OSD, we encourage you to discuss your accommodations and  needs with the course staff at the beginning of the quarter. We are committed to working  with you to ensure that the necessary accommodations are provided. 
- All students welcome 
- We are committed to promoting equity and creating an inclusive learning environment at  UCSD. We also deeply value the diverse identities, backgrounds, and experiences of all  participants. We understand that there might be instances where we fall short. If you  recognize any of these, please feel free to reach out to the course staff. Your feedback is  crucial to our ongoing efforts on fostering a more supportive and equitable learning  environment! 
+• Accommodations 
+• If you have a disability and have received an accommodations letter from the Office for  Students with Disabilities (OSD), we encourage you to discuss your accommodations and  needs with the course staff at the beginning of the quarter. We are committed to working  with you to ensure that the necessary accommodations are provided. 
+• All students welcome 
+• We are committed to promoting equity and creating an inclusive learning environment at  UCSD. We also deeply value the diverse identities, backgrounds, and experiences of all  participants. We understand that there might be instances where we fall short. If you  recognize any of these, please feel free to reach out to the course staff. Your feedback is  crucial to our ongoing efforts on fostering a more supportive and equitable learning  environment! 
 Statistical NLP - CSE 156 30
 The Era of LLMs 31
- Large language models LLMs are large scale neural networks that are pre-trained  on vast amounts of text data. 
- They can potentially perform a wide range  of language tasks such as recognizing,  summarizing, translating, predicting,  classifying, and generating texts. 
- LLMs are built with the Transformer architecture. 
- From several millions to hundreds of  billions of parameters. 
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
+• Large language models (LLMs) are large scale neural networks that are pre-trained  on vast amounts of text data. 
+• They can potentially perform a wide range  of language tasks such as recognizing,  summarizing, translating, predicting,  classifying, and generating texts. 
+• LLMs are built with the Transformer architecture. 
+• From several millions to hundreds of  billions of parameters. 
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
 History of NLP Research 
-httpsarxiv.orgabs2310.07715 
+https://arxiv.org/abs/2310.07715 
 32
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
 Bloom of NLP with LLMs 
 33
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
 Bloom of NLP with LLMs 34
 
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
 Why are LLMs revolutionary? 
 Enabled seemingly impossible possibilities 
- Generate texts beyond average human writing ability 
- Demonstrate human-like complex reasoning  understanding patterns 
- Versatile on many language tasks altogether 
- Unprecedented crossover with society  other fields 
- Sparks of AGI 
-  
-Natural Language Processing - CSE 156 35 Lecture 1 Introduction
-Text Generation  Automation 
- Conversation 
- Recommendation letter 
- Poetry 
- Essay 
- Translation 
- Scientific paper 
- News article 
- Email 
- Murder mystery story 
- Shopping list 
-  
+• Generate texts beyond average human writing ability 
+• Demonstrate human-like complex reasoning & understanding patterns 
+• Versatile on many language tasks altogether 
+• Unprecedented crossover with society & other fields 
+• “Sparks of AGI” 
+• … 
+Natural Language Processing - CSE 156 35 Lecture 1: Introduction
+Text Generation & Automation 
+• Conversation 
+• Recommendation letter 
+• Poetry 
+• Essay 
+• Translation 
+• Scientific paper 
+• News article 
+• Email 
+• Murder mystery story 
+• Shopping list 
+• … 
 36
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
-Code Generation  Debugging 
-Natural Language Processing - CSE 156 37 Lecture 1 Introduction
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
+Code Generation & Debugging 
+Natural Language Processing - CSE 156 37 Lecture 1: Introduction
 LLM-Powered Search Engine 
 
-Natural Language Processing - CSE 156 38 Lecture 1 Introduction
+Natural Language Processing - CSE 156 38 Lecture 1: Introduction
 LLM-Powered Intelligent Agents 
 39
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
 LLMs for Scientific Discovery 
-Natural Language Processing - CSE 156 40 Lecture 1 Introduction
-LLMs for Medical Research  Diagnoses Natural Language Processing - CSE 156 41 Lecture 1 Introduction
-LLMs for Law  Legal Usages 
-Natural Language Processing - CSE 156 42 Lecture 1 Introduction
+Natural Language Processing - CSE 156 40 Lecture 1: Introduction
+LLMs for Medical Research & Diagnoses Natural Language Processing - CSE 156 41 Lecture 1: Introduction
+LLMs for Law & Legal Usages 
+Natural Language Processing - CSE 156 42 Lecture 1: Introduction
 Vision 
 Language  
 Applications 
- Google collage  
-by The Verge 
+—— Google (collage  
+by The Verge) 
 43
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
 Vision-Language Applications 
 More fictional images! 
-An expressive oil painting of a  
+“An expressive oil painting of a  
 basketball player dunking,  
 depicted as an explosion of a  
-nebula.  DALLE 3 
+nebula.” —— DALL·E 3 
 44
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
 Vision-Language Applications 
 Complex fictional scenes that  
 demand a profound grasp of the  
 language context. 
 
- DALLE 3 
+—— DALL·E 3 
 45
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
-OpenAI O1  the strongest reasoning model 
-OpenAI In our tests, the next model  
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
+OpenAI O1 — the strongest reasoning model 
+OpenAI: In our tests, the next model  
 update performs similarly to PhD  
 students on challenging benchmark  
 tasks in physics, chemistry, and biology. 
 For the International Mathematics  
-Olympiad IMO, the reasoning model  
-scored 83. Their coding abilities were  
+Olympiad (IMO), the reasoning model  
+scored 83%. Their coding abilities were  
 evaluated in contests and reached the  
-89 in Codeforces competitions. 
+89% in Codeforces competitions. 
 46
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
 Surprising Failure Modes of LLMs 
 47
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
 Generative AI Paradox 
 
 
-Natural Language Processing - CSE 156 48 Lecture 1 Introduction
+Natural Language Processing - CSE 156 48 Lecture 1: Introduction
 Weird Conversations 
 
-Natural Language Processing - CSE 156 49 Lecture 1 Introduction
+Natural Language Processing - CSE 156 49 Lecture 1: Introduction
 Hallucination 
 
-httpsgithub.comgiuven95chatgpt-failures 
+https://github.com/giuven95/chatgpt-failures 
 50
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
 Privacy and Security Risks 
-Natural Language Processing - CSE 156 51 Lecture 1 Introduction
+Natural Language Processing - CSE 156 51 Lecture 1: Introduction
 Scientific Claims Fabrication 
 
 52
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
-Intellectual Property Infringement Natural Language Processing - CSE 156 53 Lecture 1 Introduction
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
+Intellectual Property Infringement Natural Language Processing - CSE 156 53 Lecture 1: Introduction
 Topics to Cover in This Course 
 Basics of Large Language Models 
-Language Models Transformers, Attention, Pre 
+Language Models: Transformers, Attention, Pre 
 training 
-World Model Video Generation, Game simulator,  
+World Model: Video Generation, Game simulator,  
 Agent 
-Prompting CoT, Role Play, Tool Use, Prompt Search,  
+Prompting: CoT, Role Play, Tool Use, Prompt Search,  
 Structural Prompting 
 54
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
 Topics to Cover in This Course 
 Making Better Language Models 
-Natural Language Generation NLG Formalization,  
+Natural Language Generation: NLG Formalization,  
 Decoding Algorithms, Training NLG, Evaluating NLG  
-Automatic and Human 
-Alignment RL Basics, RLHF for LMs, Instruction  
-Learning, Data Collection for RL, PPODPO,  
-Emergent Capabilities In-context Learning, Scaling  
-Laws, Emergent Capabilities, Reasoning,  
+(Automatic and Human) 
+Alignment: RL Basics, RLHF for LMs, Instruction  
+Learning, Data Collection for RL, PPO/DPO, … 
+Emergent Capabilities: In-context Learning, Scaling  
+Laws, Emergent Capabilities, Reasoning, … 
 55
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
 Topics to Cover in This Course Making Better Language Models 
-Multi-modality Vision-Language Understanding,  
+Multi-modality: Vision-Language Understanding,  
 CLIP, Visual Instruction-Tuning with LLMs, Text to  
-Image Generation, Embodiment, Robotics,  
-Retrieval Retrieval-based LMs Architecture, Training,  
-Applications, Promises and Challenges Retrieval 
-httpai.stanford.edublogretrieval-based-NLP 
-Augmented Generation Parametric and Non Parametric Memories,  
+Image Generation, Embodiment, Robotics, … 
+Retrieval: Retrieval-based LMs Architecture, Training,  
+Applications, Promises and Challenges; Retrieval 
+http://ai.stanford.edu/blog/retrieval-based-NLP/ 
+Augmented Generation; Parametric and Non Parametric Memories, … 
 56
-Natural Language Processing - CSE 156 Lecture 1 Introduction 
+Natural Language Processing - CSE 156 Lecture 1: Introduction 
 Many forms of LLM Reasoning
-Natural Language Processing - CSE 156 57 Lecture 1 Introduction 
+Natural Language Processing - CSE 156 57 Lecture 1: Introduction 
 LLM Reasoning in Science
-Natural Language Processing - CSE 156 58 Lecture 1 Introduction 
-Learning Goals of the Course  
-Whats youll gain by the end of the class? 
- A decent understanding of basic conceptual and technical details of the building  blocks of frontier LLMs. 
- A close understanding of the promises and limits of the abilities of existing frontier  LLMs. 
- A clearer picture of the cutting-edge NLP research areas, and scientific impact of LLMs. Natural Language Processing - CSE 156 59 Lecture 1 Introduction
+Natural Language Processing - CSE 156 58 Lecture 1: Introduction 
+Learning Goals of the Course / 
+What’s you’ll gain by the end of the class? 
+• A decent understanding of basic conceptual and technical details of the building  blocks of frontier LLMs. 
+• A close understanding of the promises and limits of the abilities of existing frontier  LLMs. 
+• A clearer picture of the cutting-edge NLP research areas, and scientific impact of LLMs. Natural Language Processing - CSE 156 59 Lecture 1: Introduction
 Thank you! 60

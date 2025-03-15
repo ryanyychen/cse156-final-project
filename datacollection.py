@@ -3,6 +3,7 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 import re
 import time
+import os
 
 SCOPES = ['https://www.googleapis.com/auth/documents.readonly']
 
@@ -25,9 +26,11 @@ def extract_all_text_from_google_doc(doc_id):
     return ''.join(text_content)
 
 def savetxt(title, text):
-    clean = re.sub(r'[^a-zA-Z0-9\s.,!?\'"-]', '', text)
-    with open(title, 'w', encoding='utf-8') as file:
-        file.write(clean)
+    folder = "lectureslides"
+    os.makedirs(folder, exist_ok=True)
+    file_path = os.path.join(folder, title)
+    with open(file_path, 'w', encoding='utf-8') as file:
+        file.write(text)
 
 for i in range(1, len(doc_id)+1):
     doc_text = extract_all_text_from_google_doc(doc_id[i-1])
