@@ -21,6 +21,7 @@ Make sure you have in your `.env` file an API key to Qdrant under the variable n
 ### Initializing the Qdrant database
 - Put all `txt` files you wish to add as context in the `documents` directory.
 - Then run the cell titled `Main` to process all files and upload them to the vector database.
+- You may change `recreate=False` if you already have all documents uploaded to the vector database. In this case, make sure to also comment out the loop which uploads all of the files in `documents`.
 
 ### Querying the Qdrant database
 - You can change the query by editing the string
