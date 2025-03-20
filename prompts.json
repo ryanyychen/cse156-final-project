@@ -1,0 +1,102 @@
+[
+    {
+        "question": "List the advantages of pre-training and fine-tuning.",
+        "answer": "Applying pre-training and fine-tuning leverages underlying information, reduces reliance on task-specific labeled data, initializes model parameters for more generalizable NLP applications, saves training costs, and provides robust representation of language contexts.",
+        "context": "Lecture 8 slide 39"
+    },
+    {
+        "question": "List measures of fit used to evaluate language models.",
+        "answer": "Likelihood, (negative) log likelihood, and perplexity are measures of fit for evaluating LMs.",
+        "context": "Lecture 3 slide 15"
+    },
+    {
+        "question": "What are convolutional neural networks?",
+        "answer": "CNNs are models that extract spatial and temporal features from images using convolution operations, with pooling layers reducing dimensionality for computational efficiency.",
+        "context": "Lecture 16 slide 10"
+    },
+    {
+        "question": "What is the attention method?",
+        "answer": "The attention method looks at all input tokens at the same time to decide which ones are the most important to decide the next token. This method treats each token's representation as a query to select information from a set of values.",
+        "context": "Lecture 5 slides 45-46"
+    },
+    {
+        "question": "What is needed to achieve a more general world model for simulative reasoning?",
+        "answer": "A more general world model requires integrating different spaces for simulation/reasoning, generalist language and vision capabilities, and real-time control of the simulation through action inputs.",
+        "context": "Guest lecture 1 slide 51"
+    },
+    {
+        "question": "What are the pros and cons of the encoder-decoder approach?",
+        "answer": "The encoder-decoder approach balances bidirectional context use and open-text generation, making it effective for multi-task fine-tuning. However, it requires more text wrangling, is harder to train, and is less flexible for natural language generation.",
+        "context": "Lecture 8 slide 67"
+    },
+    {
+        "question": "What is add-one estimation?",
+        "answer": "Add-one estimation, which is also called Laplace smoothing, smooths probability calculations by adding one to all frequency counts.",
+        "context": "Lecture 2 slide 64"
+    },
+    {
+        "question": "What are the traits of high-quality pre-training data, and where can it be found?",
+        "answer": "High-quality pre-training data is natural, clean, informative, and diverse, and can be found in sources such as books, Wikipedia, news, and scientific papers.",
+        "context": "Lecture 6 slide 88"
+    },
+    {
+        "question": "Can you explain what tokenization means?",
+        "answer": "Tokenization is the process of splitting large chunks of text into smaller pieces called tokens.",
+        "context": "Lecture 3 slide 28"
+    },
+    {
+        "question": "Why do LLMs need to use tools, and what do they use them for?",
+        "answer": "LLMs use tools to aid with tasks beyond their ability. They mainly use tools for knowledge, symbolic, and external environment operations.",
+        "context": "Lecture 10 slide 32"
+    },
+    {
+        "question": "How much of my grade is based on participation?",
+        "answer": "10% of your grade is determined by course participation/attendance, plus 3% extra credit for attending discussions.",
+        "context": "Lecture 1 slide 15"
+    },
+    {
+        "question": "Define ReAct prompting.",
+        "answer": "ReAct prompting enables language models to generate reasoning traces and task-specific actions in an interleaved manner, improving interpretability and mitigating errors.",
+        "context": "Lecture 10 slide 17"
+    },
+    {
+        "question": "What are content overlap metrics, and what are their strengths and weaknesses?",
+        "answer": "Content overlap metrics involve computing a similarity score between generated and gold-standard text. They are fast and efficient to calculate, but are not ideal for open-ended tasks and they have no concept of semantic relatedness.",
+        "context": "Lecture 13 slides 78-80"
+    },
+    {
+        "question": "What is an n-gram model?",
+        "answer": "An n-gram model is a language model that determines the probability of a word from the previous n-1 words.",
+        "context": "Lecture 2 slide 43"
+    },
+    {
+        "question": "What are the problems with human evaluations?",
+        "answer": "Human evaluations are slow, expensive, inconsistent, irreproducible, and sometimes illogical, with risks of misinterpretation and potential reliance on LLMs by crowd workers.",
+        "context": "Lecture 14 slide 20"
+    },
+    {
+        "question": "What is layer normalization, and how does it work?",
+        "answer": "Layer normalization is a trick to help models learn faster by normalizing to unit mean and standard deviation in each layer, then modulating by learned parameters.",
+        "context": "Lecture 6 slide 71"
+    },
+    {
+        "question": "Tell me the pros and cons of one-hot encoding.",
+        "answer": "One-hot encoding creates sparse representations without requiring learning, but the feature space must be the same size as the vocabulary and there is no way to encode shared representations of words.",
+        "context": "Lecture 4 slide 36"
+    },
+    {
+        "question": "What is prompt-tuning?",
+        "answer": "Prompt-tuning is contemporaneous work to pre-tuning, where a single \"soft prompt\" representation is prepended to the embedded input on the encoder side.",
+        "context": "Lecture 8 slide 46"
+    },
+    {
+        "question": "What is the time complexity of beam search?",
+        "answer": "The time complexity of beam search is O(beam width * vocab size * generation length).",
+        "context": "Lecture 12 slide 21"
+    },
+    {
+        "question": "What are the advantages and applications of persona-based prompting?",
+        "answer": "Persona-based prompting increases engagement and provides context-aware responses, with applications in recommendation systems, customer support, and specialized domains like medicine and law.",
+        "context": "Lecture 11 slide 11"
+    }
+]

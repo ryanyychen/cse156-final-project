@@ -1,0 +1,314 @@
+,question,retrieval_type,llm,response
+0,List the advantages of pre-training and fine-tuning.,hybrid,t5,CSE 156 NLP 38 Pretraining Advantages of Pre-training & Fine-tuning
+1,List the advantages of pre-training and fine-tuning.,sparse,t5,Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Answer this: List the advantages of pre-training and fine-tuning.
+2,List the advantages of pre-training and fine-tuning.,dense,t5,CSE 156 NLP 38 Pretraining Advantages of Pre-training & Fine-tuning • Leveraging rich underlying information from abundant raw texts
+3,List the advantages of pre-training and fine-tuning.,bm25,t5,CSE 156 NLP 38 Pretraining Advantages of Pre-training & Fine-tuning • Leveraging rich underlying information from abundant raw texts. • Advantages • Reduces the likelihood of incorrect information or hallucinations in the final output. • Advantages • Reduces the likelihood of incorrect information or hallucinations in the final output. • Advantages • Reduces the likelihood of incorrect information or hallucinations in the final output. Lecture 10 DSC 190: Machine Learning with Few Labels Pretraining Pre
+4,List the advantages of pre-training and fine-tuning.,hybrid,gemini,"Leveraging rich underlying information from abundant raw texts.
+"
+5,List the advantages of pre-training and fine-tuning.,sparse,gemini,"The provided text does not list the advantages of pre-training and fine-tuning. It repeats a question about aligning LLMs with supervised fine-tuning (SFT) and mentions Proximal Policy Optimization (PPO) as a potential method, followed by the expression ""Whaaat?"".  The final line asks for the advantages, but they are not given.
+"
+6,List the advantages of pre-training and fine-tuning.,dense,gemini,"Leveraging rich underlying information from abundant raw texts.
+"
+7,List the advantages of pre-training and fine-tuning.,bm25,gemini,"* Leverages rich underlying information from abundant raw texts.
+* Reduces the likelihood of incorrect information or hallucinations in the final output.
+"
+8,List measures of fit used to evaluate language models.,hybrid,t5,"R Problem: Estimate a probability distribution such that X s2V p(s) = 1; 8s 2 V, p(s) 0 CSE 156 NLP 35 Language Modeling and N-Grams"
+9,List measures of fit used to evaluate language models.,sparse,t5,Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat
+10,List measures of fit used to evaluate language models.,dense,t5,"X s2V p(s) = 1; 8s 2 V, p(s) 0 CSE 156 NLP 35 Language Modeling and N-Grams"
+11,List measures of fit used to evaluate language models.,bm25,t5,"Claude Shannon • Want to assign high probability to observed words 48 CSE 156 NLP Language Modeling and N-Grams Language Model Evaluation Would like to understand how the LM perform on unseen text General Approach: • Take a training set and a test set D D0 • Fit a model (e.g., n-gram) on training set M D • Evaluate the model on unseen test set D0 M D0 • We care about performance of on not because it is special in any"
+12,List measures of fit used to evaluate language models.,hybrid,gemini,"Log likelihood.
+"
+13,List measures of fit used to evaluate language models.,sparse,gemini,"The provided text does not list any measures of fit used to evaluate language models. It defines language models and repeats ""Proximal Policy Optimization (PPO)"" and a question about it, then asks about aligning LLMs with supervised fine-tuning.  It does *not* answer the question it poses, nor does it provide any information about evaluating language models.
+"
+14,List measures of fit used to evaluate language models.,dense,gemini,"The measures of fit used to evaluate language models mentioned in the text are:
+
+* **Likelihood:** The probability of the data under the model (pM(D0)).
+* **Log Likelihood:** The log of the probability of the data with respect to the model (log(pM(D0))).
+* **Negative Log Likelihood:** -log(pM(D0))
+* **Perplexity:** Inverse probability of the data, normalized by the number of words (or tokens) (PM(D0) := pM(D0)^(1/N)).
+"
+15,List measures of fit used to evaluate language models.,bm25,gemini,"* **Likelihood:** Probability of the data under the model (pM(D0)).
+* **Log Likelihood:** Log of the probability of the data with respect to the model (log(pM(D0))).
+* **Negative Log Likelihood:** -log(pM(D0))
+* **Perplexity:** Inverse probability of the data, normalized by the number of words or tokens (PM(D0) := pM(D0)^(1/N)).  A lower perplexity indicates better model fit as it corresponds to a higher probability assigned to observed words.
+* **Cross-entropy loss:** Measures prediction accuracy. (Not mentioned in the CSE 156 NLP excerpts, but introduced by the prompt's concluding sentence.)
+"
+16,What are convolutional neural networks?,hybrid,t5,CSE 156 NLP 9 Multimodality Vision Encoder: Convolutional Neural Networks • CNNs: Extract features that encode spatial and temporal relationships in image with convolution operations
+17,What are convolutional neural networks?,sparse,t5,Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Direct Preference Optim (DPO) Personalization! Direct Preference Optim (DPO) Personalization! Answer this: What are convolutional neural networks?
+18,What are convolutional neural networks?,dense,t5,Statistical NLP - CSE 156 7 The Era of LLMs 8 • Large language models (LLMs) are large scale neural networks that are pre-trained on vast amounts of text data
+19,What are convolutional neural networks?,bm25,t5,CSE 156 NLP 9 Multimodality Vision Encoder: Convolutional Neural Networks • CNNs: Extract features that encode spatial and temporal relationships in image with convolution operations
+20,What are convolutional neural networks?,hybrid,gemini,"Convolutional Neural Networks (CNNs) extract features that encode spatial and temporal relationships in images using convolution operations.
+"
+21,What are convolutional neural networks?,sparse,gemini,"This document does not contain the answer to what convolutional neural networks are.  It only mentions Proximal Policy Optimization (PPO) and Direct Preference Optimization (DPO), along with their associated domains (task/domain and personalization, respectively).
+"
+22,What are convolutional neural networks?,dense,gemini,"CNNs extract features that encode spatial and temporal relationships in images with convolution operations.
+"
+23,What are convolutional neural networks?,bm25,gemini,"CNNs extract features that encode spatial and temporal relationships in images with convolution operations.  They produce an output the same size as the vocabulary, |V|.
+"
+24,What is the attention method?,hybrid,t5,"CSE 156 NLP 24 Transformer Attention as a soft, averaging lookup table"
+25,What is the attention method?,sparse,t5,Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Direct Preference Optim (DPO) Personalization! Answer this: What is the attention method?
+26,What is the attention method?,dense,t5,"CSE 156 NLP 24 Transformer Attention as a soft, averaging lookup table"
+27,What is the attention method?,bm25,t5,WQ a1 WK a4 Method 1 (most common): Dot product Method 2: Additive 7 CSE 156 NLP Transformer How to compute?
+28,What is the attention method?,hybrid,gemini,"Attention can be thought of as a soft, averaging lookup table, performing fuzzy lookup in a key-value store. It treats each token’s representation as a query to access and incorporate information from a set of values.
+"
+29,What is the attention method?,sparse,gemini,"This text doesn't define or explain the attention method. It only mentions language models, Proximal Policy Optimization (PPO), and Direct Preference Optimization (DPO). 
+"
+30,What is the attention method?,dense,gemini,"The attention method is described as a ""soft, averaging lookup table"" that performs ""fuzzy lookup in a key-value store."" It treats each token's representation as a query to access and incorporate information from a set of values.  The context also mentions ""Multi-head Attention"" but doesn't define it beyond stating its computational efficiency.
+"
+31,What is the attention method?,bm25,gemini,"This text doesn't describe anything being thrown. It discusses computing α, alignment of LLMs, funny output, and attention methods.  It also includes what appear to be chess notation (WQ a1, WK a4) but these moves don't involve throwing.
+"
+32,What is needed to achieve a more general world model for simulative reasoning?,hybrid,t5,"... Choose one out of 3 options Wake up with violent stomach aches... 33 Outline of this talk Constraints Cause-Effect Logic COLD Decoding Steering machine reasoning to satisfy constraints Many forms of reasoning Unified framework with energy-based modeling COLD Decoding: Energy-based constrained text generation with langevin dynamics [Qin et al., NeurIPS 2022] Oral 34 Outline of this talk Constraints Cause-Effect Logic Maieutic Prompting"
+33,What is needed to achieve a more general world model for simulative reasoning?,sparse,t5,Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat
+34,What is needed to achieve a more general world model for simulative reasoning?,dense,t5,LM reasoning is often inconsistent Claim Verification One is a number that comes after zero
+35,What is needed to achieve a more general world model for simulative reasoning?,bm25,t5,STOP Large Model Reasoning - CSE 291 71 Lecture 2: Basic of Language Model What is a Language Model? Large Model Reasoning - CSE 291 73 Lecture 2: Basic of Language Model What are language models useful for?  Directly fine-tune open-source models with high-quality reasoning data can achieve huge improvement against zero-shot inferences
+36,What is needed to achieve a more general world model for simulative reasoning?,hybrid,gemini,"Choose one out of 3 options.
+"
+37,What is needed to achieve a more general world model for simulative reasoning?,sparse,gemini,"This text doesn't provide an answer to what is needed to achieve a more general world model for simulative reasoning. It repeats ""Proximal Policy Optimization (PPO)"", ""Task/Domain"", and ""Whaaat?"" but offers no information about them or their relationship to world models or simulative reasoning. It defines language models and mentions supervised fine-tuning, but not in the context of the question posed.
+"
+38,What is needed to achieve a more general world model for simulative reasoning?,dense,gemini,"Choose one out of 3 options.
+"
+39,What is needed to achieve a more general world model for simulative reasoning?,bm25,gemini,"High-quality reasoning data is needed to improve zero-shot inferences.
+"
+40,What are the pros and cons of the encoder-decoder approach?,hybrid,t5,• Base (222M) • Small (60M) • Large (770M) • 3B • 11B • Achieved SOTA with scaling & purity of data [Google Blog] CSE 156 NLP 33 Pretraining Encoder-Decoder: Pros & Cons • A nice middle ground between leveraging bidirectional contexts and open-text generation • Good for multi-task fine-tuning • Require more text wrangling • Harder to train • Less flexible for natural
+41,What are the pros and cons of the encoder-decoder approach?,sparse,t5,Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat
+42,What are the pros and cons of the encoder-decoder approach?,dense,t5,",wt1 • The encoder portion benefits from bidirectional context; the decoder portion is used to train the whole model through language modeling h1,.,wt1 • A nice middle ground between leveraging bidirectional contexts and open-text generation • Good for multi-task fine-tuning • Harder to train • Less flexible for natural language generation CSE 156 NLP 34 Pretraining 3 Pre-training Paradigms/Architectures Encoder • Bidirectional"
+43,What are the pros and cons of the encoder-decoder approach?,bm25,t5,Various Sized Models: • Base (222M) • Small (60M) • Large (770M) • 3B • 11B • Achieved SOTA with scaling & purity of data [Google Blog]
+44,What are the pros and cons of the encoder-decoder approach?,hybrid,gemini,"Pros:
+
+* A nice middle ground between leveraging bidirectional contexts and open-text generation.
+* Good for multi-task fine-tuning.
+
+Cons:
+
+* Require more text wrangling.
+* Harder to train.
+* Less flexible for natural language generation.
+"
+45,What are the pros and cons of the encoder-decoder approach?,sparse,gemini,"This text doesn't offer any information about the pros and cons of the encoder-decoder approach. It repeatedly mentions Proximal Policy Optimization (PPO) and Supervised Fine-Tuning (SFT) but doesn't discuss encoder-decoders.  Therefore, I cannot answer your question based on the provided context.
+"
+46,What are the pros and cons of the encoder-decoder approach?,dense,gemini,"Pros:
+
+* A nice middle ground between leveraging bidirectional contexts and open-text generation.
+* Good for multi-task fine-tuning.
+
+Cons:
+
+* Require more text wrangling.
+* Harder to train.
+* Less flexible for natural language generation.
+"
+47,What are the pros and cons of the encoder-decoder approach?,bm25,gemini,"Pros:
+
+* A nice middle ground between leveraging bidirectional contexts and open-text generation.
+* Good for multi-task fine-tuning.
+
+Cons:
+
+* Require more text wrangling.
+* Harder to train.
+* Less flexible for natural language generation.
+"
+48,What is add-one estimation?,hybrid,t5,"20 claims charges benefits motion CSE 156 NLP Language Modeling and N-Grams Add-one estimation • Also called Laplace smoothing • Pretend that we saw each word one more time than we did • Just add one to all the counts! 1 + 2 + 3 = 1 and 1, 2, 3 0 • Often works better than Add-K for several reasons: • Can flexibly include multiple back-off contexts • Good ways of learning the mixture weights with EM (later) • Not entirely clear"
+49,What is add-one estimation?,sparse,t5,=1=1(  )2 R •Let
+50,What is add-one estimation?,dense,t5,"20 claims charges benefits motion CSE 156 NLP Language Modeling and N-Grams Add-one estimation • Also called Laplace smoothing • Pretend that we saw each word one more time than we did • Just add one to all the counts! 1 + 2 + 3 = 1 and 1, 2, 3 0 • Often works better than Add-K for several reasons: • Can flexibly include multiple back-off contexts • Good ways of learning the mixture weights with EM (later) • Not entirely clear"
+51,What is add-one estimation?,bm25,t5,63 claims charges benefits motion CSE 156 NLP Language Modeling and N-Grams Add-one estimation • Also called Laplace smoothing • Pretend that we saw each word one more time than we did • Just add one to all the counts! 20 claims charges benefits motion CSE 156 NLP Language Modeling and N-Grams Add-one estimation • Also called Laplace smoothing • Pretend that we saw each word one more time than we did • Just add one to all the counts!
+52,What is add-one estimation?,hybrid,gemini,"Add-one estimation, also called Laplace smoothing, pretends that we saw each word one more time than we did by adding one to all the counts.
+"
+53,What is add-one estimation?,sparse,gemini,"This text doesn't define ""add-one estimation"". It describes formulas for standard deviation and mean, and a nested function yˆ, but doesn't mention add-one estimation.  Therefore, based on the provided text, it's impossible to answer what add-one estimation is.
+"
+54,What is add-one estimation?,dense,gemini,"Add-one estimation, also called Laplace smoothing, pretends that we saw each word one more time than we did; adding one to all the counts.
+"
+55,What is add-one estimation?,bm25,gemini,"Add-one estimation, also called Laplace smoothing, pretends we saw each word one more time than we did, adding one to all the counts.
+"
+56,"What are the traits of high-quality pre-training data, and where can it be found?",hybrid,t5,"Lecture 10 CSE 156 NLP 34 Pretraining Pre-training Data • The diversity of pre-training data matters Zhao et al. CSE 156 NLP 27 Pretraining Pre-training Data • Web data is plentiful, but can be challenging to work with"
+57,"What are the traits of high-quality pre-training data, and where can it be found?",sparse,t5,Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat
+58,"What are the traits of high-quality pre-training data, and where can it be found?",dense,t5,"Lecture 10 CSE 156 NLP 34 Pretraining Pre-training Data • The diversity of pre-training data matters Zhao et al. CSE 156 NLP 27 Pretraining Pre-training Data • Web data is plentiful, but can be challenging to work with. Lecture 10 CSE 156 NLP 5 Pretraining Pre-training Data • Web data is plentiful, but can be challenging to work with. Lecture 10 CSE 156 NLP 26 Pretraining Pre-training Data • Web data is plentiful, but can be challenging to work"
+59,"What are the traits of high-quality pre-training data, and where can it be found?",bm25,t5,"Clouds are composed of tiny water droplet CSE 156 NLP 4 Pretraining Pre-training Data • Ideally, we want high-quality data for pre-training. GLM-4 (Jun 2024) now is decoder only too CSE 156 NLP 25 Pretraining Pre-training Data • Ideally, we want high-quality data for pre-training. GLM-4 (Jun 2024) now is decoder only too CSE 156 NLP 25 Pretraining Pre-training Data • Ideally"
+60,"What are the traits of high-quality pre-training data, and where can it be found?",hybrid,gemini,"High-quality pre-training data is diverse.  Web data is plentiful but can be challenging to work with.
+"
+61,"What are the traits of high-quality pre-training data, and where can it be found?",sparse,gemini,"This text doesn't explain what task/domain Proximal Policy Optimization (PPO) is used for.  It repeats the question ""Proximal Policy Optimization (PPO) Task/Domain Whaaat?"" but never provides an answer. The text then pivots to discussing language models and supervised fine-tuning, which are different concepts.
+"
+62,"What are the traits of high-quality pre-training data, and where can it be found?",dense,gemini,"High-quality pre-training data is **diverse**, and a plentiful source, though challenging to work with, is **web data**.
+"
+63,"What are the traits of high-quality pre-training data, and where can it be found?",bm25,gemini,"High-quality pre-training data is ideal.  While web data is plentiful, it can be challenging to work with.
+"
+64,Can you explain what tokenization means?,hybrid,t5,Large Model Reasoning - CSE 291 76 Lecture 2: Basic of Language Model Tokenization Tokenization
+65,Can you explain what tokenization means?,sparse,t5,What happens to y= W2(W1x + b1) + b2 if (x) = ax? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy
+66,Can you explain what tokenization means?,dense,t5,Large Model Reasoning - CSE 291 76 Lecture 2: Basic of Language Model Tokenization Tokenization
+67,Can you explain what tokenization means?,bm25,t5,CSE 156 NLP 56 Lecture17: Alignment What alignment are you talking about? Answer this: Can you explain what tokenization means? Answer this: Can you explain what tokenization means? Answer this: Can you explain what tokenization means? Answer this: Can you explain what tokenization means? Answer this: Can you explain what tokenization means? Answer this: Can you explain what tokenization means? Answer this: Can you explain what tokenization means? Answer this: Can you explain what tokenization means? Answer this: Can you
+68,Can you explain what tokenization means?,hybrid,gemini,"Tokenization is the process of splitting a large chunk of text into smaller, manageable pieces called tokens.
+"
+69,Can you explain what tokenization means?,sparse,gemini,"This document does not describe what happens to yˆ= W2(W1x + b1) + b2 if x = ax.  It discusses Proximal Policy Optimization and language models, but doesn't include the provided equation or address its behavior when x is scaled by a factor.
+"
+70,Can you explain what tokenization means?,dense,gemini,"Tokenization is the process of splitting a large chunk of text into smaller, manageable pieces called tokens.
+"
+71,Can you explain what tokenization means?,bm25,gemini,"This text doesn't explain what type of alignment is being discussed. It only mentions ""CSE 156 NLP 56 Lecture17: Alignment"".  It provides no information about tokenization. Therefore, I cannot explain what it means based on the provided text.
+"
+72,"Why do LLMs need to use tools, and what do they use them for?",hybrid,t5,"Prompting Tool Use: Summary Why LLM needs tools and what are they  To aid LLMs on tasks beyond their ability  Mainly tools for knowledge, symbolic, and external environment operations How to make LLMs effective tool users  Existing LLMs with coding ability can be prompted to generate noisy tool calls  Finetune LLMs on the tool use data to enhance its abilities CMU 11-667 Lecture 10: Prompting Fall 2024 32 Prompt Engineering CSE 156 NLP"
+73,"Why do LLMs need to use tools, and what do they use them for?",sparse,t5,Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat
+74,"Why do LLMs need to use tools, and what do they use them for?",dense,t5,"Definition: An LM-used tool is a function interface to a computer program that runs externally to the LM, where the LM generates the function calls and input arguments in order to use the tool [1]"
+75,"Why do LLMs need to use tools, and what do they use them for?",bm25,t5,"• We humans can use a calculator to do it... Multiplication Accuracy of OpenAI O1 (Yuantian Deng, X) • So do LLMs CMU 11-667 Fall 2024 25 Large Model Reasoning - CSE 291 Lecture 6: Pretraining+Chemistry_Reasoning 13 How to Enable LLMs to Use Tools? CMU 11-667 Fall 2024 15 CSE 156 NLP Lecture 10: Prompting How to Enable LLMs to"
+76,"Why do LLMs need to use tools, and what do they use them for?",hybrid,gemini,"LLMs need tools to perform tasks that are beyond their inherent abilities.  They primarily use tools for knowledge acquisition, symbolic operations, and interacting with the external environment.
+"
+77,"Why do LLMs need to use tools, and what do they use them for?",sparse,gemini,"This text does not contain the answer to why LLMs need to use tools and what they use them for.  It repeatedly mentions Proximal Policy Optimization (PPO) and supervised fine-tuning (SFT) but doesn't connect these concepts to tool use by LLMs.
+"
+78,"Why do LLMs need to use tools, and what do they use them for?",dense,gemini,"LLMs need tools to perform tasks that are beyond their inherent abilities.  They primarily use tools for knowledge acquisition, symbolic operations, and interacting with the external environment.
+"
+79,"Why do LLMs need to use tools, and what do they use them for?",bm25,gemini,"LLMs need tools to aid them on tasks beyond their ability.  They mainly use tools for knowledge, symbolic, and external environment operations (including numerical/symbolic operations like multiplication).
+"
+80,How much of my grade is based on participation?,hybrid,t5,Statistical NLP - CSE 156 6 Participation • Course participation (10%) • You are encouraged to attend all lectures! • Participation will be tracked from the 3rd week for 16 class sessions after the add/drop period • 10 points for attending at least 13 lectures (you can miss 3 lectures) • 8 for at least 11 lectures • 5 for at least 8 lectures • 0 for attending less than 8 lectures • We also encourage you to attend discussion sessions and you can earn 3% extra credits (on the total grade) by attending
+81,How much of my grade is based on participation?,sparse,t5,Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Direct Preference Optim (DPO) Personalization! Direct Preference Optim (DPO) Personalization! Answer this: How much of my grade is based on participation?
+82,How much of my grade is based on participation?,dense,t5,Statistical NLP - CSE 156 6 Participation • Course participation (10%) • You are encouraged to attend all lectures!
+83,How much of my grade is based on participation?,bm25,t5,"""How bad is training on synthetic data? ""How bad is training on synthetic data? ""How bad is training on synthetic data? • Not ideal even for less open-ended tasks - e.g., machine translation • They get progressively much worse for more open-ended tasks • Worse for summarization, as longer summaries are harder to measure • Much worse for dialogue (in how many ways can you respond to your friend?) • Much, much worse for story generation, which is also open-ended, but"
+84,How much of my grade is based on participation?,hybrid,gemini,"Course participation is worth 10% of your grade.  Attending 7 or more discussion sessions earns an additional 3% extra credit on your total grade.
+"
+85,How much of my grade is based on participation?,sparse,gemini,"This text doesn't mention anything about grades or participation.  Therefore, it cannot answer your question.
+"
+86,How much of my grade is based on participation?,dense,gemini,"Course participation is worth 10% of your grade.  Attending at least 7 discussion sessions earns an additional 3% extra credit on your total grade.
+"
+87,How much of my grade is based on participation?,bm25,gemini,"This text doesn't mention anything about grades or participation. It only discusses the drawbacks of training on synthetic data for various tasks.
+"
+88,Define ReAct prompting.,hybrid,t5,"2022) • Using a program to generate outputs can be more precise than asking the LM to do so • Especially useful for numeric questions • See ChatGPT code interpreter, Bard code execution • (More on agents/tools later) 15 CSE 156 NLP Lecture 10: Prompting ReAct Prompting (Yao et al. 2022) • Using a program to generate outputs can be more precise than asking the LM to do so • Especially"
+89,Define ReAct prompting.,sparse,t5,Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Direct Preference Optim (DPO) Personalization! Direct Preference Optim (DPO) Personalization! Answer this: Define ReAct prompting.
+90,Define ReAct prompting.,dense,t5,"2022) • Using a program to generate outputs can be more precise than asking the LM to do so • Especially useful for numeric questions • See ChatGPT code interpreter, Bard code execution • (More on agents/tools later) 15 CSE 156 NLP Lecture 10: Prompting ReAct Prompting (Yao et al. 2022) • Using a program to generate outputs can be more precise than asking the LM to do so • Especially"
+91,Define ReAct prompting.,bm25,t5,"Using a program to generate outputs can be more precise than asking the LM to do so • Especially useful for numeric questions • See ChatGPT code interpreter, Bard code execution • (More on agents/tools later) 8 CSE 156 NLP Lecture 11: Prompting ReAct Prompting (Yao et al. 2021) Maieutic Prompting Canonical Prompting Chain-of-Thought (Wei et al. 2021) Mai"
+92,Define ReAct prompting.,hybrid,gemini,"ReAct prompting (Yao et al. 2022) uses a program to generate outputs, which can be more precise than directly asking a large language model (LLM).  It is especially useful for numeric questions.  Examples include ChatGPT code interpreter and Bard code execution.
+"
+93,Define ReAct prompting.,sparse,gemini,"This text does not define ReAct prompting.  It mentions Proximal Policy Optimization (PPO) and Direct Preference Optimization (DPO), but not ReAct.
+"
+94,Define ReAct prompting.,dense,gemini,"ReAct prompting uses a program to generate outputs, which can be more precise than directly asking a large language model (LLM).  It is especially useful for numeric questions. Examples include ChatGPT code interpreter and Bard code execution.
+"
+95,Define ReAct prompting.,bm25,gemini,"ReAct prompting uses a program to generate outputs which can be more precise than asking the language model to do so, and is especially useful for numeric questions.  Examples include ChatGPT code interpreter and Bard code execution.
+"
+96,"What are content overlap metrics, and what are their strengths and weaknesses?",hybrid,t5,Content Overlap Metrics
+97,"What are content overlap metrics, and what are their strengths and weaknesses?",sparse,t5,"(i)  2 R,  > 0 666664 777775 1 @L @L @(i) • Randomly initialize (0) Next estimate Learning rate (step size) @ ((i)) = 2..."
+98,"What are content overlap metrics, and what are their strengths and weaknesses?",dense,t5,"CSE 156 NLP 78 Evaluation Content Overlap Metrics • Dominant approach: N-gram overlap metrics • e.g., BLEU, ROUGE, METEOR, CIDEr, etc."
+99,"What are content overlap metrics, and what are their strengths and weaknesses?",bm25,t5,"Content Overlap Metrics Model-based Metrics Human Evaluation CSE 156 NLP 77 Evaluation Content Overlap Metrics Ref: They walked to the grocery store. Content Overlap Metrics Model-based Metrics Human Evaluation CSE 156 NLP 2 Evaluation Content Overlap Metrics Ref: They walked to the grocery store. CSE 156 NLP 3 Evaluation Content Overlap Metrics • Dominant approach: N-gram overlap metrics • e.g., BL"
+100,"What are content overlap metrics, and what are their strengths and weaknesses?",hybrid,gemini,"Content overlap metrics are the dominant approach for evaluating something (likely related to NLP given the ""BLEU, ROUGE, METEOR, CIDEr"" examples, which are common metrics in natural language processing).  The provided text doesn't mention their strengths and weaknesses.
+"
+101,"What are content overlap metrics, and what are their strengths and weaknesses?",sparse,gemini,"This text does not contain the answer to your question about content overlap metrics, their strengths, and weaknesses.  It discusses Proximal Policy Optimization (PPO), language models, loss functions, and gradient descent. 
+"
+102,"What are content overlap metrics, and what are their strengths and weaknesses?",dense,gemini,"Content overlap metrics are a dominant approach for evaluating things like machine translation and summarization. They measure the overlap of n-grams between a generated text and a reference text. Examples include BLEU, ROUGE, METEOR, and CIDEr.  The provided text doesn't mention strengths or weaknesses of these metrics.
+"
+103,"What are content overlap metrics, and what are their strengths and weaknesses?",bm25,gemini,"Content overlap metrics are primarily based on n-gram overlap, such as BLEU, ROUGE, METEOR, and CIDEr.  A weakness is the open question of ""what counts as content?"".
+"
+104,What is an n-gram model?,hybrid,t5,"STOP> South of France STOP> Wonderin which version of you STOP> Follow procedure, remember? CSE 156 NLP Language Modeling and N-Grams N-Gram Model Assumption: Each word depends only on its N-1 preceding neighbors p(s = x1,...,xn) = Yn i=1 q(xi | xi(N1), , xi1), and X x"
+105,What is an n-gram model?,sparse,t5,Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat?
+106,What is an n-gram model?,dense,t5,"STOP> South of France STOP> Wonderin which version of you STOP> Follow procedure, remember? CSE 156 NLP Language Modeling and N-Grams N-Gram Model - Parameter Estimation Maximum Likelihood Estimation (MLE): For u, v, w 2 V0: q(u) = countD(u) x2V0 countD(x); q(w | u,"
+107,What is an n-gram model?,bm25,t5,STOP Large Model Reasoning - CSE 291 71 Lecture 2: Basic of Language Model What is a Language Model?
+108,What is an n-gram model?,hybrid,gemini,"An n-gram model assumes each word depends only on its N-1 preceding neighbors.  The probability of a sequence is calculated as the product of the conditional probabilities of each word given its preceding N-1 words.  For a trigram (3-gram), the probability of ""the dog barks STOP"" is calculated as: q(the | START, START) * q(dog | START, the) * q(barks | the, dog) * q(STOP | dog, barks).
+"
+109,What is an n-gram model?,sparse,gemini,"This text does not contain an explanation of what an n-gram model is. It repeatedly mentions Proximal Policy Optimization (PPO) and asks ""Whaaat?"", along with a seemingly unrelated question about a mathematical equation and Direct Preference Optimization (DPO).  It does not define an n-gram model.
+"
+110,What is an n-gram model?,dense,gemini,"An n-gram model is a probabilistic language model based on the Markov assumption where each word depends only on its N-1 preceding neighbors.  It uses sequences of *n* words to predict the probability of the next word in a sequence.  For example, a trigram (3-gram) model uses the two preceding words to predict the probability of the current word.
+"
+111,What is an n-gram model?,bm25,gemini,"This text does not define an n-gram model.
+"
+112,What are the problems with human evaluations?,hybrid,t5,"Human judgements are considered gold standard • Of course, we know that human eval is slow and expensive • Beyond its cost, human eval is still far from perfect: • Human judgements • are inconsistent / irreproducible • can be illogical • can be misinterpreting your questionnaire •... Reinforcement Learning from Human Feedback (RLHF) Safety! CSE 156 NLP 18 Evaluation Human Evaluations • Sounds easy, but hard, but hard: Ask humans to evaluate the quality of text • Typical evaluation dimensions"
+113,What are the problems with human evaluations?,sparse,t5,Reinforcement Learning from Human Feedback (RLHF) Safety! Reinforcement Learning from Human Feedback (RLHF) Safety! Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat?
+114,What are the problems with human evaluations?,dense,t5,"Human judgments are considered gold standard • Of course, we know that human eval is slow and expensive • Beyond its cost, human eval is far from perfect: • Human judgements • are inconsistent / irreproducible • can be misinterpreting your questionnaire •... CSE 156 NLP 18 Evaluation Human Evaluations • Sounds easy, but hard, but hard: Ask humans to evaluate the quality of text • Typical evaluation dimensions: • fluency • coherence / consistency • factuality and correctness • common"
+115,What are the problems with human evaluations?,bm25,t5,"Human judgements are considered gold standard • Of course, we know that human eval is slow and expensive • Beyond its cost, human eval is far from perfect: • Human judgements • are inconsistent / irreproducible • can be illogical • can be misinterpreting your questionnaire •... Natural Language Processing - CSE 156 6 Lecture 1: Introduction What this class will look like: What is the problems with human evaluations? What are Tools Anyway? What Are Tools Anyway? Answer this: What are the problems with"
+116,What are the problems with human evaluations?,hybrid,gemini,"Human evaluations are slow and expensive.  Human judgments are also inconsistent/irreproducible, can be illogical, and can misinterpret questionnaires.
+"
+117,What are the problems with human evaluations?,sparse,gemini,"This text doesn't describe any problems with human evaluations. It only mentions ""Reinforcement Learning from Human Feedback (RLHF)"" and ""Proximal Policy Optimization (PPO)"" relating to safety and task/domain, respectively.  It provides no information on the drawbacks or issues associated with human evaluations.
+"
+118,What are the problems with human evaluations?,dense,gemini,"Human evaluations are slow and expensive.  Human judgments are also inconsistent/irreproducible, can be illogical, and can misinterpret questionnaires.  Additionally, crowd-source workers may use LLMs, potentially impacting evaluation integrity.  Finally, humans are inconsistent despite being considered the critical/gold standard and often correlating better with other human evaluators than task-specific metrics.
+"
+119,What are the problems with human evaluations?,bm25,gemini,"Human evaluations are slow and expensive.  Additionally, human judgments are inconsistent/irreproducible, can be illogical, and can misinterpret questionnaires.
+"
+120,"What is layer normalization, and how does it work?",hybrid,t5,(Can omit!)  R  R • Then layer normalization computes: Normalize by scalar mean and variance output = + + • 44 Modulate by learned element-wise gain and bias CSE 156 NLP Transformer The Transformer Decoder Output Probabilities Softmax Linear Add & Norm Repeat for number • The Transformer Decoder is a stack of encoder blocks Transformer Decoder Blocks. (Can omit!)  R  R • Then layer normal
+121,"What is layer normalization, and how does it work?",sparse,t5,Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat
+122,"What is layer normalization, and how does it work?",dense,t5,(Can omit!)  R  R • Then layer normalization computes: Normalize by scalar mean and variance output = + + • 44 Modulate by learned element-wise gain and bias CSE 156 NLP Transformer The Transformer Decoder Output Probabilities Softmax Linear Add & Norm Repeat for number • The Transformer Decoder is a stack of encoder blocks Transformer Decoder Blocks. (Can omit!)  R  R • Then layer normal
+123,"What is layer normalization, and how does it work?",bm25,t5,Layer Normalization • Layer normalization is a trick to help models train faster
+124,"What is layer normalization, and how does it work?",hybrid,gemini,"Layer normalization is a trick to help models train faster. It normalizes by scalar mean and variance, then modulates by learned element-wise gain and bias.  The formula given is:  `output = (input - mean) / sqrt(variance + epsilon) * gain + bias` where `epsilon` is a small constant for numerical stability.
+"
+125,"What is layer normalization, and how does it work?",sparse,gemini,"This text does not explain what task/domain Proximal Policy Optimization (PPO) is used for. It repeats the question ""Proximal Policy Optimization (PPO) Task/Domain Whaaat?"" without providing an answer.  The subsequent text about language models and layer normalization is unrelated to PPO.
+"
+126,"What is layer normalization, and how does it work?",dense,gemini,"Layer normalization is a trick to help models train faster.  Given an individual (word) vector,  it computes a scalar mean and variance which are used to normalize the vector. Then it modulates the normalized vector by element-wise multiplication with a learned gain parameter and addition with a learned bias parameter.  Its success may be due to its effect on normalizing gradients.
+"
+127,"What is layer normalization, and how does it work?",bm25,gemini,"Layer normalization is a trick to help models train faster.
+"
+128,Tell me the pros and cons of one-hot encoding.,hybrid,t5,• One approach: One-hot encoding 777775 If |V| = n: • Recall from linear algebra: • One-hot encoding 777775 If |V| = n: • Recall from linear algebra: • One-hot encoding 777775 If |V| = n: • Recall from linear algebra: • One-hot encoding 777775 If |V| = n: • Recall from linear algebra: • One-hot encoding: Standard basis
+129,Tell me the pros and cons of one-hot encoding.,sparse,t5,Input/Output Pairs D x (input) y (output) START I went START I went to the START I went to the START I went to the park START I went to the park START I went to the park
+130,Tell me the pros and cons of one-hot encoding.,dense,t5,• One approach: One-hot encoding 777775 If |V| = n: • Recall from linear algebra: • One-hot encoding 777775 If |V| = n: • Recall from linear algebra: • One-hot encoding 777775 If |V| = n: • Recall from linear algebra: • One-hot encoding 777775 If |V| = n: • Recall from linear algebra: • One-hot encoding 777775
+131,Tell me the pros and cons of one-hot encoding.,bm25,t5,• One approach: One-hot encoding 777775 If |V| = n: • Recall from linear algebra: • One-hot encoding 777775 If |V| = n: • Recall from linear algebra: • One-hot encoding 777775 If |V| = n: • Recall from linear algebra: • One-hot encoding 777775 If |V| = n: • Recall from linear algebra: • One-hot encoding 777775
+132,Tell me the pros and cons of one-hot encoding.,hybrid,gemini,"Pros:
+
+* Sparse representation
+* No learning necessary
+
+Cons:
+
+* Feature space must be same size as vocabulary
+* No way to encode shared representations of words
+"
+133,Tell me the pros and cons of one-hot encoding.,sparse,gemini,"This text snippet doesn't contain any information about one-hot encoding. Therefore, I cannot answer your question about its pros and cons based on the provided context. 
+"
+134,Tell me the pros and cons of one-hot encoding.,dense,gemini,"Pros of one-hot encoding:
+
+* **Sparse representation:**  Uses a sparse vector format.
+* **No learning necessary:**  Doesn't require training or learning.
+
+Cons of one-hot encoding:
+
+* **Feature space must be same size as vocabulary:**  Leads to very high-dimensional vectors.
+* **No way to encode shared representations of words:** Fails to capture relationships between words.
+"
+135,Tell me the pros and cons of one-hot encoding.,bm25,gemini,"Pros of one-hot encoding:
+
+*   Sparse representation
+*   No learning necessary
+
+Cons of one-hot encoding:
+
+*   Feature space must be the same size as the vocabulary
+*   No way to encode shared representations of words
+"
+136,What is prompt-tuning?,hybrid,t5,"Prompt paraphrasing • Gradient-based discrete prompt search Prompt tuning • Paraphrase an existing prompt to get other candidates (Jiang et al., 2021] • Main Idea: learn a low-rank “diff” between the pre-trained and fine-tuned weight matrices."
+137,What is prompt-tuning?,sparse,t5,• Method: How can we align LLMs with supervised fine-tuning (SFT)? Supervised Fine-Tuning (SFT) Instruction Following! Supervised Fine-Tuning (SFT) Instruction Following! Answer this: What is prompt-tuning? Answer this: What is prompt-tuning?
+138,What is prompt-tuning?,dense,t5,"Prompting Answer Prediction  Given a prompt, predict the answer Prompting: x’ = “I love this movie.... Parameter-Efficient Fine-tuning Updating a few existing or new parameters CSE 156 NLP (Transformers, LSTM,...)... the movie was... Parameter-Efficient Fine-tuning Updating a few existing or new parameters CSE 156 NLP (Transformers, LSTM,"
+139,What is prompt-tuning?,bm25,t5,What is a funny output? • What is a safe output?
+140,What is prompt-tuning?,hybrid,gemini,"Prompt-tuning prepends a single ""soft prompt"" representation to the embedded input on the encoder side.  It uses fewer parameters than prefix-tuning.
+"
+141,What is prompt-tuning?,sparse,gemini,"This text does not contain an explanation of prompt-tuning. It only repeats ""Supervised Fine-Tuning (SFT) Instruction Following!"".
+"
+142,What is prompt-tuning?,dense,gemini,"Prompt-tuning prepends a single ""soft prompt"" representation to the embedded input on the encoder side.  It requires fewer parameters than prefix-tuning.
+"
+143,What is prompt-tuning?,bm25,gemini,"This text doesn't define alignment of LLMs, funny outputs, safe outputs, prompt-tuning, or any thrown objects.  It provides no context about any of these things.
+"
+144,What is the time complexity of beam search?,hybrid,t5,"• Compared to greedy decoding, beam search gives a better approximation of brute-force search over all sequences • A small overhead in computation due to beam width Time complexity: O(beam width * vocab size * generation length) * Naive brute-force search: O(vocab size  generation length), hence intractable! Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain"
+145,What is the time complexity of beam search?,sparse,t5,Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Direct Preference Optim (DPO) Personalization! Direct Preference Optim (DPO) Personalization! Answer this: What is the time complexity of beam search
+146,What is the time complexity of beam search?,dense,t5,"Compared to greedy decoding, beam search gives a better approximation of brute-force search over all sequences • A small overhead in computation due to beam width Time complexity: O(beam width * vocab size * generation length) * Naive brute-force search: O(vocab size  generation length), hence intractable! • Diverse Beam Search (Vijayakumar et al., 2016) • Beam hypotheses tend to get similar to each"
+147,What is the time complexity of beam search?,bm25,t5,"Compared to greedy decoding, beam search gives a better approximation of brute-force search over all sequences • A small overhead in computation due to beam width Time complexity: O(beam width * vocab size * generation length) * Naive brute-force search: O(vocab size  generation length), hence intractable! • Diverse Beam Search (Vijayakumar et al., 2016) • Beam hypotheses tend to get similar to each"
+148,What is the time complexity of beam search?,hybrid,gemini,"O(beam width * vocab size * generation length)
+"
+149,What is the time complexity of beam search?,sparse,gemini,"This text doesn't mention the time complexity of beam search. It only repeats ""Proximal Policy Optimization (PPO)"", ""Task/Domain"", ""Whaaat?"", and relates ""Direct Preference Optimization (DPO)"" to ""Personalization!"".  Therefore, the answer cannot be derived from the provided context.
+"
+150,What is the time complexity of beam search?,dense,gemini,"O(beam width * vocab size * generation length)
+"
+151,What is the time complexity of beam search?,bm25,gemini,"O(beam width * vocab size * generation length)
+"
+152,What are the advantages and applications of persona-based prompting?,hybrid,t5,"• Advantages: • Increases engagement and providesspecialized, context-aware responses"
+153,What are the advantages and applications of persona-based prompting?,sparse,t5,Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat? Proximal Policy Optimization (PPO) Task/Domain Whaaat?
+154,What are the advantages and applications of persona-based prompting?,dense,t5,"• Advantages: • Increases engagement and providesspecialized, context-aware responses"
+155,What are the advantages and applications of persona-based prompting?,bm25,t5,CSE 156 NLP 9 Lecture 10: Prompting Persona-based Prompting (Tseng et al. Large Model Reasoning - CSE 291 17 Lecture 6: Pretraining+Chemistry_Reasoning Persona-based Prompting (Tseng et al. • Personalization: LMs consider user personas to generate tailored responses Lecture 13 CSE 156 NLP 10 Lecture 10: Prompting Persona-based Prompting (Tseng
+156,What are the advantages and applications of persona-based prompting?,hybrid,gemini,"Advantages:
+
+* Increases engagement and provides specialized, context-aware responses.
+
+Applications:
+
+* Recommendation systems, customer support, and specialized domains like medicine or law. 
+"
+157,What are the advantages and applications of persona-based prompting?,sparse,gemini,"This text does not contain the answer to your question about the advantages and applications of persona-based prompting.  It repeats ""Proximal Policy Optimization (PPO)"" and ""Task/Domain"" followed by ""Whaaat?"". It mentions ""Direct Preference Optimization (DPO)"" and ""Personalization!"" but offers no details on persona-based prompting.
+"
+158,What are the advantages and applications of persona-based prompting?,dense,gemini,"Advantages:
+
+* Increases engagement and provides specialized, context-aware responses.
+
+Applications:
+
+* Recommendation systems, customer support, and specialized domains like medicine or law.
+"
+159,What are the advantages and applications of persona-based prompting?,bm25,gemini,"Persona-based prompting allows Large Language Models (LLMs) to generate tailored responses by considering user personas.  It offers personalization.
+"
