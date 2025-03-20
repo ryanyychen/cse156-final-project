@@ -3,20 +3,18 @@ import os
 import torch
 import time
 import gradio as gr
+import shutil
 from dotenv import load_dotenv
-
-# Embeddings #
+import google.generativeai as genai
 from sentence_transformers import SentenceTransformer
+from langchain_experimental.text_splitter import SemanticChunker
+from langchain_huggingface.embeddings import HuggingFaceEmbeddings
 from transformers import AutoTokenizer, AutoModel, T5Tokenizer, T5ForConditionalGeneration
-
-# Database #
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, VectorParams, SparseVectorParams
 
-# Gemini
-import google.generativeai as genai
-
 from embeddings import vectorize
+from document_upload import read_file, upsert
 from retrieval import hybrid_query, sparse_query, dense_query, bm25_query
 
 if torch.cuda.is_available():
@@ -71,6 +69,14 @@ def start_database(recreate, sparse_vector_size, dense_vector_size, collection_n
 
     return client
 
+# Text splitter to chunk texts
+# Using semantic chunking for best separation of different information to help retrieval
+embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+text_splitter = SemanticChunker(
+    embeddings=embeddings,
+    breakpoint_threshold_amount=0.2, # Higher = fewer chunks
+)
+
 # Initialize tokenizers and embedding models
 SPARSE_MODEL_NAME = "naver/splade_v2_distil"
 sparse_tokenizer = AutoTokenizer.from_pretrained(
@@ -103,6 +109,29 @@ gemini_model = genai.GenerativeModel('gemini-1.5-pro-latest')
 # Initialize the database connection
 db = start_database(recreate=False, sparse_vector_size=SPARSE_VECTOR_SIZE, dense_vector_size=DENSE_VECTOR_SIZE, collection_name=COLLECTION_NAME)
 
+# Function to handle file uploads and processing
+def handle_upload(file):
+    if file is None:
+        return "No file uploaded."
+
+    # Ensure uploads directory exists
+    upload_dir = "uploads"
+    os.makedirs(upload_dir, exist_ok=True)
+
+    # Save file to uploads directory
+    filename = os.path.basename(file.name)
+    filepath = os.path.join(upload_dir, filename)
+    shutil.move(file.name, filepath)
+
+    # Display processing message
+    yield f"Processing '{filename}', please wait..."
+
+    # Process file and upsert to database
+    chunks = read_file(filepath, text_splitter)
+    upsert(db, chunks, sparse_tokenizer, sparse_model, SPARSE_VECTOR_SIZE, dense_model, COLLECTION_NAME)
+
+    # Display success message
+    yield f"File '{filename}' uploaded and processed successfully."
 
 def get_model_output(client, query, retrieval_type="hybrid", top_k=5, model="gemini"):
     """
@@ -157,17 +186,23 @@ def get_model_output(client, query, retrieval_type="hybrid", top_k=5, model="gem
     print(f"Answer generated in {end_time - start_time:.2f} seconds")
     return answer
 
-def respond(message, chat_history):
-    retrieval_method = retrieval_type.value
-    k = top_k.value
-    model = model_type.value
-    return get_model_output(
+def respond(message, retrieval_method, model, k, chat_history):
+    # Display user's message immediately
+    chat_history.append((message, ""))
+    yield "", chat_history
+    
+    # Simulate the bot generating a response
+    bot_response = get_model_output(
         client=db,
         query=message,
         retrieval_type=retrieval_method,
         top_k=k,
         model=model,
     )
+
+    # Update the bot's response
+    chat_history[-1] = (message, bot_response)
+    yield "", chat_history
 
 
 # Create a Gradio interface
@@ -199,15 +234,35 @@ with gr.Blocks() as demo:
             label="Number of documents to retrieve"
         )
     
-    # Chat interface using gr.ChatInterface
-    chat = gr.ChatInterface(
+    # Chat interface without gr.ChatInterface for better control
+    chatbot = gr.Chatbot(placeholder="What would you like to know?")
+    msg = gr.Textbox(placeholder="Ask a question about the course...", show_label=False)
+    send_btn = gr.Button("Send")
+
+    send_btn.click(
         respond,
-        chatbot=gr.Chatbot(placeholder="What would you like to know?"),
-        textbox=gr.Textbox(placeholder="Ask a question about the course...", show_label=False)
+        inputs=[msg, retrieval_type, model_type, top_k, chatbot],
+        outputs=[msg, chatbot]
     )
 
+    msg.submit(
+        respond,
+        inputs=[msg, retrieval_type, model_type, top_k, chatbot],
+        outputs=[msg, chatbot]
+    )
+
+    # File upload component
+    with gr.Row():
+        file_upload = gr.File(label="Upload a .txt file")
+
+    upload_button = gr.Button("Process Upload")
+    upload_message = gr.Markdown()
+
+    upload_button.click(handle_upload, inputs=file_upload, outputs=upload_message)
+
+    # Clear button to reset the chat
     clear = gr.Button("Clear")
-    clear.click(lambda: None, outputs=chat)
+    clear.click(lambda: ("", []), outputs=[msg, chatbot])
 # Launch the app
 if __name__ == "__main__":
     demo.launch(share=False)
