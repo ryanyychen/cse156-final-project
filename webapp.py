@@ -217,7 +217,7 @@ with gr.Blocks() as demo:
     # Create dropdown for retrieval type and model
     with gr.Row():
         retrieval_type = gr.Dropdown(
-            choices=["hybrid", "sparse", "dense", "bm25"], 
+            choices=["hybrid", "sparse", "dense", "bm25", "tf-idf"], 
             value="hybrid", 
             label="Retrieval Method"
         )
